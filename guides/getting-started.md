@@ -4,9 +4,9 @@ Orbit runs on your PS5. Use the TV with your controller, or pair a phone or comp
 
 You need a PS5 environment that can run homebrew ELF payloads, an ELF loader or payload manager, internet access on the console for direct provider downloads, and enough writable storage. A phone or computer should be on the same local network. Library management additionally needs a compatible ShadowMount v1 local API.
 
-**No internet on your PS5?** [Set up Orbit Zero](orbit-zero-offline-ps5.md) to start Orbit and download through your computer over the same local network.
+**Prefer downloading on your computer?** [Orbit Zero](orbit-zero.md) is our desktop app for Mac, Windows and Linux. It starts Orbit on your PS5, downloads on your computer and transfers the files over your local network. Your PS5 does not need internet access for this route. Follow the [desktop installation guide](orbit-zero-installation.md) or [set up a PS5 without internet](orbit-zero-offline-ps5.md).
 
-**Using Orbit Zero on your computer?** The [desktop installation guide](orbit-zero-installation.md) covers Mac, Windows and Linux. Orbit Zero 1.2.0 includes PS4 browsing and the same 11 interface languages as Orbit Store. Update both the desktop app and the matching PS5 service; update the native FFPKG too if you use it.
+Orbit Zero includes PS4 and PS5 browsing and the same 11 interface languages as Orbit Store. Update the desktop app and its matching PS5 service together; update the native FFPKG too if you use it.
 
 ## PS4 and PS5 games
 

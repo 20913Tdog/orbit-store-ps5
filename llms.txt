@@ -24,7 +24,7 @@ The native app bundles Orbit's service. A compatible ELF loader on port 9021 let
 
 Phone and computer browser controls use http://<ps5-ip>:34177/ on the local network. Pair devices displays the console's six-digit code; Show code on PS5 repeats the notification. Keep codes private and the service on a trusted local network.
 
-Choose a game, source and drive in Download options. Direct downloads run on PS5. Vikingfile browser options open the provider page on PS5 while preserving the selected game, source and destination. Complete any verification, press Download on the provider page, then return to Orbit. A paired phone controls this flow but does not host the provider browser. Orbit validates the selected file before queueing it.
+Enable the providers you want in Sources settings and save your selection, including AkiraBox when updating from an earlier release. Choose a game, source and drive in Download options. Direct downloads run on PS5. Provider pages open on PS5 while preserving the selected game, source and destination. For Vikingfile, complete any verification, press Download on the provider page, then return to Orbit. For AkiraBox, complete verification and wait without pressing Download; Orbit captures the ready link and returns automatically. A paired phone controls this flow but does not host the provider browser. Orbit validates the selected file before queueing it.
 
 Optional TorBox delivery is configured in browser App settings → Debrid with the user's own API key. Supported hosts, account plans, quotas and file-size limits apply. Original-provider downloads remain available. A TorBox job is never silently changed to direct delivery.
 
@@ -63,9 +63,10 @@ Orbit Store is GPL-3.0-or-later. Releases provide the complete source correspond
 ## Documentation
 
 - [Project overview](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/README.md): Features, current screenshots, setup, controls and beta limits.
+- [Orbit Zero guide](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/orbit-zero.md): Desktop browsing, console connection, download routes, transfers and cache cleanup.
 - [Orbit Zero installation](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/orbit-zero-installation.md): Mac, Windows and Linux installation, permissions and pairing.
 - [PS5 without internet](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/orbit-zero-offline-ps5.md): Start Orbit and download through the computer on a local network.
-- [Getting started](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/getting-started.md): Installation, Payload Manager, updates and phone pairing.
+- [Getting started](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/getting-started.md): Choose desktop or PS5 setup, install Orbit, use Payload Manager, update and pair a phone.
 - [Downloads](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/downloads.md): Browse, sources, formats, Vikingfile and AkiraBox steps, archive extraction, saved locations, storage and queue controls.
 - [Library](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/library.md): Inventory labels and compatible ShadowMount actions.
 - [Troubleshooting](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/troubleshooting.md): Startup, updates, providers, storage, artwork and diagnostics.
