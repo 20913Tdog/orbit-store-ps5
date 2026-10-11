@@ -17,7 +17,7 @@ The full-screen screenshots show the desktop interface. Connection, storage and 
 - A computer with internet access and enough free space to cache the full download, plus writable storage on the PS5.
 - A PS5 with its jailbreak and Payload Manager or a compatible ELF loader already running, or the matching Orbit receiver already started. Zero does not jailbreak the console.
 - Both devices on the same reachable home network. Wi-Fi, Ethernet, or a mixture of both work. Use the PS5's local IPv4 address.
-- Orbit Zero and its included Orbit Store 1.1.0 service. For native TV controls, install the matching FFPKG from the same release.
+- Orbit Zero and its included Orbit Store 1.2.0 service. For native TV controls, install the matching FFPKG from the same release.
 
 Downloads are available for **ARM64 and x64 on macOS, Windows and Linux**; 32-bit x86 is not supported. Mac builds use Developer ID signing but are not notarized; Windows and Linux packages are unsigned. The interface supports English, German, Spanish, French, Hungarian, Italian, Dutch, Polish, Brazilian Portuguese, Russian and Turkish. Select the globe-shaped **Language** button to choose one, or leave **System language** selected.
 
@@ -54,7 +54,7 @@ Pairing is saved using the computer's encrypted credential store. Zero reconnect
 
 **New on Orbit** appears first in Discover, followed by **Latest releases** and the All games grid. In Browse, use **Platform** to choose PS4, PS5 or both. Platform editions stay separate, with their own images, release dates and download options.
 
-The 1.1.0 catalogue includes 200 PS4 games as single-file PKG/FPKG downloads. Choose a source and PS5 destination just as you would for a PS5 game. The computer-download route also works with the PS5’s internet access blocked. Completed packages need the installation method supported by your PS5 setup; Zero does not install them. See [PS4 games on PS5](downloads.md#ps4-games-on-ps5).
+The 1.2.0 catalogue includes 400 PS4 games with single-file PKG/FPKG download options. Choose a source and PS5 destination just as you would for a PS5 game. The computer-download route also works with the PS5’s internet access blocked. Completed packages need the installation method supported by your PS5 setup; Zero does not install them. See [PS4 games on PS5](downloads.md#ps4-games-on-ps5).
 
 ## Choose where downloads run
 
@@ -65,7 +65,7 @@ The 1.1.0 catalogue includes 200 PS4 games as single-file PKG/FPKG downloads. Ch
 
 Change this under **Console → Download preference**. It applies to new downloads; running downloads keep their original route. The PS5 needs internet access for direct PS5 downloads. For computer downloads, the computer handles provider access and artwork, so the PS5 only needs its local network connection.
 
-Zero downloads two games to the computer at a time by default. Open **Downloads → Download settings → Simultaneous computer downloads** to choose **1**, **2** or **3**. Lowering the limit lets current downloads finish before another starts. Files transfer to the PS5 one at a time while computer downloads continue. Each file needs enough computer space for its full cached copy.
+Zero downloads one game to the computer at a time by default. Open **Downloads → Download settings → Simultaneous computer downloads** to choose **1–8**. Lowering the limit lets current downloads finish before another starts. Files transfer to the PS5 one at a time while computer downloads continue. Each file needs enough computer space for its full cached copy.
 
 Each computer download uses up to eight connections when the provider supports validated byte ranges, with a single-connection fallback. Actual speed depends on the provider, network and storage. **Downloads** shows **Download to computer** and **Transfer to PS5** separately; their rates and progress can differ. A direct PS5 download shows the rate reported by Orbit.
 
@@ -74,6 +74,8 @@ Each computer download uses up to eight connections when the provider supports v
 *Downloads in Orbit Zero. Progress and rates illustrate the two stages; they are not measured transfer results.*
 
 For Vikingfile, Zero opens a separate browser window on the computer. Complete any provider verification and select the matching file's Download button. Zero captures and checks the final file link before adding it to the queue. Provider logins stay in a separate persistent browser profile on the computer. Unwanted popups are blocked; **Back**, **Reload** and **Return to download page** let you get back to the file.
+
+For **AkiraBox**, open the provider page, complete verification and wait without pressing Download. Zero captures the ready link and closes the provider window. Supported ZIP, RAR and 7z downloads extract on the computer before transfer; see [archive downloads](downloads.md#zip-rar-and-7z-downloads).
 
 ## Control it from the PS5
 
@@ -91,15 +93,23 @@ Keep Orbit Zero open and prevent the computer from sleeping during transfers. Ke
 
 **Waiting to transfer** means the computer copy is ready for its PS5 turn. If an earlier PS5 transfer is paused or needs attention, resume it, cancel and remove its partials, or choose **Stop transfer** to keep its files and release that turn. Other computer downloads can continue in the meantime.
 
-The computer copy is kept by default. **Downloads → Download settings → Computer cache** offers **Automatically remove after transfer** for future successful transfers and **Clear completed cache** for copies already completed. You can still select **Remove computer cache** on an individual download. Cleanup preserves PS5 files, partial downloads and history. **Cancel and remove partials** asks for confirmation before deleting the transfer's partial files. Cancelled computer downloads offer **Remove from history**, which removes only the queue entry and keeps files.
+| Choose | What happens |
+| --- | --- |
+| **Resume** | Continues the existing transfer after checking its partial files. Reconnect the original PS5 and destination, keep the original pairing, and leave the computer copy in place. |
+| **Cancel and remove partials** | Asks for confirmation, then removes that transfer’s partial files from the computer and PS5. Use this to discard unfinished work before starting fresh. |
+| **Stop transfer** | Keeps remaining computer and PS5 files and frees the queue after the PS5 confirms the stop. **This transfer cannot be resumed afterward.** You can start a new download. |
 
-![Orbit Zero download settings with folder and completed-cache controls](../assets/1.0.5/orbit-zero-download-settings.jpg)
+For an existing PS5 transfer, keep the matching Orbit service running and reconnect before cancelling or stopping. If the PS5 cannot confirm the operation, the job stays available for you to retry. Updating Orbit Zero alone does not update its receiver on the console; follow [Update Orbit Zero](orbit-zero-installation.md#update-orbit-zero) to update both.
 
-*Download settings in Orbit Zero 1.0.5. The folder and free space shown are illustrative.*
+The computer copy is kept by default. **Downloads → Download settings → Computer cache** offers **Automatically remove after transfer** for future successful transfers and **Clear completed cache** for copies already completed. You can still select **Remove computer cache** on an individual download. Cleanup preserves PS5 files, partial downloads and history. Cancelled computer downloads offer **Remove from history**, which removes only the queue entry and keeps files.
+
+![Orbit Zero download settings with simultaneous-download choices, computer folder and completed-cache controls](../assets/1.1.0/orbit-zero-download-settings.jpg)
+
+*Download settings in Orbit Zero 1.1.0. The folder and free space shown are illustrative.*
 
 To forget the console, use **Console → Connection settings → Unpair PS5**. Finish or cancel unfinished computer transfers first, including paused or interrupted transfers, because they require the original pairing to resume. Unpairing keeps files and download history.
 
-Library is read-only in the first desktop version. Zero transfers files; it does not install or launch games.
+Orbit Zero’s Library is read-only. Zero transfers files; it does not install or launch games.
 
 ## Desktop updates
 

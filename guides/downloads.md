@@ -1,18 +1,18 @@
 # Find and download a game
 
-Orbit 1.1.0 includes **930 games: 730 PS5 games and 200 PS4 games**, with single-file options from Archive.org and Vikingfile. Each platform edition has its own game page; open it to choose from its available sources and formats. The selection depends on which sources you enable.
+Orbit 1.2.0 includes **1,201 games: 801 PS5 games and 400 PS4 games**, with single-file options from Archive.org, Vikingfile and AkiraBox. Each platform edition has its own game page; open it to choose from its available sources and formats. The selection depends on which sources you enable.
 
 ## Browse and choose
 
 **Discover opens first.** Explore the featured game and **New on Orbit** first, followed by **Latest releases**. New on Orbit starts with selected highlights, then shows recent additions ordered by game release date. Move down to All games for the full collection. Its grid shows 96 games per page, ordered by the largest available download option first. Use Previous and Next to move between pages.
 
-![Native Discover with PS4 games in New on Orbit](../assets/1.1.0/native-discover.png)
+![Native Discover with the 1.2.0 catalogue](../assets/1.2.0/native-discover.png)
 
-*The 1.1.0 native Discover screen, rendered locally from the app. Browser and desktop Discover use the same featured order.*
+*Native Discover with the 1.2.0 catalogue, rendered locally from the app. Browser and desktop Discover use the same featured order.*
 
 Switch to **Browse** when you want search and filters. It defaults to **Release date (newest first)**. Games without a recorded date follow alphabetically. Search by game name or title ID, filter by platform, source, format, region or download size, and change the sort order. **Reset filters** restores the default. Missing dates and other metadata can be added later through catalogue updates.
 
-![Browse with filters and newest-first sorting](../assets/0.9.0/desktop-browse.jpg)
+![Native Browse with platform, source, format and region filters](../assets/1.1.0/native-browse.png)
 
 *Use filters to find options that fit your drive and preferred format. Sizes reflect the download option you choose.*
 
@@ -37,7 +37,7 @@ Use **Orbit Store 1.1.0** and the matching **native app 1.4.0**, or **Orbit Zero
 1. Open **Browse → Platform → PS4**. Choose **All platforms** to see PS4 and PS5 together.
 2. Open a game and check its **PS4** label, title ID, region and source notes. PS4 title IDs begin with `CUSA`; PS5 IDs begin with `PPSA`. Editions for different platforms stay separate, even when their names match.
 3. Choose a **PKG** or **FPKG** option, its source and the destination drive. Both use a `.pkg` file; the format label describes the available package. A PS4 label does not imply a frame-rate patch, DLC, or compatibility with every PS5 setup. Check the specific option’s notes.
-4. Follow the normal Archive.org or Vikingfile steps below. Orbit Zero can download and transfer these files while the PS5 has no internet access.
+4. Follow the provider steps below. Orbit Zero can download and transfer these files while the PS5 has no internet access.
 
 Files go to the selected drive’s `homebrew` folder, including `/data/homebrew/` for internal storage. A completed transfer saves the package; it does not install the game. Use the PS4 package installation method supported by your PS5 setup and check its game and firmware requirements. The instructions for installing Orbit’s own `PPSA99177.ffpkg` TV app do not install a downloaded game package.
 
@@ -52,6 +52,20 @@ On the game page, select the main download button to open **Download options**. 
 *Different sources can offer different formats or sizes for the same game. Select the exact option you intend to download.*
 
 For a direct option, select **Download to PS5**. Orbit checks the file and destination, then adds it to Downloads.
+
+## Where downloads are saved
+
+Direct PS5 downloads and Orbit Zero transfers use the selected PS5 drive’s `homebrew` folder:
+
+| Destination | Folder on the PS5 |
+| --- | --- |
+| Internal storage | `/data/homebrew/` |
+| M.2 SSD | `/mnt/ext1/homebrew/` |
+| USB drive | `/mnt/usb0/homebrew/`, `/mnt/usb1/homebrew/`, or the corresponding folder for the selected USB drive |
+
+USB numbering depends on how the console mounts your drives. Choose by the storage label shown in Orbit and keep that drive connected. Orbit creates `homebrew` when needed and checks write access before downloading or resuming. A drive attached only to your computer is not a PS5 destination.
+
+Orbit Zero also keeps a computer copy in your chosen [computer download folder](orbit-zero.md#choose-the-computer-download-folder), unless you enable cleanup after transfer. Saving a game package to the PS5 does not install it; use the tools supported by your console setup.
 
 ## Optional: download through TorBox
 
@@ -71,6 +85,26 @@ For a direct option, select **Download to PS5**. Orbit checks the file and desti
 An account connection does not guarantee support for every file. If an option is unavailable through TorBox, select the original provider explicitly. Orbit does not silently switch a TorBox job to another delivery method.
 
 Pause and resume from Downloads as usual. Disconnecting TorBox pauses its unfinished jobs and keeps their partial files. Reconnect the same account to resume them. Disconnecting does not remove files from your remote TorBox account.
+
+## AkiraBox: verify, then wait
+
+**Requires Orbit Store or Orbit Zero 1.2.0.** Choose the AkiraBox option and destination, then open its download page from Orbit. Complete any human verification yourself and wait a few seconds. **Do not press AkiraBox’s Download button or an advertisement.** Orbit captures the ready file link and checks it against your selected game.
+
+In Orbit’s PS5 browser version, you return to Orbit automatically when the file is queued. If you started from the native TV app, return to the app to follow verification or view the download. In Orbit Zero, the provider window closes once the matching file is ready, and the download appears in your queue.
+
+If the session expires, start the provider step again. For an existing paused or failed AkiraBox download, use **Refresh download link**. Orbit reuses the partial file only if the refreshed link identifies the same file.
+
+## ZIP, RAR and 7z downloads
+
+**Requires 1.2.0 and its matching apps.** Compressed options appear in the normal Format filter. Their displayed download size is the compressed archive size; keep space for both the archive and the extracted files. Multipart archives are not supported.
+
+Orbit Store extracts on the selected PS5 drive after downloading. Orbit Zero extracts on the computer first, then transfers the extracted files to your selected PS5 drive. Follow the **Extracting** progress in Downloads. Orbit tries the known source passwords automatically; see the [password list](../README.md#automatic-archive-extraction-120). If another password is needed, choose **Enter archive password**, then **Retry extraction**. This reuses the downloaded archive.
+
+In Orbit Zero, **Downloads → Download settings → Delete archives after extracting** controls removal of the archive after successful extraction. It is on by default. Extracted computer files follow your separate Computer cache setting.
+
+## Simultaneous downloads
+
+Orbit Store and Orbit Zero start one game at a time by default. Choose **1–8** in Orbit Store’s **App settings → Storage → Simultaneous downloads**, or **Downloads → Download settings → Simultaneous computer downloads** in Orbit Zero. Reducing the limit lets active downloads finish before another starts. Orbit Zero transfers one file to the PS5 at a time while computer downloads continue.
 
 ## Vikingfile: open the page on PS5 first
 
@@ -119,7 +153,7 @@ After deleting a cancelled partial, you can start the download again from its ga
 
 **Remove from history** and the history-clear buttons keep completed files. To remove a cancelled download and its partial file, use **Delete download** and confirm. If its drive is disconnected, reconnect it before deleting the file. If you already deleted the partial yourself, Orbit can clear the stale entry so you can start fresh.
 
-Keep the PS5 awake. Closing the TV app or control browser leaves the download worker running; stopping Orbit interrupts it. Interrupted transfers return paused after restart. Orbit does not extract archives, directly install game packages, launch games or continue downloading in rest mode. For compatible drive files, see [Library](library.md).
+Keep the PS5 awake. Closing the TV app or control browser leaves the download worker running; stopping Orbit interrupts it. Interrupted transfers return paused after restart. Orbit extracts supported archives after downloading. It does not directly install game packages, launch games or continue downloading in rest mode. For compatible drive files, see [Library](library.md).
 
 ## Get new games and corrected metadata
 

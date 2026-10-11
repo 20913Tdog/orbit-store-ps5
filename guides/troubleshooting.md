@@ -22,6 +22,14 @@ If a TV app update still opens the previous version, close the app first. Restar
 
 The replacement was saved for the next start. Open **App settings → Update / reinstall**, compare **Running** and **Saved for next start**, choose **Stop Orbit to restart**, then launch the saved `/data/orbit-store/orbit_store.elf` or a synced manager copy. Pairing and the queue stay saved. A manually imported old ELF starts that older copy unless you replace it.
 
+## AkiraBox does not enter Downloads
+
+Use matching Orbit Store or Orbit Zero **1.2.0** apps. Open the file page from Orbit, complete verification and wait a few seconds without pressing Download. Orbit captures the ready link; avoid advertisements and popup buttons. If the session expires, return to Orbit and open the provider step again. For a paused or failed job, use **Refresh download link**.
+
+## Archive needs a password
+
+Orbit automatically tries the [known source passwords](../README.md#automatic-archive-extraction-120). If the archive needs a different one, choose **Enter archive password**, enter the source’s password exactly, then **Retry extraction**. Keep the downloaded archive and enough free space for its extracted files. A corrupt or unsupported archive can still fail with the correct password.
+
 ## Vikingfile does not enter Downloads
 
 Use Orbit 0.5.0 or later and enable Vikingfile in Sources. Select the desired option and drive, press **Open download page on PS5**, complete any provider verification and press Download on the provider page, then return to Orbit. Verification happens on the PS5 even if you initiated it on your phone.
@@ -45,6 +53,20 @@ If the drive still does not appear, include your firmware, Orbit and ShadowMount
 - **Source changed:** keep the partial until you decide whether to remove it and restart. Orbit will not append a different file to it.
 
 Parallel connections can help only when supported by the host and file identity. Provider speed limits, network conditions and drive performance still apply.
+
+## An Orbit Zero transfer is stuck after sleep or disconnection
+
+Wake the computer and PS5, keep the original destination connected, and reconnect in **Console**. Start Orbit on the PS5 if its service stopped. Keep the original pairing and computer partial file, then select **Resume** on the interrupted transfer. Orbit checks the saved files before continuing; it does not start every paused transfer automatically.
+
+If other games show **Waiting to transfer**, an earlier PS5 transfer may still hold their turn. In Downloads, choose the recovery action that matches what you want:
+
+- **Resume** to continue that transfer.
+- **Cancel and remove partials** to delete its unfinished files after confirmation and start fresh.
+- **Stop transfer** to keep remaining files and free the queue. **A stopped transfer cannot resume afterward.**
+
+For a transfer already created on the PS5, cancellation and stopping need a response from the original console. If it cannot confirm the operation, reconnect and retry. If Zero asks for a newer receiver, update both the desktop app and the PS5 service using [these steps](orbit-zero-installation.md#update-orbit-zero). The receiver is `orbit_store.elf`; installing only the desktop update does not replace a running PS5 service.
+
+Keep both devices awake while transferring. See [transfer recovery and cleanup](orbit-zero.md#pause-reconnect-and-clean-up) for the differences between stopping, deleting partials and clearing completed computer copies.
 
 ## A game or image is missing
 

@@ -4,7 +4,7 @@
 
 Orbit runs on your PS5. Browse games, compare their available sources and formats, and download a single file directly to the console or an attached drive. Open the native TV app from your Games row, or pair a phone or computer to manage the same queue over your local network.
 
-Explore **930 games: 730 PS5 games and 200 PS4 games**, with single-file options from Archive.org and Vikingfile. Filter by platform, choose your source and save to your preferred drive. New games and corrected links arrive through catalogue updates.
+Explore **1,201 games: 801 PS5 games and 400 PS4 games**, with single-file options from Archive.org, Vikingfile and AkiraBox. Filter by platform, choose your source and save to your preferred drive. New games and corrected links arrive through catalogue updates.
 
 PS4 game browsing requires **Orbit Store 1.1.0** with its matching native app, or **Orbit Zero 1.1.0**. Orbit itself runs on PS5. See [PS4 games on PS5](guides/downloads.md#ps4-games-on-ps5) for package download and installation guidance.
 
@@ -16,21 +16,22 @@ PS4 game browsing requires **Orbit Store 1.1.0** with its matching native app, o
 
 ## Built around the console
 
-- **A native app for your TV.** Browse, Discover, Library and Downloads, built for your controller. Your downloads keep running when you close the app.
-- **One file per game.** Choose a single-file FFPFSC, exFAT, PKG or FPKG option, with its source, size and version shown before downloading. No archive parts to collect.
-- **Your queue, your pace.** Pause, resume, retry and reorder downloads. Check the space they need before adding more.
+- **A native app for your TV.** Browse, Discover, Library and Downloads, built for your controller. Press Square to save a game to favourites in Browse or Discover. Your downloads keep running when you close the app.
+- **One link per download.** Choose a single-file FFPFSC, exFAT, PKG, FPKG, ZIP, RAR or 7z option, with its source and download size shown before starting. Supported archives extract automatically; there are no archive parts to collect.
+- **Your queue, your pace.** Pause, resume, retry and reorder downloads. Choose 1–8 simultaneous games, with one active download by default. Check the space they need before adding more.
+- **Optional TorBox downloads.** Connect your own account to use TorBox for supported links, or download directly from the original provider. See [TorBox setup](guides/downloads.md#optional-download-through-torbox) for account and host limits.
 - **A Library for your drives.** See installed games and available files. Manage compatible sources through ShadowMount.
 - **Control from your phone.** Pair once to browse, queue downloads and check progress on the same PS5.
 - **Updates when you choose.** Orbit tells you when an update is available. In the TV app, open **App settings → Updates** to manage the TV app and download service separately. Installation, restart and payload-manager setup remain your choice.
-- **No Orbit account. No telemetry.** Your paired devices connect to Orbit on your local network. Optional TorBox downloads use your own TorBox account.
+- **No Orbit account. No telemetry.** Your paired devices connect to Orbit on your local network.
 
 ## Get started
 
 For direct console downloads, you need a PS5 that can run homebrew ELF payloads, a payload manager or ELF loader, internet access on the console, and enough writable storage. For downloads through your computer, see [Orbit Zero](#orbit-zero-for-mac-windows-and-linux) below.
 
 1. **Choose how to open Orbit.** For the native TV app, download and verify `PPSA99177.ffpkg` from the [latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest), copy it to `/data/homebrew/`, then open Orbit from the Games row. This needs **kstuff and ShadowMountPlus**. For the browser version, run `orbit_store.elf` through your loader and open Orbit from the Media tab.
-2. **Choose your sources.** Choose sources in the TV app’s setup screen or **App settings → Download sources**. Select Archive.org, Vikingfile, or both, and acknowledge the download notice. Your choices apply across both versions.
-3. **Pick a download.** Open a game and select its main download button to review **Download options**. Choose **Source**, **Download using** and **Save to**, then confirm the download. Direct options download from the TV app. Vikingfile browser options open the provider page on the PS5, keeping your selected game, source and drive. Choose **Open Vikingfile on PS5** in the native app or **Open download page on PS5** in the browser version, press **Download** on Vikingfile, then return to Orbit.
+2. **Choose your sources.** Choose sources in the TV app’s setup screen or **App settings → Download sources**. Select the sources you want to use, including Archive.org, Vikingfile and AkiraBox, and acknowledge the download notice. Your choices apply across both versions.
+3. **Pick a download.** Open a game and select its main download button to review **Download options**. Choose **Source**, **Download using** and **Save to**, then confirm the download. Direct options download from the TV app. Vikingfile browser options open the provider page on the PS5, keeping your selected game, source and drive. Choose **Open Vikingfile on PS5** in the native app or **Open download page on PS5** in the browser version, press **Download** on Vikingfile, then return to Orbit. For **AkiraBox**, complete verification and wait without pressing its Download button. The browser version returns to Orbit automatically once the file is ready; native-app users can return to the TV app to follow progress.
 4. **Follow your queue.** Open Downloads on the TV or a paired device to check progress, pause or resume.
 
 The TV app includes Orbit's download service and can start it through a compatible ELF loader on **port 9021**. You can also start `orbit_store.elf` yourself. The Media-tab shortcut opens the browser version while the service is running. After a reboot, start your jailbreak before opening Orbit. See the [setup and update guide](guides/getting-started.md) for installation, updates and phone pairing.
@@ -39,21 +40,21 @@ The TV app includes Orbit's download service and can start it through a compatib
 
 Open Orbit from your Games row and use the controller to browse, explore and choose a download. The native app shares your catalogue, favourites and download queue with the browser version.
 
-*Discover shows the browser interface with the current catalogue, rendered locally. Other screenshots show the existing workflows; storage details and download progress are examples.*
+*Discover screenshots show the current 1.2.0 catalogue. Browse retains the native app screenshot from 1.1.0. These previews are rendered locally; other screenshots show existing workflows with illustrative storage and download values.*
 
 ### Discover, browse and choose a download
 
 **Start with something new.** Discover opens first. **New on Orbit** brings featured picks and recent additions to the first row, followed by **Latest releases**. Move down to All games to explore a grid of 96 games per page. PS4 and PS5 editions have their own platform labels and download choices.
 
-![Orbit Store browser Discover with Red Dead Redemption 2 selected and the updated New on Orbit row](assets/1.1.0/browser-discover-r26.jpg)
+![Orbit Store 1.2.0 native Discover with Red Dead Redemption 2 selected](assets/1.2.0/native-discover.png)
 
 **Keep exploring.** All games gives each title its own tile. Move through the grid with your controller and use the page controls to see more.
 
-![Native Discover All games grid with controller selection](assets/1.1.0/native-discover-grid.png)
+![Orbit Store 1.2.0 All games grid with Oblivion Remastered selected and its background artwork](assets/1.2.0/native-discover-grid.png)
 
 **Find your next game.** Search by name or title ID, narrow the collection by platform, source, format, region or size, and browse the newest known releases first.
 
-![Native TV app Browse with search and download filters](assets/0.9.0/native-browse.png)
+![Native TV app Browse with search and Platform, Source, Format and Region filters](assets/1.1.0/native-browse.png)
 
 **Get to know a game.** Read its description, save it to favourites, or open the three-dot menu for more information. The main download button opens your options before anything starts.
 
@@ -107,7 +108,8 @@ Download on your computer and transfer to your PS5 at the same time. **Works ove
 - **Control downloads from either device.** Browse and manage the computer’s queue from the desktop or the matching native Orbit app on your PS5.
 - **Choose where downloads run.** Use **Computer** to download through your computer, or **Prefer PS5** to download directly when the console can reach the source. Save your preference once.
 - **Follow both stages.** See the download and PS5 transfer rates separately, with controls to pause, resume and reconnect.
-- **Download more at once.** Download two games to your computer at a time by default, or choose one, two or three in Download settings. PS5 transfers run one at a time while computer downloads continue.
+- **Recover an interrupted transfer.** Reconnect and resume, remove partial files to start fresh, or stop a stuck transfer to free the queue. Stopping keeps files but prevents that transfer from resuming; [compare the recovery choices](guides/orbit-zero.md#pause-reconnect-and-clean-up).
+- **Download more at once.** Download one game to your computer at a time by default, or choose 1–8 in Download settings. PS5 transfers run one at a time while computer downloads continue.
 
 [Install on Mac, Windows or Linux](https://github.com/saawant12/orbit-store-ps5/blob/main/guides/orbit-zero-installation.md) · [Set up a PS5 without internet](https://github.com/saawant12/orbit-store-ps5/blob/main/guides/orbit-zero-offline-ps5.md)
 
@@ -131,21 +133,21 @@ The desktop app supports **ARM64 and x64** computers and the same **11 interface
 
 ## Beta status
 
-**Orbit Store is an experimental beta.** [Download the latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest). Use matching service, TV app and desktop versions for the features described here.
+**Orbit Store is an experimental beta.** [Download the latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest). The matching components in release **1.2.0** have these version numbers:
 
-**Introducing Orbit Zero.** Download on your Mac, Windows or Linux computer and transfer to the PS5 over your local network. The PS5 does not need internet. Use the matching 1.1.0 service and native TV app for computer-download controls on the console.
+| Component | Version |
+| --- | --- |
+| Orbit Store download service and browser interface (`orbit_store.elf`) | **1.2.0** |
+| Native TV app (`PPSA99177.ffpkg`) | **1.5.0** |
+| Orbit Zero for desktop | **1.2.0** |
 
-**PS4 and PS5 games in one catalogue.** Explore 930 games with single-file FFPFSC, exFAT, PKG and FPKG options. Compare sources, use TorBox where supported, and choose your destination before downloading. For PS4 packages, follow the [PS4 download guide](guides/downloads.md#ps4-games-on-ps5). Installation and launching are separate.
-
-**A refreshed interface on TV and in the browser.** Explore New on Orbit and Latest releases, filter Browse by platform, format or region, and review your download choices in one panel. Orbit also improves M.2 storage detection and makes it easier to delete cancelled downloads and start fresh. Keep the PS5 awake while downloading.
+The TV app has its own version number; these files belong to the same release. Use matching files when updating. Keep the PS5 awake while downloading or receiving transfers.
 
 **Payload-manager setup is opt-in.** Choose **App settings → Payload managers → Add Orbit** to let Orbit add and update a copy. Existing copies stay in place until you choose whether to allow updates. Auto-start is a separate choice, and Orbit leaves your manager's global Autoload switch unchanged.
 
 Compatibility varies by PS5 firmware, loader and ShadowMount version. Library requires a compatible ShadowMount v1 local API, and available actions depend on your setup. If something goes wrong, use the [bug report format](.github/ISSUE_TEMPLATE/bug_report.md) and include your versions and the error shown. The reported etaHEN payload-toggle issue remains under investigation.
 
-Downloads are single-file **FFPFSC**, **exFAT**, **PKG** and **FPKG** options across **Archive.org** and **Vikingfile**. The available sources and formats depend on the game. Availability and compatibility can vary between files and providers.
-
-PS4 games require Orbit Store 1.1.0 with its matching TV app, or Orbit Zero 1.1.0. Earlier supported apps continue to receive their PS5-compatible catalogue; a catalogue refresh alone does not add PS4 support to an older app. You only need an Orbit app update for new features and fixes. Your queued downloads keep the files you originally chose.
+Earlier supported apps continue to receive their PS5-compatible catalogue; a catalogue refresh alone does not add PS4 support to an older app. App updates add features and fixes. Your queued downloads keep the files you originally chose.
 
 ## Using the beta
 
@@ -157,7 +159,7 @@ The [release downloads](https://github.com/saawant12/orbit-store-ps5/releases/la
 - [orbit_store.elf](https://github.com/saawant12/orbit-store-ps5/releases/latest/download/orbit_store.elf), the download service and browser interface, and [its checksum](https://github.com/saawant12/orbit-store-ps5/releases/latest/download/orbit_store.elf.sha256).
 - The complete source and licence bundle for the PS5 service, browser interface, native TV app and their open-source components, with build instructions.
 
-Put each download beside its `.sha256` file and run `shasum -a 256 -c <filename>.sha256`. To install the TV app from Orbit 0.6.0 or later, use **App settings → TV app** in the browser version. See the [installation guide](guides/getting-started.md) for both options.
+The ELF and FFPKG each have a matching `.sha256` file. Desktop packages use the release’s **`SHA256SUMS`** file. Follow the verification commands for [PS5 files](guides/getting-started.md#verify-the-ps5-files) or [desktop packages](guides/orbit-zero-installation.md#verify-your-download), then use the installation guide for your app.
 
 To download Orbit through **Payload Manager**, open **Settings → Manage Sources → Add Source** and paste:
 
@@ -167,14 +169,7 @@ https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/payloads.json
 
 Open the **Orbit Store** source, download **Orbit Store (Beta)**, then run `orbit_store.elf`. The feed includes its version and SHA-256 checksum using the [Payload Manager repository format](https://github.com/itsPLK/ps5-payload-manager/blob/main/CUSTOM_REPOSITORIES.md).
 
-For the browser version, the setup and everyday workflow is:
-
-1. **Run it once.** Run `orbit_store.elf` through your payload manager or ELF loader. Orbit starts, saves itself on the console, and adds the **Orbit Store** home-screen icon.
-2. **Choose manager setup.** Optionally open **App settings → Payload managers → Add Orbit** for Payload Manager or Homebrew Launcher. This adds a copy and lets Orbit keep it current. Auto-start is separate: use **Start automatically**, then enable the global Autoload switch yourself in Payload Manager if needed. Existing `autoload.txt` lists are supported; etaHEN setup is manual in its Toolbox.
-3. **Open the icon.** Once Orbit is running, select its home-screen icon to open the storefront.
-4. **Choose your sources.** Sources start off. Select Archive.org, Vikingfile, or both, read the notice, and acknowledge your responsibility to download only content you are legally entitled to access and use.
-5. **Download on the console.** Open a game and select its main download button. In **Download options**, choose **Source**, **Download using** and **Save to**, then select **Download to PS5** for a direct option. For a Vikingfile browser option, select **Open download page on PS5**, complete any verification and press Download on Vikingfile, then return to Orbit and open Downloads. Orbit checks the file before adding it to the queue.
-6. **Use your phone if you want.** While Orbit is running, visit `http://<ps5-ip>:34177/` on the same network and select **Pair devices**. Enter the console's six-digit code. Choose **Show code on PS5** if you missed the notification, or open **Pair devices** on the console to keep the code visible until you close it.
+For the browser setup, manager integration and phone pairing steps, follow [Getting started](guides/getting-started.md). Only download material you have permission to obtain and use.
 
 After a reboot, run your jailbreak as usual. Open the Games-row TV app to start Orbit through your ELF loader, or start the payload manually or through auto-start you have configured. The Media-tab browser shortcut needs Orbit already running. If auto-start does not launch Orbit on your setup, start it manually from your payload manager.
 
@@ -184,15 +179,11 @@ Keep the PS5 awake while downloading. Closing the storefront leaves downloads ru
 
 **Update the service and TV app separately.** In the native app, open **App settings → Updates** for both. In the browser version, **App settings → Update / reinstall** updates the ELF; **App settings → TV app** installs or updates the native app. Close the TV app before replacing it. If ShadowMountPlus still opens the old version, restart the console when convenient and run your jailbreak again. Replacing the FFPKG does not switch an already-running Orbit service; stop Orbit deliberately before starting its new copy. The [update guide](guides/getting-started.md#update-the-tv-app) explains both steps.
 
-**After upgrading to 0.4.2, use 0.4.2 or newer.** The saved download queue uses a newer format that older versions cannot read.
-
-**Coming from beta.2 or earlier:** download the new ELF and replace the existing `orbit_store.elf` in Payload Manager. Accept its overwrite/reinstall prompt. Pause downloads, stop only the identifiable Orbit process in Payload Manager’s **Active Processes**, then run the new ELF. If you cannot confidently identify the process, restart the console when convenient, run the jailbreak and launch the new ELF. Keep the Orbit icon and its saved data.
-
 To restore a deleted Orbit icon, start Orbit through your payload manager. Your paired devices, source choices and download queue stay saved.
 
 Loading an ELF while Orbit is already running saves the replacement for the next start. It does not switch the active session. The notification now explains this; an existing icon is expected and does not need to be removed.
 
-**From beta.3 onward:**
+**Update the browser service:**
 
 1. Open **App settings → Update / reinstall → Check for updates**.
 2. Choose **Install update**, or **Reinstall release** for the current published version. Orbit downloads the official ELF and verifies its SHA-256 checksum before replacing the saved copy.
@@ -203,7 +194,7 @@ Loading an ELF while Orbit is already running saves the replacement for the next
 
 The panel shows **Running**, **Saved for next start**, and **Latest release** separately. Pairing, source choices and the download queue are preserved. Updates are manual; no release is installed just by opening the panel. If a download or copy fails, Orbit reports the error and leaves the running session open for a retry.
 
-After using TorBox, keep using Orbit 0.8.0 or later while those jobs remain in your queue or history. Earlier releases cannot read TorBox jobs. Update both the service and TV app to use all new controls.
+For installations from older betas and queue compatibility, see [Upgrading an older version](guides/getting-started.md#upgrading-an-older-version). For the desktop app, follow [Update Orbit Zero](guides/orbit-zero-installation.md#update-orbit-zero).
 
 ## Managing your downloads
 
@@ -211,9 +202,13 @@ New large downloads use up to eight connections when the host supports byte rang
 
 Open **Downloads** and choose **Active**, **Finished**, **Failed** or **Cancelled**. Finished contains only successfully completed downloads; cancelled items have their own view. Move waiting downloads up or down to choose what runs next. Paused items keep their place. A retry countdown tells you when Orbit will try an interrupted download again.
 
-**Remove from history**, **Clear finished history** and **Clear cancelled history** keep downloaded files on your drive. Each clear button affects only its own view. A cancelled download with a kept partial file stays listed so you can resume it. To remove it, reconnect its original drive, choose **Partial file options → Delete partial file**, then remove the history entry.
+On a cancelled download, **Delete download** offers to delete the partial file and remove the entry together. If you already deleted the partial file, it still removes the entry; completed files are kept. Reconnect the original destination if Orbit asks for it.
+
+**Remove from history** keeps files on the drive. **Clear finished history** and **Clear cancelled history** also keep files and affect only their own view; cancelled entries with kept partial files remain listed. Use **Delete download** when you want to remove a cancelled entry and its partial file.
 
 Before queuing a game, check **Free now**, **Unfinished downloads** and **After queue + this download**. Paused and failed downloads count toward the estimate; cancelled ones do not. Other apps can change free space, so Orbit checks again when a download starts.
+
+Files are saved in the selected drive’s `homebrew` folder. See [where downloads are saved](guides/downloads.md#where-downloads-are-saved) for internal, M.2 and USB paths. For computer downloads, see [Orbit Zero transfer recovery](guides/orbit-zero.md#pause-reconnect-and-clean-up).
 
 ## Your Library
 
@@ -242,7 +237,7 @@ If your connection drops, you can still browse the last available catalogue. Rec
 
 ## Controls and formats
 
-In the native TV app, use the D-pad or left stick to move, Cross to select, Circle to go back, and L1/R1 to switch tabs. Filters open with Cross; choose with the D-pad and Cross, or close with Circle. The table below applies to the browser version.
+In the native TV app, use the D-pad or left stick to move, Cross to select, Circle to go back, and L1/R1 to switch tabs. **Square adds or removes the selected game from favourites in Browse and Discover.** Filters open with Cross; choose with the D-pad and Cross, or close with Circle. The table below applies to the browser version.
 
 | Control | Action |
 |---|---|
@@ -253,11 +248,33 @@ In the native TV app, use the D-pad or left stick to move, Cross to select, Circ
 | Circle / Escape | Back or close details |
 | Touch / mouse | Select visible controls |
 
-The catalogue offers single-file **FFPFSC**, **exFAT**, **PKG** and **FPKG** options across Archive.org and Vikingfile.
+The catalogue offers single-file **FFPFSC**, **exFAT**, **PKG**, **FPKG**, **ZIP**, **RAR** and **7z** options across Archive.org, Vikingfile and AkiraBox. Archive sizes are marked as compressed; the extracted files need additional space.
 
 Source choices are saved on the console and shared by paired devices. Turning off a source hides its download options and pauses unfinished downloads without deleting files. A game stays visible if another enabled source offers it. Re-enable a source and resume its downloads when ready. There is no user library import or custom source entry in this version.
 
-Orbit does **not** extract RAR/7z archives, directly install game packages, launch games, or download in rest mode. Library actions use ShadowMount; a confirmed scan may register or mount discovered games. “Complete” means the file was saved and passed available validation. Size-only checks are labelled separately from checksum verification.
+### Provider download steps
+
+- **Vikingfile:** open the provider page, complete verification, press **Download**, then return to Orbit.
+- **AkiraBox:** open the provider page, complete verification and **wait without pressing Download**. Orbit captures the ready link. The PS5 browser version returns to Orbit automatically; native-app users return to the TV app. Orbit Zero closes its provider window when the file is ready.
+
+On a paired phone, these steps open on the PS5. In Orbit Zero, they open on your computer. See the [full provider instructions](guides/downloads.md#akirabox-verify-then-wait).
+
+### Automatic archive extraction (1.2.0)
+
+Orbit automatically extracts supported single-file **ZIP, RAR and 7z** downloads. Orbit Store extracts on the selected PS5 drive; Orbit Zero extracts on your computer before transferring the extracted files to the PS5. Keep enough free space for both the archive and its extracted files.
+
+For password-protected archives, Orbit automatically tries the supplied password and these built-in passwords, so you usually don’t need to enter one yourself:
+
+- `DLPSGAME.COM`
+- `[DLPSGAME.COM]`
+- `SuperPSX`
+- `www.DLPSGAME.COM`
+- `downloadgameps3.com`
+- `hako`
+
+Passwords are case-sensitive. If none works, select **Enter archive password** on the download, enter the password provided by its source, then choose **Retry extraction**. Orbit keeps the downloaded archive so you can retry without downloading it again.
+
+Orbit does **not** directly install game packages, launch games, or download in rest mode. Library actions use ShadowMount; a confirmed scan may register or mount discovered games. “Complete” means the file was saved and passed available validation. Size-only checks are labelled separately from checksum verification.
 
 ## When something needs attention
 

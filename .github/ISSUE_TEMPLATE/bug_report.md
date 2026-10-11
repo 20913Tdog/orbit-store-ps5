@@ -36,10 +36,11 @@ Complete this section if relevant:
 
 - Game name and title ID (CUSA or PPSA):
 - Game platform: PS4 / PS5
-- Source: Archive.org / Vikingfile / other
+- Source: Archive.org / Vikingfile / AkiraBox / other
 - File format: PKG / FPKG / exFAT / FFPFSC / other
+- Archive, if applicable: ZIP / RAR / 7z
 - Download route: direct PS5 / Orbit Zero computer
-- Stage: computer download / transfer to PS5 / download on PS5 / game installation
+- Stage: computer download / transfer to PS5 / download on PS5 / archive extraction / game installation
 - Destination: internal / M.2 / USB
 - Available space:
 - Connection: Wi-Fi / Ethernet

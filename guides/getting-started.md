@@ -6,7 +6,7 @@ You need a PS5 environment that can run homebrew ELF payloads, an ELF loader or 
 
 **No internet on your PS5?** [Set up Orbit Zero](orbit-zero-offline-ps5.md) to start Orbit and download through your computer over the same local network.
 
-**Using Orbit Zero on your computer?** The [desktop installation guide](orbit-zero-installation.md) covers Mac, Windows and Linux. Orbit Zero 1.1.0 includes PS4 browsing and the same 11 interface languages as Orbit Store. Update both the desktop app and the matching PS5 service; update the native FFPKG too if you use it.
+**Using Orbit Zero on your computer?** The [desktop installation guide](orbit-zero-installation.md) covers Mac, Windows and Linux. Orbit Zero 1.2.0 includes PS4 browsing and the same 11 interface languages as Orbit Store. Update both the desktop app and the matching PS5 service; update the native FFPKG too if you use it.
 
 ## PS4 and PS5 games
 
@@ -18,29 +18,43 @@ Orbit itself runs on PS5. Downloading a PS4 PKG/FPKG saves a package to your sel
 
 The native app requires **kstuff and ShadowMountPlus**. For the app to start Orbit's download service itself, keep a compatible **ELF loader on port 9021** running. You can instead start `orbit_store.elf` through your payload manager before opening the app.
 
-1. Get `PPSA99177.ffpkg` and `PPSA99177.ffpkg.sha256` from the [latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest). In the folder containing both files, run `shasum -a 256 -c PPSA99177.ffpkg.sha256`.
+1. Get `PPSA99177.ffpkg` and `PPSA99177.ffpkg.sha256` from the [latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest), then [verify the checksum](#verify-the-ps5-files).
 2. If an older Orbit service is running, stop it from **App settings → Update / reinstall → Stop Orbit to restart** in the browser version. Installing an FFPKG does not replace a running service.
 3. Copy the FFPKG to **`/data/homebrew/` on the PS5**. Allow ShadowMountPlus to register it, then open **Orbit Store** from the **Games row**.
 4. Discover is the starting page. On first use, select **Choose sources**, enable the sources you want and acknowledge the notice. Saving opens Discover. Source choices are shared with the browser.
-5. Choose a game, source, format and destination drive. Follow the [download guide](downloads.md) for direct and Vikingfile browser options.
+5. Choose a game, source, format and destination drive. Follow the [download guide](downloads.md) for direct downloads and each provider’s browser steps.
 
 Already using Orbit 0.6.0 or later? In the browser version, open **App settings → TV app → Install on this PS5**. Orbit downloads the official FFPKG, verifies it and saves it to `/data/homebrew/`.
 
 ## Use the browser version
 
-1. Get `orbit_store.elf` and `orbit_store.elf.sha256` from the [latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest). Run `shasum -a 256 -c orbit_store.elf.sha256` from their folder.
+1. Get `orbit_store.elf` and `orbit_store.elf.sha256` from the [latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest), then [verify the checksum](#verify-the-ps5-files).
 2. Load the ELF through your payload manager. Orbit saves its runtime and creates its browser shortcut in the PS5 **Media tab**.
-3. Open **Orbit Store**, then **App settings → Sources**. Choose Archive.org, Vikingfile, or both, and acknowledge the notice. Only download material you have permission to obtain and use.
+3. Open **Orbit Store**, then **App settings → Sources**. Choose the sources you want to use, including Archive.org, Vikingfile and AkiraBox, and acknowledge the notice. Only download material you have permission to obtain and use.
 
 Both interfaces use the same service, catalogue, favourites and download queue. The TV app does not need a pairing code on the console. The native **App settings** page includes Download sources, Storage, Pair a device, Game catalogue and Updates. **More settings → Open browser version** provides auto-start, payload-manager setup and diagnostics.
 
-To use optional TorBox downloads in 0.8.0, connect your account in the browser’s **App settings → Debrid**. Both apps can then use it for supported options. See [TorBox setup](downloads.md#optional-download-through-torbox).
+To use optional TorBox downloads, connect your account in the browser’s **App settings → Debrid**. Both apps can then use it for supported options. See [TorBox setup](downloads.md#optional-download-through-torbox).
 
 A drive connected to your phone or computer is not a PS5 destination. Attach your external drive to the console; Orbit uses its `homebrew` folder when available.
 
 ![Choose download sources and acknowledge the notice](../assets/0.9.0/desktop-sources.jpg)
 
 *Sources are your choice. Turning one off later hides its options and pauses unfinished downloads without deleting files. Interface previews use example storage data.*
+
+## Verify the PS5 files
+
+Download the ELF or FFPKG and its matching `.sha256` file from the **same release**. Keep both files in one folder and open a terminal there. Run the command for the file you downloaded:
+
+| System | ELF | Native FFPKG |
+| --- | --- | --- |
+| macOS | `shasum -a 256 -c orbit_store.elf.sha256` | `shasum -a 256 -c PPSA99177.ffpkg.sha256` |
+| Linux | `sha256sum -c orbit_store.elf.sha256` | `sha256sum -c PPSA99177.ffpkg.sha256` |
+| Windows PowerShell | `Get-FileHash .\orbit_store.elf -Algorithm SHA256` | `Get-FileHash .\PPSA99177.ffpkg -Algorithm SHA256` |
+
+On macOS or Linux, the result should say **OK**. On Windows, open the `.sha256` file in a text editor and compare its 64-character checksum with PowerShell’s **Hash** value; uppercase and lowercase letters are equivalent. If it differs, download the file again before loading it.
+
+Orbit Zero’s desktop packages use **`SHA256SUMS`** instead. Follow [desktop download verification](orbit-zero-installation.md#verify-your-download) for those files.
 
 ## Choose your language
 
@@ -54,7 +68,7 @@ Orbit Store and Orbit Zero support **11 interface languages**: English, German, 
 
 <img src="../assets/0.9.0/phone-language.jpg" width="300" alt="The Language setting near the top of App settings on a phone">
 
-*Browser interface previews are from Orbit 0.9.0; Hungarian is also available in 1.0.5. Game names, descriptions and provider pages may keep their original language. Changing Orbit’s language does not change a downloaded game’s language.*
+*Browser interface previews are from Orbit 0.9.0; current versions also include Hungarian. Game names, descriptions and provider pages may keep their original language. Changing Orbit’s language does not change a downloaded game’s language.*
 
 ## Choose a default drive
 
@@ -76,6 +90,8 @@ Open **App settings → Payload managers** and choose **Add Orbit**, or **Allow 
 
 Auto-start is separate. Choose **Start automatically** if wanted and enable your manager’s global Autoload switch yourself. Orbit does not change that global switch. After a reboot, run your jailbreak and start Orbit manually or through your configured auto-start. The Media-tab shortcut needs the payload already running. The Games-row TV app can start it through a local ELF loader on port 9021.
 
+Existing `autoload.txt` lists are supported. Configure etaHEN auto-start manually in its Toolbox. If you select **Stop syncing**, future Orbit updates leave that manager copy alone; replace it manually when updating or launch `/data/orbit-store/orbit_store.elf` instead.
+
 ## Update the download service
 
 In the native app, open **App settings → Updates → Download service**. Check for updates, install the chosen release, then confirm **Restart download service**. The app stops only Orbit and starts its saved service through your ELF loader. If no loader is available, follow the on-screen instructions to start Orbit manually.
@@ -93,7 +109,11 @@ The following steps apply to the browser version. The download service and nativ
 
 *App updates install features and fixes. Refresh catalogue updates game data without reinstalling the app.*
 
-Very old beta.2 or earlier installations need a manual ELF replacement and Orbit restart first. Pause downloads and stop only an identifiable Orbit process; if you cannot identify it, restart the console when convenient and load the new ELF after the jailbreak.
+### Upgrading an older version
+
+**From beta.2 or earlier:** download the current ELF and replace the existing `orbit_store.elf` in Payload Manager, accepting its overwrite/reinstall prompt. Pause downloads, then stop only the identifiable Orbit process in **Active Processes** and launch the new ELF. If you cannot confidently identify Orbit, restart the console when convenient, run your jailbreak and start the new copy. Keep the Orbit icon and `/data/orbit-store/`, which holds your saved settings and queue. The in-app service update steps above are available from beta.3 onward.
+
+**Keep a version that can read your queue.** After using 0.4.2 or newer, do not return to an older queue format. After using TorBox, keep Orbit 0.8.0 or later while those jobs remain in your queue or history. For PS4 browsing, use the service and native versions listed above; refreshing the catalogue alone does not add PS4 support to an older app.
 
 ## Update the TV app
 
