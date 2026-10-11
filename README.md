@@ -40,7 +40,7 @@ The TV app includes Orbit's download service and can start it through a compatib
 
 Open Orbit from your Games row and use the controller to browse, explore and choose a download. The native app shares your catalogue, favourites and download queue with the browser version.
 
-*Discover screenshots show the current 1.2.0 catalogue. Browse retains the native app screenshot from 1.1.0. These previews are rendered locally; other screenshots show existing workflows with illustrative storage and download values.*
+*Discover, game details and download-options screenshots show the current 1.2.0 catalogue. Browse retains the native app screenshot from 1.1.0. These previews are rendered locally; other screenshots show existing workflows with illustrative storage and download values.*
 
 ### Discover, browse and choose a download
 
@@ -58,11 +58,11 @@ Open Orbit from your Games row and use the controller to browse, explore and cho
 
 **Get to know a game.** Read its description, save it to favourites, or open the three-dot menu for more information. The main download button opens your options before anything starts.
 
-![Native game page with full artwork, description, favourites and download control](assets/0.9.0/native-details.png)
+![Cyberpunk 2077 in Orbit Store 1.2.0 with full artwork, description, favourites and download control](assets/1.2.0/native-details.png)
 
 **Choose how and where to download.** Review the source, format, delivery method and drive together. Direct options download from the TV app; Vikingfile browser options open the provider page on PS5 and keep your choices when you return. See the [download guide](guides/downloads.md), including [TorBox setup](guides/downloads.md#optional-download-through-torbox).
 
-![Native Download options with source, delivery and destination controls](assets/0.9.0/native-download-options.png)
+![Cyberpunk 2077 download options in Orbit Store 1.2.0 with source, delivery method and USB destination controls](assets/1.2.0/native-download-options.png)
 
 ### Settings without leaving the TV app
 
