@@ -4,11 +4,13 @@
 
 The official project is https://github.com/saawant12/orbit-store-ps5. Orbit Store has no official social media accounts. It is free to use and does not accept donations or payments.
 
+The current release is Orbit Store 1.2.0, with native TV app 1.5.0 and Orbit Zero 1.2.0. Use matching files from the same release; the native app and download service have separate version numbers.
+
 ## PS4 and PS5 games
 
 Orbit 1.2.0 supports a catalogue of 1,201 games: 801 PS5 games and 400 PS4 games, with 1,965 single-file download options from Archive.org, Vikingfile and AkiraBox. Formats include FFPFSC, exFAT, PKG, FPKG, ZIP, RAR and 7z. Sources are opt-in; available formats depend on the game. Supported archives extract automatically on the selected PS5 drive, or on the computer before Orbit Zero transfers the extracted files. Compressed size and extracted space requirements differ. Known source passwords are tried automatically; custom-password retries reuse the downloaded archive.
 
-PS4 support requires service/browser version 1.1.0 with native app 1.4.0, or Orbit Zero 1.1.0. Browse has a Platform filter for PS4, PS5 or All platforms. PS4 CUSA and PS5 PPSA editions remain separate, with their own metadata and download choices. PS4 options are single-file .pkg packages, labelled PKG or FPKG. Saving one does not install it; users need the package installation method supported by their PS5 setup. A platform label does not imply a frame-rate patch, DLC or universal compatibility. Orbit's ELF and TV app run on PS5, not PS4 consoles.
+PS4 support starts with service/browser version 1.1.0, native app 1.4.0 and Orbit Zero 1.1.0; these are minimum versions, not the current release. Browse has a Platform filter for PS4, PS5 or All platforms. PS4 CUSA and PS5 PPSA editions remain separate, with their own metadata and download choices. PS4 options are single-file .pkg packages, labelled PKG or FPKG. Saving one does not install it; users need the package installation method supported by their PS5 setup. A platform label does not imply a frame-rate patch, DLC or universal compatibility. Orbit's ELF and TV app run on PS5, not PS4 consoles.
 
 Discover opens first, with New on Orbit before Latest releases and an All games grid. Curated highlights lead New on Orbit, followed by recent catalogue additions ordered by release date. Browse and the All games grid show 96 games per page. Browse supports platform, source, format, region and size filters, search, sorting and shared favourites. In native Browse and Discover, Square toggles Favourite for the selected game.
 
@@ -28,17 +30,21 @@ Optional TorBox delivery is configured in browser App settings → Debrid with t
 
 Downloads supports pause, resume, cancellation, retry and queue ordering. Finished contains completed downloads; cancelled items have their own view. Completed files remain when removing history. Delete download can remove a cancelled job and its partial file after confirmation. Keep the PS5 awake during downloads; rest-mode downloading is not supported.
 
+Completed downloads handled by Orbit Store show their saved file or extracted folder path under Downloads → Finished → Location in both the browser and native app. This records the save location, not a fresh check that the file exists or is installed. Orbit Zero's download rows currently show filenames without the full destination path. Both routes save to the selected PS5 drive's homebrew folder.
+
 Library reads installed games and drive sources from a compatible ShadowMount v1 local API. Refresh reads inventory; Scan for games asks the provider to discover sources. Mount/unmount and copy/move depend on provider and format support. A completed file is not necessarily installed or launchable. Orbit does not launch or uninstall games.
 
 ## Orbit Zero for desktop
 
-Orbit Zero supports macOS, Windows and Linux on ARM64 and x64. A computer downloads and transfers completed chunks to PS5 over the local network, using Wi-Fi or Ethernet. The PS5 does not need internet for this route; the computer needs provider access for new downloads. The console's jailbreak and Payload Manager or ELF loader must already be running.
+Orbit Zero supports macOS, Windows and Linux on ARM64 and x64. For uncompressed files, a computer downloads and transfers completed chunks to PS5 over the local network, using Wi-Fi or Ethernet. Archives finish downloading and extracting on the computer before their files transfer. The PS5 does not need internet for this route; the computer needs provider access for new downloads. The console's jailbreak and Payload Manager or ELF loader must already be running.
 
 Console → Start Orbit on PS5 can upload the compatible receiver ELF, then connect for pairing. Zero reconnects to the saved console when reopened. Computer is the default download route; Prefer PS5 checks whether the console can reach the source. Native App settings → Orbit Zero enables computer queue controls on PS5. Downloads shows computer download and PS5 transfer progress separately. PS4 packages use these same controls.
 
 Vikingfile opens in a separate computer browser window for Zero downloads. Users complete verification and select Download themselves. Unwanted popups are blocked; Back, Reload and Return to download page restore navigation. Provider sessions persist separately from the main application. AkiraBox users complete verification and wait without pressing Download: Orbit captures the ready link. The PS5 browser returns to Orbit automatically after queueing; native users return to the app, and Zero closes its provider window.
 
 Download settings contains the simultaneous computer-download limit, computer folder preference and optional cache cleanup. One game downloads at a time by default; users can choose 1–8 in Orbit Store or Orbit Zero. One file transfers to PS5 at a time while computer downloads continue. Automatic cleanup is off by default and removes completed computer copies only after a confirmed PS5 transfer. Clear completed cache removes completed copies while retaining PS5 files and unfinished downloads. The computer's credential store protects saved pairing.
+
+Delete archives after extracting is separate from completed-cache cleanup and is on by default. It is in Orbit Store's App settings → Storage and Zero's Downloads → Download settings. It removes the archive after successful extraction, retaining it on extraction errors for retry. Zero's extracted files follow the Computer cache preference, whose automatic removal is off by default. Both the archive and extracted files need space until extraction succeeds.
 
 After a disconnection, reconnect the original PS5 and destination, keep the original pairing and partial files, and choose Resume. Cancel and remove partials discards unfinished files after confirmation. Stop transfer keeps remaining files and frees the queue after the receiver confirms the stop, but that transfer cannot resume afterward. For an existing receiver transfer, reconnect the console before cancelling or stopping; failed confirmation leaves the operation available to retry.
 
@@ -60,7 +66,7 @@ Orbit Store is GPL-3.0-or-later. Releases provide the complete source correspond
 - [Orbit Zero installation](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/orbit-zero-installation.md): Mac, Windows and Linux installation, permissions and pairing.
 - [PS5 without internet](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/orbit-zero-offline-ps5.md): Start Orbit and download through the computer on a local network.
 - [Getting started](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/getting-started.md): Installation, Payload Manager, updates and phone pairing.
-- [Downloads](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/downloads.md): Browse, sources, formats, Vikingfile's PS5 browser steps, storage and queue controls.
+- [Downloads](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/downloads.md): Browse, sources, formats, Vikingfile and AkiraBox steps, archive extraction, saved locations, storage and queue controls.
 - [Library](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/library.md): Inventory labels and compatible ShadowMount actions.
 - [Troubleshooting](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/troubleshooting.md): Startup, updates, providers, storage, artwork and diagnostics.
 - [Official project](https://github.com/saawant12/orbit-store-ps5): Public repository and project updates.

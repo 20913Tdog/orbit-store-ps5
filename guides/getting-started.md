@@ -10,7 +10,7 @@ You need a PS5 environment that can run homebrew ELF payloads, an ELF loader or 
 
 ## PS4 and PS5 games
 
-The catalogue includes both platforms. For PS4 games, use **Orbit Store 1.1.0** with **native app 1.4.0**, or **Orbit Zero 1.1.0**. In Browse, choose **Platform → PS4**, **PS5** or **All platforms**. A PS4 and a PS5 edition of the same game have separate download choices.
+The catalogue includes both platforms. The current release pairs **Orbit Store 1.2.0**, **native app 1.5.0** and **Orbit Zero 1.2.0**. PS4 support starts with service 1.1.0, native app 1.4.0 and Zero 1.1.0; archive extraction and AkiraBox need the current matching apps. In Browse, choose **Platform → PS4**, **PS5** or **All platforms**. A PS4 and a PS5 edition of the same game have separate download choices.
 
 Orbit itself runs on PS5. Downloading a PS4 PKG/FPKG saves a package to your selected drive; installing and launching it uses the compatible tools for your PS5 setup. See [PS4 games on PS5](downloads.md#ps4-games-on-ps5).
 

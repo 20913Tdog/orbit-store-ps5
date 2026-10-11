@@ -199,9 +199,11 @@ In **Downloads → Download settings → Computer cache**, turn on **Automatical
 
 To clear copies already completed, select **Clear completed cache**, review the amount to remove, then confirm. You can also use **Remove computer cache** on one completed download. Files on your PS5, active or paused downloads, unrelated files in the folder and download history are kept. If cleanup fails because a drive is missing or a file is locked, reconnect or unlock it and retry.
 
-![Orbit Zero download settings with simultaneous-download choices, computer folder and optional automatic cache cleanup](../assets/1.1.0/orbit-zero-download-settings.jpg)
+For compressed downloads, **Delete archives after extracting** is a separate setting and is on by default. It removes the archive after successful extraction. The extracted computer files remain until you remove their cache or enable **Automatically remove after transfer**.
 
-*Download settings in Orbit Zero 1.1.0. The folder and free space shown are illustrative.*
+![Orbit Zero 1.2.0 download settings with a 1–8 download limit, computer folder, archive removal and optional automatic cache cleanup](../assets/1.2.0/orbit-zero-download-settings.jpg)
+
+*Download settings in Orbit Zero 1.2.0. The folder and free space shown are illustrative.*
 
 ## Vikingfile downloads
 

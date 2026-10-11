@@ -1,6 +1,6 @@
 # Orbit Zero
 
-Orbit Zero downloads on your computer and transfers the file to your PS5 over the local network. The two stages overlap: completed chunks can reach the console while the computer is still downloading. Use the desktop app, a compatible native Orbit TV app, or the local browser controls to browse and manage the queue.
+Orbit Zero downloads on your computer and transfers files to your PS5 over the local network. For uncompressed files, the two stages overlap: completed chunks can reach the console while the computer is still downloading. ZIP, RAR and 7z archives finish downloading and extract on the computer before their files transfer. Use the desktop app, a compatible native Orbit TV app, or the local browser controls to browse and manage the queue.
 
 Download the desktop app and matching PS5 files from [Orbit Store releases](https://github.com/saawant12/orbit-store-ps5/releases/latest). PS4 browsing and desktop language selection require Orbit Zero 1.1.0. For a console without internet, follow the [offline PS5 setup guide](orbit-zero-offline-ps5.md).
 
@@ -60,7 +60,7 @@ The 1.2.0 catalogue includes 400 PS4 games with single-file PKG/FPKG download op
 
 | Preference | New downloads |
 | --- | --- |
-| **Computer** (default) | Download through the computer and transfer completed chunks to the PS5. |
+| **Computer** (default) | Download through the computer. Uncompressed files transfer in completed chunks; archives extract before their files transfer. |
 | **Prefer PS5** | Check whether the PS5 can reach the selected source, then use a direct PS5 download if it can. Otherwise, use the computer. |
 
 Change this under **Console → Download preference**. It applies to new downloads; running downloads keep their original route. The PS5 needs internet access for direct PS5 downloads. For computer downloads, the computer handles provider access and artwork, so the PS5 only needs its local network connection.
@@ -68,6 +68,8 @@ Change this under **Console → Download preference**. It applies to new downloa
 Zero downloads one game to the computer at a time by default. Open **Downloads → Download settings → Simultaneous computer downloads** to choose **1–8**. Lowering the limit lets current downloads finish before another starts. Files transfer to the PS5 one at a time while computer downloads continue. Each file needs enough computer space for its full cached copy.
 
 Each computer download uses up to eight connections when the provider supports validated byte ranges, with a single-connection fallback. Actual speed depends on the provider, network and storage. **Downloads** shows **Download to computer** and **Transfer to PS5** separately; their rates and progress can differ. A direct PS5 download shows the rate reported by Orbit.
+
+For compressed downloads, **Extract on computer** appears between those stages. Keep enough computer space for the archive and its extracted files together. **Download settings → Delete archives after extracting** is on by default and removes the archive after successful extraction. The extracted files follow the separate Computer cache preference below.
 
 ![Orbit Zero Downloads showing separate computer download and PS5 transfer progress](../assets/orbit-zero-development/downloads.jpg)
 
@@ -103,13 +105,15 @@ For an existing PS5 transfer, keep the matching Orbit service running and reconn
 
 The computer copy is kept by default. **Downloads → Download settings → Computer cache** offers **Automatically remove after transfer** for future successful transfers and **Clear completed cache** for copies already completed. You can still select **Remove computer cache** on an individual download. Cleanup preserves PS5 files, partial downloads and history. Cancelled computer downloads offer **Remove from history**, which removes only the queue entry and keeps files.
 
-![Orbit Zero download settings with simultaneous-download choices, computer folder and completed-cache controls](../assets/1.1.0/orbit-zero-download-settings.jpg)
+![Orbit Zero 1.2.0 download settings with a 1–8 download limit, computer folder, archive removal and completed-cache controls](../assets/1.2.0/orbit-zero-download-settings.jpg)
 
-*Download settings in Orbit Zero 1.1.0. The folder and free space shown are illustrative.*
+*Download settings in Orbit Zero 1.2.0. The folder and free space shown are illustrative.*
 
 To forget the console, use **Console → Connection settings → Unpair PS5**. Finish or cancel unfinished computer transfers first, including paused or interrupted transfers, because they require the original pairing to resume. Unpairing keeps files and download history.
 
 Orbit Zero’s Library is read-only. Zero transfers files; it does not install or launch games.
+
+Completed transfers currently show their filename rather than the full destination path. Files go to the selected PS5 drive's `homebrew` folder; archives may produce a file or an extracted folder. See [where downloads are saved](downloads.md#where-downloads-are-saved).
 
 ## Desktop updates
 

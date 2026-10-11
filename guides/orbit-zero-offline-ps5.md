@@ -68,11 +68,12 @@ Once **Connected** appears, check that the intended PS5 drive is listed under **
 
 ![Connected Orbit Zero Console showing storage and download preference](../assets/orbit-zero-development/connect-ready.jpg)
 
-In Browse, use **Platform** to choose PS4, PS5 or both. Open a game in Orbit Zero, choose its source and PS5 destination, then start the download. The computer downloads the file and transfers completed parts to the PS5 while the download continues.
+In Browse, use **Platform** to choose PS4, PS5 or both. Open a game in Orbit Zero, choose its source and PS5 destination, then start the download. For an uncompressed file, the computer transfers completed parts to the PS5 while the download continues. ZIP, RAR and 7z archives finish downloading and extracting on the computer before their files transfer; keep room for both the archive and its extracted files.
 
-**Downloads** shows both stages separately:
+**Downloads** shows each stage separately:
 
 - **Download to computer:** progress and speed from the online provider.
+- **Extract on computer:** extraction progress for ZIP, RAR and 7z downloads.
 - **Transfer to PS5:** progress and speed across your local network.
 
 For Vikingfile, complete any verification and select the file's Download button in the provider window **on the computer**. For AkiraBox, complete verification and wait without pressing Download. Orbit Zero captures the ready file link and queues the download; the PS5 does not need to open the provider page.

@@ -4,7 +4,7 @@ Orbit 1.2.0 includes **1,201 games: 801 PS5 games and 400 PS4 games**, with sing
 
 ## Browse and choose
 
-**Discover opens first.** Explore the featured game and **New on Orbit** first, followed by **Latest releases**. New on Orbit starts with selected highlights, then shows recent additions ordered by game release date. Move down to All games for the full collection. Its grid shows 96 games per page, ordered by the largest available download option first. Use Previous and Next to move between pages.
+**Discover opens first.** Explore the featured game and **New on Orbit** first, followed by **Latest releases**. New on Orbit starts with selected highlights, then shows recent additions ordered by game release date. Move down to All games for the full collection. Its grid shows 96 games per page, largest downloads first. Each game's size is its smallest available option from your enabled sources. Use Previous and Next to move between pages.
 
 ![Native Discover with the 1.2.0 catalogue](../assets/1.2.0/native-discover.png)
 
@@ -32,7 +32,7 @@ In the native TV app, use D-pad/left stick to move, Cross to select, Circle to g
 
 ## PS4 games on PS5
 
-Use **Orbit Store 1.1.0** and the matching **native app 1.4.0**, or **Orbit Zero 1.1.0**, for PS4 games. Update the apps before refreshing the catalogue. Older apps keep their PS5-compatible catalogue.
+PS4 support starts with **Orbit Store 1.1.0**, **native app 1.4.0** and **Orbit Zero 1.1.0**. Use the latest matching apps for the current catalogue and features. Update the apps before refreshing the catalogue; builds without PS4 support keep their PS5-compatible catalogue.
 
 1. Open **Browse → Platform → PS4**. Choose **All platforms** to see PS4 and PS5 together.
 2. Open a game and check its **PS4** label, title ID, region and source notes. PS4 title IDs begin with `CUSA`; PS5 IDs begin with `PPSA`. Editions for different platforms stay separate, even when their names match.
@@ -67,6 +67,10 @@ USB numbering depends on how the console mounts your drives. Choose by the stora
 
 Orbit Zero also keeps a computer copy in your chosen [computer download folder](orbit-zero.md#choose-the-computer-download-folder), unless you enable cleanup after transfer. Saving a game package to the PS5 does not install it; use the tools supported by your console setup.
 
+For downloads handled by Orbit Store, **Downloads → Finished → Location** shows the saved file or extracted folder path in both the browser and native app. This is the recorded save location; it does not check whether someone has since moved or deleted the file, and it does not mean the game is installed or listed by ShadowMount.
+
+Orbit Zero currently shows the filename without the full PS5 path. Check the selected drive's `homebrew` folder. Extracted downloads may be a file or a folder containing several files. Zero's **Computer download folder** setting controls new computer downloads; existing partial files stay in their original folder.
+
 ## Optional: download through TorBox
 
 **Available in 0.8.0 and later.** TorBox is an optional delivery choice for supported links. Update both Orbit’s service ELF and native FFPKG to use it in the TV app. You need your own TorBox account; its plan, host availability, quotas and file-size limits apply. You can keep using the original provider without connecting TorBox.
@@ -100,7 +104,9 @@ If the session expires, start the provider step again. For an existing paused or
 
 Orbit Store extracts on the selected PS5 drive after downloading. Orbit Zero extracts on the computer first, then transfers the extracted files to your selected PS5 drive. Follow the **Extracting** progress in Downloads. Orbit tries the known source passwords automatically; see the [password list](../README.md#automatic-archive-extraction-120). If another password is needed, choose **Enter archive password**, then **Retry extraction**. This reuses the downloaded archive.
 
-In Orbit Zero, **Downloads → Download settings → Delete archives after extracting** controls removal of the archive after successful extraction. It is on by default. Extracted computer files follow your separate Computer cache setting.
+**Delete archives after extracting** is on by default in both apps. Find it under **App settings → Storage** in Orbit Store, or **Downloads → Download settings** in Orbit Zero. It removes the downloaded archive after successful extraction and keeps archives that need a password or fail to extract.
+
+In Zero, the extracted computer files follow the separate **Computer cache** setting. **Automatically remove after transfer** is off by default; enabling it removes those copies only after the PS5 confirms the transfer. Deleting an archive after extraction does not delete the extracted files. See [saved locations](#where-downloads-are-saved) to find the result.
 
 ## Simultaneous downloads
 

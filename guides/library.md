@@ -23,6 +23,8 @@ These states can overlap. Search by title, title ID or path, and filter by statu
 
 Library uses the inventory reported by ShadowMount, while Browse uses Orbit’s download catalogue. Where a platform is known, PS4 and PS5 editions stay separate. Downloading a PS4 `.pkg` file does not make it an installed game or guarantee that ShadowMount can mount that format.
 
+To locate a completed Orbit Store download, open **Downloads → Finished → Location** in the browser or native app. That saved path is separate from the ShadowMount inventory. Orbit Zero does not yet show the full destination path; see [where downloads are saved](downloads.md#where-downloads-are-saved).
+
 Use the PS4 package installation method supported by your PS5 setup. Library actions appear only when the provider supports them. See [PS4 games on PS5](downloads.md#ps4-games-on-ps5) before choosing a download.
 
 ## Refresh or scan

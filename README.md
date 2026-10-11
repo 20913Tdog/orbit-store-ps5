@@ -102,12 +102,12 @@ For your existing collection, the [Library guide](guides/library.md) explains in
 
 Orbit Zero is our desktop companion for Mac, Windows and Linux. [Download Orbit Zero](https://github.com/saawant12/orbit-store-ps5/releases/latest), open **Console**, enter your PS5’s local IP address and choose **Start Orbit on PS5**.
 
-Download on your computer and transfer to your PS5 at the same time. **Works over your local network: Wi-Fi or Ethernet. Your PS5 does not need internet access.** Keep both devices connected to your home network while the computer handles online downloads.
+Download on your computer and transfer to your PS5 over your home network. Uncompressed files can transfer while downloading; archives finish downloading and extracting before their files transfer. **Works over your local network: Wi-Fi or Ethernet. Your PS5 does not need internet access.** Keep both devices connected to your home network while the computer handles online downloads.
 
 - **Start Orbit from your computer.** Upload and launch the compatible payload without a separate ELF download or manual file selection. Your PS5 must already have its jailbreak and Payload Manager or an ELF loader running.
 - **Control downloads from either device.** Browse and manage the computer’s queue from the desktop or the matching native Orbit app on your PS5.
 - **Choose where downloads run.** Use **Computer** to download through your computer, or **Prefer PS5** to download directly when the console can reach the source. Save your preference once.
-- **Follow both stages.** See the download and PS5 transfer rates separately, with controls to pause, resume and reconnect.
+- **Follow each stage.** See the download and PS5 transfer rates separately, plus extraction progress for archives, with controls to pause, resume and reconnect.
 - **Recover an interrupted transfer.** Reconnect and resume, remove partial files to start fresh, or stop a stuck transfer to free the queue. Stopping keeps files but prevents that transfer from resuming; [compare the recovery choices](guides/orbit-zero.md#pause-reconnect-and-clean-up).
 - **Download more at once.** Download one game to your computer at a time by default, or choose 1–8 in Download settings. PS5 transfers run one at a time while computer downloads continue.
 
@@ -262,6 +262,10 @@ On a paired phone, these steps open on the PS5. In Orbit Zero, they open on your
 ### Automatic archive extraction (1.2.0)
 
 Orbit automatically extracts supported single-file **ZIP, RAR and 7z** downloads. Orbit Store extracts on the selected PS5 drive; Orbit Zero extracts on your computer before transferring the extracted files to the PS5. Keep enough free space for both the archive and its extracted files.
+
+**Delete archives after extracting** is on by default. Change it under **App settings → Storage** in Orbit Store, or **Downloads → Download settings** in Orbit Zero. It removes the downloaded archive only after successful extraction. In Zero, keeping or removing the extracted computer copy after transfer is a separate **Computer cache** setting; automatic cache removal is off by default.
+
+For downloads handled by Orbit Store, open **Downloads → Finished → Location** in the browser or native app to see the saved file or extracted folder path. Moving or deleting the file afterward does not update that history. Orbit Zero currently shows the filename rather than the full destination path. See [where downloads are saved](guides/downloads.md#where-downloads-are-saved).
 
 For password-protected archives, Orbit automatically tries the supplied password and these built-in passwords, so you usually don’t need to enter one yourself:
 
