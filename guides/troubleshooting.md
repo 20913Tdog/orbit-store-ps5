@@ -109,7 +109,7 @@ If the file exists but does not appear in Library or on the home screen, check i
 
 ## A downloaded PKG or FPKG game doesn't appear
 
-PKG and FPKG options are `.pkg` packages, for PS4 or PS5 games. Orbit saves them to the chosen drive's `homebrew` folder; it doesn't install them. ShadowMountPlus doesn't mount packages, so a package won't appear in Library or on the home screen, and **Scan for games** won't find it. Install it with the package installer supported by your PS5 setup, and check that installer's firmware support. Copying a game package to the same folder as Orbit's native app does not register it the way the TV app is registered.
+PKG and FPKG options are `.pkg` packages, for PS4 or PS5 games. Orbit saves them to the chosen drive's `homebrew` folder; it doesn't install them. ShadowMountPlus doesn't mount packages, so a package won't appear in Library or on the home screen, and **Scan for games** won't find it. Install it with the package installer supported by your PS5 setup, and check that installer's firmware support. PS5 FPKG games currently run only on firmware 11.60 or lower (October 2026); on 12.xx and 13.xx they may install but won't start. Copying a game package to the same folder as Orbit's native app does not register it the way the TV app is registered.
 
 If the game also offers exFAT or FFPFSC, those are mounted by ShadowMountPlus without installing. See [which format to pick](downloads.md#which-format-to-pick).
 
