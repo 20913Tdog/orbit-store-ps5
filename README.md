@@ -299,7 +299,7 @@ When reporting a bug, follow the [bug report format](.github/ISSUE_TEMPLATE/bug_
 
 Orbit Store is free software under the GNU General Public License, version 3 or later. Every release includes the complete source for its payload and native TV app, the corresponding sources of their copyleft components, third-party licence notices and rebuild instructions.
 
-Forks are welcome, as long as they share their source under the same licence. BlackBox is built from Orbit's code but is released without its source; see [BlackBox is built from Orbit Store's code](https://saawant12.github.io/blackbox-gpl/).
+Forks are welcome, as long as they share their source under the same licence. BlackBox is built from Orbit's code but is released without its source; see [BlackBox is built from Orbit Store's code](https://blackboxisorbit.com/).
 
 ---
 
