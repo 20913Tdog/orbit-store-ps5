@@ -250,6 +250,16 @@ In the native TV app, use the D-pad or left stick to move, Cross to select, Circ
 
 The catalogue offers single-file **FFPFSC**, **exFAT**, **PKG**, **FPKG**, **ZIP**, **RAR** and **7z** options across Archive.org, Vikingfile and AkiraBox. Archive sizes are marked as compressed; the extracted files need additional space.
 
+| Format | What you get | What to do after it's saved |
+|---|---|---|
+| **exFAT** | `.exfat` image | ShadowMountPlus mounts it. Nothing to install. |
+| **FFPFSC** | `.ffpfsc` image | ShadowMountPlus mounts it. Nothing to install. |
+| **Game folder** | A folder of game files, from an archive | ShadowMountPlus mounts it. Nothing to install. |
+| **PKG**, **FPKG** | `.pkg` package | Install it with a package installer. ShadowMountPlus doesn't mount packages, so the game won't appear in Library or on the home screen until it's installed. |
+| **ZIP**, **RAR**, **7z** | Archive | Orbit extracts it after downloading. The label shows what's inside, for example `7z · exFAT`; follow that row. |
+
+See [which format to pick](guides/downloads.md#which-format-to-pick).
+
 Source choices are saved on the console and shared by paired devices. Turning off a source hides its download options and pauses unfinished downloads without deleting files. A game stays visible if another enabled source offers it. Re-enable a source and resume its downloads when ready. There is no user library import or custom source entry in this version.
 
 ### Provider download steps

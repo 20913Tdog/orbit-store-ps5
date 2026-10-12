@@ -99,13 +99,15 @@ For downloads handled by Orbit Store, check **Downloads → Finished → Locatio
 
 Orbit Zero currently shows the filename rather than the full destination path. Check the selected PS5 drive's [homebrew folder](downloads.md#where-downloads-are-saved). The computer download finishing is not enough; wait for **Transfer to PS5** to complete too.
 
-If the file exists but does not appear in Library or on the home screen, check its format and the installation or mounting method supported by your console setup. A finished download is not automatically installed, and ShadowMount may not list every format. If the file is absent, include the app, game, source, format, destination and completion screen in your report; do not delete the queue or remaining files while investigating.
+If the file exists but does not appear in Library or on the home screen, check its format and the installation or mounting method supported by your console setup. A finished download is not automatically installed, and ShadowMount may not list every format. PKG and FPKG packages need installing first; see [below](#a-downloaded-pkg-or-fpkg-game-doesnt-appear). If the file is absent, include the app, game, source, format, destination and completion screen in your report; do not delete the queue or remaining files while investigating.
 
-## A downloaded PS4 game is not installed
+## A downloaded PKG or FPKG game doesn't appear
 
-Check the download’s platform, title ID and file format, and wait for the transfer to finish on the PS5. PS4 catalogue options are `.pkg` files labelled PKG or FPKG. Orbit saves them to the chosen drive’s `homebrew` folder; it does not install or launch them. Use the package installer supported by your PS5 setup. Copying a game package to the same folder as Orbit’s native app does not mean it will be registered in the same way.
+PKG and FPKG options are `.pkg` packages, for PS4 or PS5 games. Orbit saves them to the chosen drive's `homebrew` folder; it doesn't install them. ShadowMountPlus doesn't mount packages, so a package won't appear in Library or on the home screen, and **Scan for games** won't find it. Install it with the package installer supported by your PS5 setup, and check that installer's firmware support. Copying a game package to the same folder as Orbit's native app does not register it the way the TV app is registered.
 
-If you report a problem, include the `CUSA` title ID, source, format, destination, app versions and whether it fails during the computer download, PS5 transfer or package installation. Do not share temporary signed links. See [PS4 games on PS5](downloads.md#ps4-games-on-ps5).
+If the game also offers exFAT or FFPFSC, those are mounted by ShadowMountPlus without installing. See [which format to pick](downloads.md#which-format-to-pick).
+
+If you report a problem, include the title ID (`CUSA` for PS4, `PPSA` for PS5), source, format, destination, app versions, any error code from the installer, and whether it fails during the computer download, PS5 transfer or package installation. Do not share temporary signed links. See [PS4 games on PS5](downloads.md#ps4-games-on-ps5).
 
 ## Share a diagnostic report
 

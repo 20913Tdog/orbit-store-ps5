@@ -51,6 +51,18 @@ On the game page, select the main download button to open **Download options**. 
 
 *Different sources can offer different formats or sizes for the same game. Select the exact option you intend to download.*
 
+### Which format to pick
+
+| Format | What you get | What to do after it's saved |
+|---|---|---|
+| **exFAT** | `.exfat` image | ShadowMountPlus mounts it. Nothing to install. |
+| **FFPFSC** | `.ffpfsc` image | ShadowMountPlus mounts it. Nothing to install. |
+| **Game folder** | A folder of game files, from an archive | ShadowMountPlus mounts it. Nothing to install. |
+| **PKG**, **FPKG** | `.pkg` package | Install it with a package installer. ShadowMountPlus doesn't mount packages, so the game won't appear in Library or on the home screen until it's installed. |
+| **ZIP**, **RAR**, **7z** | Archive | Orbit extracts it after downloading. The label shows what's inside, for example `7z · exFAT`; follow that row. |
+
+Package installers and their firmware support vary, so check yours before choosing PKG or FPKG. Where a game offers exFAT or FFPFSC, those work without installing.
+
 For a direct option, select **Download to PS5**. Orbit checks the file and destination, then adds it to Downloads.
 
 ## Where downloads are saved
