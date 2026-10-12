@@ -26,7 +26,7 @@ Describe what should have happened.
 - PS5 firmware:
 - etaHEN version:
 - Payload manager or ELF loader:
-- Where it happens: native PS5 app / PS5 browser / Orbit Zero desktop / paired phone or computer
+- Where it happens: TV app (Games) / browser version (Media) / Orbit Zero desktop / paired phone or computer
 
 Use “unknown” if you cannot find a version.
 

@@ -2,6 +2,16 @@
 
 Orbit runs on your PS5. Use the TV with your controller, or pair a phone or computer to manage the same catalogue and download queue. Files go to the PS5’s selected storage.
 
+**Three ways to use Orbit**
+
+| Do this | Orbit appears in | What it is |
+|---|---|---|
+| Copy `PPSA99177.ffpkg` to `/data/homebrew/` | **Games** on your PS5 | The TV app, used with your controller. Needs kstuff and ShadowMountPlus. [Install it](#install-the-native-tv-app). |
+| Run `orbit_store.elf` with your payload manager or ELF loader | **Media** on your PS5 | The browser version. It only opens while Orbit is running. [Set it up](#use-the-browser-version). |
+| Install [Orbit Zero](orbit-zero.md) | Your Mac, Windows or Linux computer | Downloads on your computer and sends the files to your PS5. The PS5 doesn't need internet. |
+
+The Games and Media versions share the same downloads, favourites and settings, so seeing two Orbit icons on your PS5 is normal.
+
 You need a PS5 environment that can run homebrew ELF payloads, an ELF loader or payload manager, internet access on the console for direct provider downloads, and enough writable storage. A phone or computer should be on the same local network. Library management additionally needs a compatible ShadowMount v1 local API.
 
 **Prefer downloading on your computer?** [Orbit Zero](orbit-zero.md) is our desktop app for Mac, Windows and Linux. It starts Orbit on your PS5, downloads on your computer and transfers the files over your local network. Your PS5 does not need internet access for this route. Follow the [desktop installation guide](orbit-zero-installation.md) or [set up a PS5 without internet](orbit-zero-offline-ps5.md).

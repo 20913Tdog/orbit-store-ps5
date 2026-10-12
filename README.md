@@ -27,9 +27,19 @@ PS4 game browsing requires **Orbit Store 1.1.0** with its matching native app, o
 
 ## Get started
 
+**Three ways to use Orbit**
+
+| Do this | Orbit appears in | What it is |
+|---|---|---|
+| Copy `PPSA99177.ffpkg` to `/data/homebrew/` | **Games** on your PS5 | The TV app, used with your controller. Needs kstuff and ShadowMountPlus. |
+| Run `orbit_store.elf` with your payload manager or ELF loader | **Media** on your PS5 | The browser version. It only opens while Orbit is running. |
+| Install [Orbit Zero](#orbit-zero-for-mac-windows-and-linux) | Your Mac, Windows or Linux computer | Downloads on your computer and sends the files to your PS5. The PS5 doesn't need internet. |
+
+The Games and Media versions share the same downloads, favourites and settings, so seeing two Orbit icons on your PS5 is normal.
+
 For direct console downloads, you need a PS5 that can run homebrew ELF payloads, a payload manager or ELF loader, internet access on the console, and enough writable storage. For downloads through your computer, see [Orbit Zero](#orbit-zero-for-mac-windows-and-linux) below.
 
-1. **Choose how to open Orbit.** For the native TV app, download and verify `PPSA99177.ffpkg` from the [latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest), copy it to `/data/homebrew/`, then open Orbit from the Games row. This needs **kstuff and ShadowMountPlus**. For the browser version, run `orbit_store.elf` through your loader and open Orbit from the Media tab.
+1. **Choose how to open Orbit.** Download the files from the [latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest), verify them and follow the table above. Use the Games version, the Media version or both.
 2. **Choose your sources.** Choose sources in the TV app’s setup screen or **App settings → Download sources**. Select the sources you want to use, including Archive.org, Vikingfile and AkiraBox, and acknowledge the download notice. Your choices apply across both versions.
 3. **Pick a download.** Open a game and select its main download button to review **Download options**. Choose **Source**, **Download using** and **Save to**, then confirm the download. Direct options download from the TV app. Vikingfile browser options open the provider page on the PS5, keeping your selected game, source and drive. Choose **Open Vikingfile on PS5** in the native app or **Open download page on PS5** in the browser version, press **Download** on Vikingfile, then return to Orbit. For **AkiraBox**, complete verification and wait without pressing its Download button. The browser version returns to Orbit automatically once the file is ready; native-app users can return to the TV app to follow progress.
 4. **Follow your queue.** Open Downloads on the TV or a paired device to check progress, pause or resume.

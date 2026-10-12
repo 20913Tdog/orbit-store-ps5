@@ -1,5 +1,11 @@
 # When something needs attention
 
+## I see two Orbit icons
+
+That's normal if you use both PS5 versions. The icon in **Games** is the TV app from `PPSA99177.ffpkg`. The icon in **Media** is the browser version, added when `orbit_store.elf` runs. Both use the same downloads, favourites and settings.
+
+If the Media icon won't open, see the next section. If the Games icon won't open, see [The native TV app will not open or start Orbit](#the-native-tv-app-will-not-open-or-start-orbit).
+
 ## Orbit or its icon does not open
 
 Start the Orbit payload through your manager, then reopen the Media-tab icon. The icon opens a running Orbit server and cannot start a stopped payload. If the icon was deleted, starting Orbit recreates it. Keep Orbit’s saved data when updating.
