@@ -18,6 +18,25 @@ If ShadowMount reports **TitleDir bridge unavailable**, its app-registration bri
 
 If a TV app update still opens the previous version, close the app first. Restart the console and jailbreak when convenient so ShadowMountPlus can remount the replacement. The TV app and service have separate versions.
 
+## Orbit shows BlackBox's icon, can't connect or is missing after BlackBox
+
+BlackBox's builds up to v1.0.6 use Orbit's title ID, `ORBT00001`. If you installed one of them, Orbit's Media-tab icon may show BlackBox's logo, fail with "127.0.0.1 could not reach", or not appear at all. Removing BlackBox's payload alone doesn't fix this, because its app files stay on the console. These steps come from users who fixed it ([#42](https://github.com/saawant12/orbit-store-ps5/issues/42), [#39](https://github.com/saawant12/orbit-store-ps5/issues/39)).
+
+You need FTP access to the PS5, for example `ftpsrv` from your payload manager and FileZilla on a computer (port 2121). Delete only the items listed here.
+
+1. **Stop BlackBox from starting.** Remove `blackbox.elf` from your payload manager and turn off its auto-start.
+2. **Delete the home-screen icons.** On the PS5, delete BlackBox's icon from the Games row and Orbit's icon from the Media tab. Orbit's icon comes back in step 5.
+3. **Delete BlackBox's files over FTP:**
+   - `/user/app/BLKB00001`
+   - `PPSA01453` in `/data/homebrew/` (its TV app, a `.ffpkg` file or a folder)
+   - `/user/download/PPSA01453`
+   - `/data/shadowmount/icon-cache/PPSA01453*.png`
+   - its payload-manager folder, such as `/data/pldmgr/payloads/BlackBox`
+4. **Delete Orbit's icon folder, `/user/app/ORBT00001`.** Orbit rebuilds it the next time it starts. Keep `/data/orbit-store`: it holds your download queue and settings.
+5. **Restart and start Orbit.** Restart the console, run your jailbreak, then start `orbit_store.elf`. Open Orbit from the Media tab, or open the TV app from the Games row, which needs kstuff and ShadowMountPlus.
+
+If Orbit still shows BlackBox's icon, open a bug report with your firmware, your Orbit version and what you deleted.
+
 ## An update says Orbit is already running
 
 The replacement was saved for the next start. Open **App settings → Update / reinstall**, compare **Running** and **Saved for next start**, choose **Stop Orbit to restart**, then launch the saved `/data/orbit-store/orbit_store.elf` or a synced manager copy. Pairing and the queue stay saved. A manually imported old ELF starts that older copy unless you replace it.
