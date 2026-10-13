@@ -17,7 +17,7 @@ The full-screen screenshots show the desktop interface. Connection, storage and 
 - A computer with internet access and enough free space to cache the full download, plus writable storage on the PS5.
 - A PS5 with its jailbreak and Payload Manager or a compatible ELF loader already running, or the matching Orbit receiver already started. Zero does not jailbreak the console.
 - Both devices on the same reachable home network. Wi-Fi, Ethernet, or a mixture of both work. Use the PS5's local IPv4 address.
-- Orbit Zero and its included Orbit Store 1.2.0 service. For native TV controls, install the matching FFPKG from the same release.
+- Orbit Zero and its included Orbit Store 1.3.0 service. For native TV controls, install the matching FFPKG from the same release.
 
 Downloads are available for **ARM64 and x64 on macOS, Windows and Linux**; 32-bit x86 is not supported. Mac builds use Developer ID signing but are not notarized; Windows and Linux packages are unsigned. The interface supports English, German, Spanish, French, Hungarian, Italian, Dutch, Polish, Brazilian Portuguese, Russian and Turkish. Select the globe-shaped **Language** button to choose one, or leave **System language** selected.
 
@@ -54,7 +54,7 @@ Pairing is saved using the computer's encrypted credential store. Zero reconnect
 
 **New on Orbit** appears first in Discover, followed by **Latest releases** and the All games grid. In Browse, use **Platform** to choose PS4, PS5 or both. Platform editions stay separate, with their own images, release dates and download options.
 
-The 1.2.0 catalogue includes 400 PS4 games with single-file PKG/FPKG download options. Choose a source and PS5 destination just as you would for a PS5 game. The computer-download route also works with the PS5’s internet access blocked. Completed packages need the installation method supported by your PS5 setup; Zero does not install them. See [PS4 games on PS5](downloads.md#ps4-games-on-ps5).
+The 1.3.0 catalogue includes 600 PS4 games with single-file PKG/FPKG download options. Choose a source and PS5 destination just as you would for a PS5 game. The computer-download route also works with the PS5’s internet access blocked. Completed packages need the installation method supported by your PS5 setup; Zero does not install them. See [PS4 games on PS5](downloads.md#ps4-games-on-ps5).
 
 ## Choose where downloads run
 
@@ -113,7 +113,7 @@ To forget the console, use **Console → Connection settings → Unpair PS5**. F
 
 Orbit Zero’s Library is read-only. Zero transfers files; it does not install or launch games.
 
-Completed transfers currently show their filename rather than the full destination path. Files go to the selected PS5 drive's `homebrew` folder; archives may produce a file or an extracted folder. See [where downloads are saved](downloads.md#where-downloads-are-saved).
+Completed transfer details show **PS5 location**, plus **Computer location** while the cached copy remains. Files go to the selected PS5 drive's `homebrew` folder; archives may produce a file or an extracted folder. See [where downloads are saved](downloads.md#where-downloads-are-saved).
 
 ## Desktop updates
 

@@ -103,7 +103,7 @@ Artwork comes from external URLs. Orbit tries an available fallback when the pri
 
 For downloads handled by Orbit Store, check **Downloads → Finished → Location** in the browser or native app. Use a file manager to check that exact saved path on the selected drive. Extracted downloads may be a folder containing several files. The recorded path remains in history even if a file is later moved or deleted.
 
-Orbit Zero currently shows the filename rather than the full destination path. Check the selected PS5 drive's [homebrew folder](downloads.md#where-downloads-are-saved). The computer download finishing is not enough; wait for **Transfer to PS5** to complete too.
+Orbit Zero download details also show the full PS5 destination path and the computer path while a cached copy remains. Check the selected PS5 drive's [homebrew folder](downloads.md#where-downloads-are-saved). The computer download finishing is not enough; wait for **Transfer to PS5** to complete too.
 
 If the file exists but does not appear in Library or on the home screen, check its format and the installation or mounting method supported by your console setup. A finished download is not automatically installed, and ShadowMount may not list every format. PKG and FPKG packages need installing first; see [below](#a-downloaded-pkg-or-fpkg-game-doesnt-appear). If the file is absent, include the app, game, source, format, destination and completion screen in your report; do not delete the queue or remaining files while investigating.
 

@@ -20,7 +20,7 @@ Orbit Zero includes PS4 and PS5 browsing and the same 11 interface languages as 
 
 ## PS4 and PS5 games
 
-The catalogue includes both platforms. The current release pairs **Orbit Store 1.2.0**, **native app 1.5.0** and **Orbit Zero 1.2.0**. PS4 support starts with service 1.1.0, native app 1.4.0 and Zero 1.1.0; archive extraction and AkiraBox need the current matching apps. In Browse, choose **Platform → PS4**, **PS5** or **All platforms**. A PS4 and a PS5 edition of the same game have separate download choices.
+The catalogue includes both platforms. The current release pairs **Orbit Store 1.3.0**, **native app 1.6.0** and **Orbit Zero 1.3.0**. PS4 support starts with service 1.1.0, native app 1.4.0 and Zero 1.1.0; archive extraction and AkiraBox need the current matching apps. In Browse, choose **Platform → PS4**, **PS5** or **All platforms**. A PS4 and a PS5 edition of the same game have separate download choices.
 
 Orbit itself runs on PS5. Downloading a PS4 PKG/FPKG saves a package to your selected drive; installing and launching it uses the compatible tools for your PS5 setup. See [PS4 games on PS5](downloads.md#ps4-games-on-ps5).
 
@@ -65,6 +65,10 @@ Download the ELF or FFPKG and its matching `.sha256` file from the **same releas
 On macOS or Linux, the result should say **OK**. On Windows, open the `.sha256` file in a text editor and compare its 64-character checksum with PowerShell’s **Hash** value; uppercase and lowercase letters are equivalent. If it differs, download the file again before loading it.
 
 Orbit Zero’s desktop packages use **`SHA256SUMS`** instead. Follow [desktop download verification](orbit-zero-installation.md#verify-your-download) for those files.
+
+## Choose your interface
+
+Open **Appearance** to choose Store, Crossbar, Cinema or Panorama, then confirm that you want to keep it. Your downloads and favourites stay with you. The choice is saved on the device where you make it.
 
 ## Choose your language
 

@@ -4,7 +4,7 @@
 
 Orbit runs on your PS5. Browse games, compare their available sources and formats, and download a single file directly to the console or an attached drive. Open the native TV app from your Games row, or pair a phone or computer to manage the same queue over your local network.
 
-Explore **1,201 games: 801 PS5 games and 400 PS4 games**, with single-file options from Archive.org, Vikingfile and AkiraBox. Filter by platform, choose your source and save to your preferred drive. New games and corrected links arrive through catalogue updates.
+Explore **1,601 games: 1,001 PS5 games and 600 PS4 games**, with single-file options from Archive.org, Vikingfile and AkiraBox. Filter by platform, choose your source and save to your preferred drive. New games and corrected links arrive through catalogue updates.
 
 PS4 game browsing requires **Orbit Store 1.1.0** with its matching native app, or **Orbit Zero 1.1.0**. Orbit itself runs on PS5. See [PS4 games on PS5](guides/downloads.md#ps4-games-on-ps5) for package download and installation guidance.
 
@@ -50,15 +50,17 @@ The TV app includes Orbit's download service and can start it through a compatib
 
 Open Orbit from your Games row and use the controller to browse, explore and choose a download. The native app shares your catalogue, favourites and download queue with the browser version.
 
-*Discover, game details and download-options screenshots show the current 1.2.0 catalogue. Browse retains the native app screenshot from 1.1.0. These previews are rendered locally; other screenshots show existing workflows with illustrative storage and download values.*
+*Discover previews the 1.3.0 catalogue in the Store interface. Game details and download options show 1.2.0, and Browse shows the native app from 1.1.0. These previews are rendered locally; other screenshots show existing workflows with illustrative storage and download values.*
 
 ### Discover, browse and choose a download
 
-**Start with something new.** Discover opens first. **New on Orbit** brings featured picks and recent additions to the first row, followed by **Latest releases**. Move down to All games to explore a grid of 96 games per page. PS4 and PS5 editions have their own platform labels and download choices.
+**Start with something new.** Discover opens first. **New on Orbit** brings featured picks and recent additions to the first row, followed by **Latest releases**. Move down to All games to explore a grid that loads more games as you scroll. PS4 and PS5 editions have their own platform labels and download choices.
 
-![Orbit Store 1.2.0 native Discover with Red Dead Redemption 2 selected](assets/1.2.0/native-discover.png)
+**Store (default)**
 
-**Keep exploring.** All games gives each title its own tile. Move through the grid with your controller and use the page controls to see more.
+![Orbit Store 1.3.0 Discover with Uncharted 4 selected](assets/1.3.0/store-discover-uncharted.png)
+
+**Keep exploring.** All games gives each title its own tile. Move through the grid with your controller; more games appear as you keep scrolling.
 
 ![Orbit Store 1.2.0 All games grid with Oblivion Remastered selected and its background artwork](assets/1.2.0/native-discover-grid.png)
 
@@ -73,6 +75,26 @@ Open Orbit from your Games row and use the controller to browse, explore and cho
 **Choose how and where to download.** Review the source, format, delivery method and drive together. Direct options download from the TV app; Vikingfile browser options open the provider page on PS5 and keep your choices when you return. See the [download guide](guides/downloads.md), including [TorBox setup](guides/downloads.md#optional-download-through-torbox).
 
 ![Cyberpunk 2077 download options in Orbit Store 1.2.0 with source, delivery method and USB destination controls](assets/1.2.0/native-download-options.png)
+
+### Choose your interface
+
+Make Orbit look the way you like. Open **Appearance** and choose **Store**, **Crossbar**, **Cinema** or **Panorama**. Confirm your choice to keep it. The interfaces are available in the native PS5 app, browser and Orbit Zero; switching keeps your downloads, favourites and settings.
+
+**Crossbar**
+
+![Crossbar Discover in the native Orbit Store app](assets/1.3.0/discover-crossbar.png)
+
+<br>
+
+**Cinema**
+
+![Cinema Discover in Orbit Store](assets/1.3.0/discover-cinema.png)
+
+<br>
+
+**Panorama**
+
+![Panorama Discover in Orbit Store](assets/1.3.0/discover-panorama.png)
 
 ### Settings without leaving the TV app
 
@@ -143,13 +165,13 @@ The desktop app supports **ARM64 and x64** computers and the same **11 interface
 
 ## Beta status
 
-**Orbit Store is an experimental beta.** [Download the latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest). The matching components in release **1.2.0** have these version numbers:
+**Orbit Store is an experimental beta.** [Download the latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest). The matching components in release **1.3.0** have these version numbers:
 
 | Component | Version |
 | --- | --- |
-| Orbit Store download service and browser interface (`orbit_store.elf`) | **1.2.0** |
-| Native TV app (`PPSA99177.ffpkg`) | **1.5.0** |
-| Orbit Zero for desktop | **1.2.0** |
+| Orbit Store download service and browser interface (`orbit_store.elf`) | **1.3.0** |
+| Native TV app (`PPSA99177.ffpkg`) | **1.6.0** |
+| Orbit Zero for desktop | **1.3.0** |
 
 The TV app has its own version number; these files belong to the same release. Use matching files when updating. Keep the PS5 awake while downloading or receiving transfers.
 
@@ -287,7 +309,7 @@ Orbit automatically extracts supported single-file **ZIP, RAR and 7z** downloads
 
 **Delete archives after extracting** is on by default. Change it under **App settings → Storage** in Orbit Store, or **Downloads → Download settings** in Orbit Zero. It removes the downloaded archive only after successful extraction. In Zero, keeping or removing the extracted computer copy after transfer is a separate **Computer cache** setting; automatic cache removal is off by default.
 
-For downloads handled by Orbit Store, open **Downloads → Finished → Location** in the browser or native app to see the saved file or extracted folder path. Moving or deleting the file afterward does not update that history. Orbit Zero currently shows the filename rather than the full destination path. See [where downloads are saved](guides/downloads.md#where-downloads-are-saved).
+For downloads handled by Orbit Store, open **Downloads → Finished → Location** in the browser or native app to see the saved file or extracted folder path. Moving or deleting the file afterward does not update that history. Orbit Zero download details also show the full PS5 destination path and the computer path while a cached copy remains. See [where downloads are saved](guides/downloads.md#where-downloads-are-saved).
 
 For password-protected archives, Orbit automatically tries the supplied password and these built-in passwords, so you usually don’t need to enter one yourself:
 

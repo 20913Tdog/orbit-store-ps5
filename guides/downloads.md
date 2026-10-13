@@ -1,10 +1,10 @@
 # Find and download a game
 
-Orbit 1.2.0 includes **1,201 games: 801 PS5 games and 400 PS4 games**, with single-file options from Archive.org, Vikingfile and AkiraBox. Each platform edition has its own game page; open it to choose from its available sources and formats. The selection depends on which sources you enable.
+Orbit 1.3.0 includes **1,601 games: 1,001 PS5 games and 600 PS4 games**, with single-file options from Archive.org, Vikingfile and AkiraBox. Each platform edition has its own game page; open it to choose from its available sources and formats. The selection depends on which sources you enable.
 
 ## Browse and choose
 
-**Discover opens first.** Explore the featured game and **New on Orbit** first, followed by **Latest releases**. New on Orbit starts with selected highlights, then shows recent additions ordered by game release date. Move down to All games for the full collection. Its grid shows 96 games per page, largest downloads first. Each game's size is its smallest available option from your enabled sources. Use Previous and Next to move between pages.
+**Discover opens first.** Explore the featured game and **New on Orbit** first, followed by **Latest releases**. New on Orbit starts with selected highlights, then shows recent additions ordered by game release date. Move down to All games for the full collection. The grid loads more games as you scroll, largest downloads first. Each game's size is its smallest available option from your enabled sources.
 
 ![Native Discover with the 1.2.0 catalogue](../assets/1.2.0/native-discover.png)
 
@@ -81,7 +81,7 @@ Orbit Zero also keeps a computer copy in your chosen [computer download folder](
 
 For downloads handled by Orbit Store, **Downloads → Finished → Location** shows the saved file or extracted folder path in both the browser and native app. This is the recorded save location; it does not check whether someone has since moved or deleted the file, and it does not mean the game is installed or listed by ShadowMount.
 
-Orbit Zero currently shows the filename without the full PS5 path. Check the selected drive's `homebrew` folder. Extracted downloads may be a file or a folder containing several files. Zero's **Computer download folder** setting controls new computer downloads; existing partial files stay in their original folder.
+Orbit Zero download details show **PS5 location** and **Computer location** while the cached copy remains. Files go to the selected drive's `homebrew` folder. Extracted downloads may be a file or a folder containing several files. Zero's **Computer download folder** setting controls new computer downloads; existing partial files stay in their original folder.
 
 ## Optional: download through TorBox
 
