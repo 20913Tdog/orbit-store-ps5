@@ -12,11 +12,13 @@ Orbit 1.3.0 supports a catalogue of 1,601 games: 1,001 PS5 games and 600 PS4 gam
 
 PS4 support starts with service/browser version 1.1.0, native app 1.4.0 and Orbit Zero 1.1.0; these are minimum versions, not the current release. Browse has a Platform filter for PS4, PS5 or All platforms. PS4 CUSA and PS5 PPSA editions remain separate, with their own metadata and download choices. PS4 options are single-file .pkg packages, labelled PKG or FPKG. Saving one does not install it; users need the package installation method supported by their PS5 setup. A platform label does not imply a frame-rate patch, DLC or universal compatibility. Orbit's ELF and TV app run on PS5, not PS4 consoles.
 
-Discover opens first, with New on Orbit before Latest releases and an All games grid. Curated highlights lead New on Orbit, followed by recent catalogue additions ordered by release date. Discover’s All games, Browse and Library load more items as you scroll. Browse supports platform, source, format, region and size filters, search, sorting and shared favourites. In native Browse and Discover, Square toggles Favourite for the selected game.
+Discover opens first. Store presents New on Orbit before Latest releases and an All games grid; Crossbar, Cinema and Panorama arrange these collections differently. Curated highlights lead New on Orbit, followed by recent catalogue additions ordered by release date. Discover’s All games, Browse and Library load more items as you scroll. Browse supports platform, source, format, region and size filters, search, sorting and shared favourites. In native Browse and Discover, Square toggles Favourite in Store; Triangle does so in Crossbar, Cinema and Panorama. Controller shortcuts and section navigation depend on the interface.
 
 New games and metadata corrections arrive through catalogue updates. App settings → Game catalogue → Refresh catalogue checks manually. The last available catalogue is cached for offline browsing, and existing downloads keep their chosen file identity. Earlier supported clients keep a PS5-compatible feed; refreshing their catalogue alone does not add PS4 support.
 
-Store is the default interface. Appearance also offers Crossbar, Cinema and Panorama across the native app, browser and Orbit Zero. Confirming a choice saves it without changing the queue, favourites or download settings.
+Store is the default interface. Appearance also offers Crossbar, Cinema and Panorama across the native app, browser and Orbit Zero. Select Keep within the 15-second confirmation to save a choice; Switch back or the timeout restores the previous interface. Preferences are separate for each app/browser and do not change the queue, favourites or download settings. All interfaces offer Full or Reduced motion. Crossbar has time-of-day ribbon backgrounds, Cinema has blurred art or plain black behind menus, and Panorama has four accent colours and faint art or plain black behind pages.
+
+The browser’s Store layout uses App settings; the other layouts use a Settings page. Sources becomes Download sources, Storage becomes Storage and downloads, Update / reinstall becomes Updates, and Debrid becomes TorBox. Native App settings is labelled Settings in the other layouts and retains its sections. Zero’s Store layout has top-bar Appearance, Language and Updates controls; its other layouts put these under Settings alongside Download settings and Computer cache.
 
 ## Install and use Orbit Store
 
@@ -54,9 +56,9 @@ Updates checks for new desktop versions automatically, downloads the matching OS
 
 ## Languages and support
 
-Orbit Store and Orbit Zero support English, German, Spanish, French, Hungarian, Italian, Dutch, Polish, Brazilian Portuguese, Russian and Turkish. Native Orbit follows the PS5 language. Browser App settings → Language sets the device preference. Zero's globe-shaped Language control chooses a language or follows System language. Game metadata and provider pages may retain their original language.
+Orbit Store and Orbit Zero support English, German, Spanish, French, Hungarian, Italian, Dutch, Polish, Brazilian Portuguese, Russian and Turkish. Native Orbit follows the PS5 language. Browser App settings → Language sets the device preference. Zero's globe-shaped Language control in Store, or Settings → Language in the other layouts, chooses a language or follows System language. Game metadata and provider pages may retain their original language.
 
-Diagnostics are available locally in browser App settings. Reports exclude pairing codes, access tokens, download links, game names and paths, and are not sent automatically. Bug reports should identify the app and version, game platform/title ID, source, format, destination and failing stage.
+Diagnostics are available locally in browser App settings. Reports exclude pairing codes, access tokens, download links, game names and paths, and are not sent automatically. Bug reports should identify the app and version, game platform/title ID, source, format, destination and failing stage. Display or navigation reports should also name the interface and input method.
 
 Payload-manager integration and automatic startup are opt-in. Orbit leaves the manager's global Autoload switch unchanged. Keep the console awake during transfers. Physical-console compatibility and game installation depend on the user's setup.
 
@@ -70,6 +72,7 @@ Orbit Store is GPL-3.0-or-later. Releases provide the complete source correspond
 - [PS5 without internet](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/orbit-zero-offline-ps5.md): Start Orbit and download through the computer on a local network.
 - [Getting started](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/getting-started.md): Choose desktop or PS5 setup, install Orbit, use Payload Manager, update and pair a phone.
 - [Downloads](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/downloads.md): Browse, sources, formats, Vikingfile and AkiraBox steps, archive extraction, saved locations, storage and queue controls.
+- [Appearance](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/appearance.md): Store, Crossbar, Cinema and Panorama previews, switching, confirmation, saved preferences, motion, backgrounds and navigation.
 - [Library](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/library.md): Inventory labels and compatible ShadowMount actions.
 - [Troubleshooting](https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/guides/troubleshooting.md): Startup, updates, providers, storage, artwork and diagnostics.
 - [Official project](https://github.com/saawant12/orbit-store-ps5): Public repository and project updates.

@@ -1,6 +1,6 @@
 # Your Library and storage
 
-Library is available in both the native TV app and browser version. Both read the same ShadowMount inventory and share storage operations.
+Library is available in both the native TV app and browser version. Both read the same ShadowMount inventory and share storage operations. Store, Crossbar, Cinema and Panorama present it in different layouts; changing [appearance](appearance.md) does not change which games are installed or mounted.
 
 ![Native TV app Library with installed and on-drive games](../assets/0.9.0/native-library.png)
 
@@ -47,4 +47,4 @@ Orbit does not launch games or uninstall them. Downloads and Library actions are
 
 *Pair a phone to inspect the same console inventory without changing download-source settings.*
 
-[Getting started](getting-started.md) · [Download guide](downloads.md) · [Troubleshooting](troubleshooting.md) · [Project home](../README.md)
+[Getting started](getting-started.md) · [Download guide](downloads.md) · [Troubleshooting](troubleshooting.md) · [Appearance guide](appearance.md) · [Project home](../README.md)

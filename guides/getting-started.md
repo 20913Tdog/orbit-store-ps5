@@ -10,7 +10,7 @@ Orbit runs on your PS5. Use the TV with your controller, or pair a phone or comp
 | Run `orbit_store.elf` with your payload manager or ELF loader | **Media** on your PS5 | The browser version. It only opens while Orbit is running. [Set it up](#use-the-browser-version). |
 | Install [Orbit Zero](orbit-zero.md) | Your Mac, Windows or Linux computer | Downloads on your computer and sends the files to your PS5. The PS5 doesn't need internet. |
 
-The Games and Media versions share the same downloads, favourites and settings, so seeing two Orbit icons on your PS5 is normal.
+The Games and Media versions share the same downloads, favourites and service settings, so seeing two Orbit icons on your PS5 is normal. Appearance is saved separately in each app or browser.
 
 You need a PS5 environment that can run homebrew ELF payloads, an ELF loader or payload manager, internet access on the console for direct provider downloads, and enough writable storage. A phone or computer should be on the same local network. Library management additionally needs a compatible ShadowMount v1 local API.
 
@@ -23,6 +23,8 @@ Orbit Zero includes PS4 and PS5 browsing and the same 11 interface languages as 
 The catalogue includes both platforms. The current release pairs **Orbit Store 1.3.0**, **native app 1.6.0** and **Orbit Zero 1.3.0**. PS4 support starts with service 1.1.0, native app 1.4.0 and Zero 1.1.0; archive extraction and AkiraBox need the current matching apps. In Browse, choose **Platform → PS4**, **PS5** or **All platforms**. A PS4 and a PS5 edition of the same game have separate download choices.
 
 Orbit itself runs on PS5. Downloading a PS4 PKG/FPKG saves a package to your selected drive; installing and launching it uses the compatible tools for your PS5 setup. See [PS4 games on PS5](downloads.md#ps4-games-on-ps5).
+
+The instructions below use the default Store layout. If you choose another interface, see [where to find its settings](appearance.md#find-settings-after-switching).
 
 ## Install the native TV app
 
@@ -42,7 +44,7 @@ Already using Orbit 0.6.0 or later? In the browser version, open **App settings 
 2. Load the ELF through your payload manager. Orbit saves its runtime and creates its browser shortcut in the PS5 **Media tab**.
 3. Open **Orbit Store**, then **App settings → Sources**. Choose the sources you want to use, including Archive.org, Vikingfile and AkiraBox, and acknowledge the notice. Only download material you have permission to obtain and use.
 
-Both interfaces use the same service, catalogue, favourites and download queue. The TV app does not need a pairing code on the console. The native **App settings** page includes Download sources, Storage, Pair a device, Game catalogue and Updates. **More settings → Open browser version** provides auto-start, payload-manager setup and diagnostics.
+Both interfaces use the same service, catalogue, favourites and download queue. The TV app does not need a pairing code on the console. The native **App settings** page includes Download sources, Storage, Pair a device, Game catalogue, Updates and Appearance. **More settings → Open browser version** provides auto-start, payload-manager setup and diagnostics.
 
 To use optional TorBox downloads, connect your account in the browser’s **App settings → Debrid**. Both apps can then use it for supported options. See [TorBox setup](downloads.md#optional-download-through-torbox).
 
@@ -68,15 +70,17 @@ Orbit Zero’s desktop packages use **`SHA256SUMS`** instead. Follow [desktop do
 
 ## Choose your interface
 
-Open **Appearance** to choose Store, Crossbar, Cinema or Panorama, then confirm that you want to keep it. Your downloads and favourites stay with you. The choice is saved on the device where you make it.
+Choose **Store**, **Crossbar**, **Cinema** or **Panorama** in **App settings → Appearance** in native Store, or **Settings → Appearance** in the other native layouts. In the browser, use **App settings → Appearance** in Store or **Settings → Appearance** in another layout. Orbit Zero has an Appearance button in Store’s top bar and **Settings → Appearance** in the other layouts.
+
+Select **Keep** within 15 seconds to save your choice, or let the countdown return you to the previous interface. Downloads and favourites stay with you; the appearance choice is separate for each app or browser. The [appearance guide](appearance.md) includes screenshots, navigation, motion and background settings.
 
 ## Choose your language
 
 Orbit Store and Orbit Zero support **11 interface languages**: English, German, Spanish, French, Hungarian, Italian, Dutch, Polish, Brazilian Portuguese, Russian and Turkish.
 
 - **Native TV app:** Orbit follows your PS5’s system language when it starts. Change the console language in **Settings → System → Language → Console Language**, then close and reopen Orbit. Unsupported languages use English.
-- **Browser, phone or computer:** open **App settings → Language**. Choose a language, or **Automatic** to follow your browser’s preference. The interface reloads after you choose. This preference is saved for that browser; it does not change other paired devices or the PS5’s system language.
-- **Orbit Zero desktop:** select the globe-shaped **Language** button in the top bar. Choose a language or **System language**. The choice is saved on that computer, and changing it keeps your downloads running.
+- **Browser, phone or computer:** open **App settings → Language** in Store, or **Settings → Language** in the other interfaces. Choose a language, or **Automatic** to follow your browser’s preference. The interface reloads after you choose. This preference is saved for that browser; it does not change other paired devices or the PS5’s system language.
+- **Orbit Zero desktop:** select the globe-shaped **Language** button in Store’s top bar, or **Settings → Language** in the other interfaces. Choose a language or **System language**. The choice is saved on that computer, and changing it keeps your downloads running.
 
 ![Browser App settings with the language selector open](../assets/0.9.0/desktop-language.jpg)
 
@@ -155,4 +159,4 @@ Orbit Store 1.1.0 also accepts browser addresses whose hostname ends in `.home.a
 
 Orbit does not create or advertise these names. Your router or local name service must resolve the hostname to the correct device. `.localhost` normally resolves to the device you are browsing on, so it is generally for local testing rather than a remote PS5. If a name does not resolve, use `http://<ps5-ip>:34177/`. Orbit Zero’s Console connection field still takes the PS5’s local IP address.
 
-[Download guide](downloads.md) · [Library guide](library.md) · [Troubleshooting](troubleshooting.md) · [Project home](../README.md)
+[Download guide](downloads.md) · [Library guide](library.md) · [Troubleshooting](troubleshooting.md) · [Appearance guide](appearance.md) · [Project home](../README.md)

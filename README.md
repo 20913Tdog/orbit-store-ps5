@@ -8,7 +8,7 @@ Explore **1,601 games: 1,001 PS5 games and 600 PS4 games**, with single-file opt
 
 PS4 game browsing requires **Orbit Store 1.1.0** with its matching native app, or **Orbit Zero 1.1.0**. Orbit itself runs on PS5. See [PS4 games on PS5](guides/downloads.md#ps4-games-on-ps5) for package download and installation guidance.
 
-[Download Orbit](https://github.com/saawant12/orbit-store-ps5/releases/latest) · [Orbit Zero](#orbit-zero-for-mac-windows-and-linux) · [Get started](guides/getting-started.md) · [Download guide](guides/downloads.md) · [Library guide](guides/library.md) · [Troubleshooting](guides/troubleshooting.md) · [Bug report format](.github/ISSUE_TEMPLATE/bug_report.md) · [Report a bug](https://github.com/saawant12/orbit-store-ps5/issues/new?template=bug_report.md) · [Request a feature](https://github.com/saawant12/orbit-store-ps5/issues/new?template=feature_request.md)
+[Download Orbit](https://github.com/saawant12/orbit-store-ps5/releases/latest) · [Orbit Zero](#orbit-zero-for-mac-windows-and-linux) · [Get started](guides/getting-started.md) · [Download guide](guides/downloads.md) · [Library guide](guides/library.md) · [Appearance guide](guides/appearance.md) · [Troubleshooting](guides/troubleshooting.md) · [Bug report format](.github/ISSUE_TEMPLATE/bug_report.md) · [Report a bug](https://github.com/saawant12/orbit-store-ps5/issues/new?template=bug_report.md) · [Request a feature](https://github.com/saawant12/orbit-store-ps5/issues/new?template=feature_request.md)
 
 > **Official channels:** Orbit Store has no official social media accounts. This GitHub repository is our official source for releases, updates and support. Any social media account claiming to officially represent Orbit Store is an impersonator.
 
@@ -16,8 +16,9 @@ PS4 game browsing requires **Orbit Store 1.1.0** with its matching native app, o
 
 ## Built around the console
 
-- **A native app for your TV.** Browse, Discover, Library and Downloads, built for your controller. Press Square to save a game to favourites in Browse or Discover. Your downloads keep running when you close the app.
+- **A native app for your TV.** Browse, Discover, Library and Downloads, built for your controller. Save favourites with Square in Store, or Triangle in the other native interfaces. Your downloads keep running when you close the app.
 - **One link per download.** Choose a single-file FFPFSC, exFAT, PKG, FPKG, ZIP, RAR or 7z option, with its source and download size shown before starting. Supported archives extract automatically; there are no archive parts to collect.
+- **Four ways to make it yours.** Choose Store, Crossbar, Cinema or Panorama, with motion and background options. See the [appearance guide](guides/appearance.md).
 - **Your queue, your pace.** Pause, resume, retry and reorder downloads. Choose 1–8 simultaneous games, with one active download by default. Check the space they need before adding more.
 - **Optional TorBox downloads.** Connect your own account to use TorBox for supported links, or download directly from the original provider. See [TorBox setup](guides/downloads.md#optional-download-through-torbox) for account and host limits.
 - **A Library for your drives.** See installed games and available files. Manage compatible sources through ShadowMount.
@@ -35,7 +36,7 @@ PS4 game browsing requires **Orbit Store 1.1.0** with its matching native app, o
 | Run `orbit_store.elf` with your payload manager or ELF loader | **Media** on your PS5 | The browser version. It only opens while Orbit is running. |
 | Install [Orbit Zero](#orbit-zero-for-mac-windows-and-linux) | Your Mac, Windows or Linux computer | Downloads on your computer and sends the files to your PS5. The PS5 doesn't need internet. |
 
-The Games and Media versions share the same downloads, favourites and settings, so seeing two Orbit icons on your PS5 is normal.
+The Games and Media versions share the same downloads, favourites and service settings, so seeing two Orbit icons on your PS5 is normal. Appearance is saved separately in each app or browser.
 
 For direct console downloads, you need a PS5 that can run homebrew ELF payloads, a payload manager or ELF loader, internet access on the console, and enough writable storage. For downloads through your computer, see [Orbit Zero](#orbit-zero-for-mac-windows-and-linux) below.
 
@@ -78,7 +79,7 @@ Open Orbit from your Games row and use the controller to browse, explore and cho
 
 ### Choose your interface
 
-Make Orbit look the way you like. Open **Appearance** and choose **Store**, **Crossbar**, **Cinema** or **Panorama**. Confirm your choice to keep it. The interfaces are available in the native PS5 app, browser and Orbit Zero; switching keeps your downloads, favourites and settings.
+Make Orbit look the way you like. Open **Appearance** and choose **Store**, **Crossbar**, **Cinema** or **Panorama**. Confirm your choice to keep it. The interfaces are available in the native PS5 app, browser and Orbit Zero; switching keeps your downloads, favourites and settings. See the [appearance guide](guides/appearance.md) for the 15-second confirmation, controller shortcuts, motion options and where to find settings in each layout.
 
 **Crossbar**
 
@@ -98,19 +99,21 @@ Make Orbit look the way you like. Open **Appearance** and choose **Store**, **Cr
 
 ### Settings without leaving the TV app
 
+The instructions below use Store’s settings names. In the browser’s Crossbar, Cinema and Panorama interfaces, use the [Settings page equivalents](guides/appearance.md#find-settings-after-switching).
+
 Choose sources, set your default drive, pair a phone and refresh your game catalogue from one place. Updates has separate controls for the TV app and its download service; you choose when to install or restart.
 
 ![Native App settings with source choices](assets/0.9.0/native-settings.png)
 
 ### Orbit in your language
 
-Orbit Store and Orbit Zero support **English, German, Spanish, French, Hungarian, Italian, Dutch, Polish, Brazilian Portuguese, Russian and Turkish**. The native app follows your PS5’s system language. In the browser version, use **App settings → Language** to choose a language for that device, or leave it on **Automatic** to follow the browser.
+Orbit Store and Orbit Zero support **English, German, Spanish, French, Hungarian, Italian, Dutch, Polish, Brazilian Portuguese, Russian and Turkish**. The native app follows your PS5’s system language. In the browser version, use **App settings → Language** in Store, or **Settings → Language** in the other interfaces, to choose a language for that device, or leave it on **Automatic** to follow the browser.
 
 ![Native Orbit Settings in Hungarian, with translated storage controls](assets/1.0.5/native-settings-hu.png)
 
 *Native app 1.3.2 rendered locally in Hungarian. Storage values are illustrative.*
 
-In Orbit Zero, use the globe-shaped **Language** button in the top bar. Language settings change Orbit’s menus; each game keeps its own language settings. See [language settings](guides/getting-started.md#choose-your-language) for instructions and the browser selector.
+In Orbit Zero’s Store interface, use the globe-shaped **Language** button in the top bar. In Crossbar, Cinema or Panorama, open **Settings → Language**. Language settings change Orbit’s menus; each game keeps its own language settings. See [language settings](guides/getting-started.md#choose-your-language) for instructions and the browser selector.
 
 ### The same queue on your phone
 
@@ -161,7 +164,7 @@ The Console page brings your connection, available storage, download preference 
 
 *Desktop interface previews. Connection, storage and transfer values are illustrative.*
 
-The desktop app supports **ARM64 and x64** computers and the same **11 interface languages** as Orbit Store. Select the globe-shaped **Language** button to choose a language, or **System language** to follow your computer. Keep Orbit Zero and the PS5 awake while transferring; the computer needs internet to fetch new downloads.
+The desktop app supports **ARM64 and x64** computers and the same **11 interface languages** as Orbit Store. Use **Language** in Store’s top bar, or **Settings → Language** in the other interfaces. Choose a language, or **System language** to follow your computer. Keep Orbit Zero and the PS5 awake while transferring; the computer needs internet to fetch new downloads.
 
 ## Beta status
 
@@ -259,7 +262,7 @@ If ShadowMount is absent or its API is incompatible, Library explains what is mi
 
 In **Browse**, combine platform, source, format, region and download-size filters, then choose a sort order. Size sorting uses the smallest option matching your filters. **Release date (newest first)** is the default. Games without a recorded date appear afterward, alphabetically. **Reset filters** restores this order.
 
-Open a game's details and choose **Add to favourites**, or press **Square** on a selected game in native Browse or Discover. Your favourites are shared between the console and paired devices and stay saved after restarting Orbit. Disabling a source hides its games without forgetting your favourites.
+Open a game's details and choose **Add to favourites**, or use the favourite shortcut on a selected game in native Browse or Discover: **Square** in Store, **Triangle** in Crossbar, Cinema or Panorama. Your favourites are shared between the console and paired devices and stay saved after restarting Orbit. Disabling a source hides its games without forgetting your favourites.
 
 ## Refreshing the game catalogue
 
@@ -269,7 +272,7 @@ If your connection drops, you can still browse the last available catalogue. Rec
 
 ## Controls and formats
 
-In the native TV app, use the D-pad or left stick to move, Cross to select, Circle to go back, and L1/R1 to switch tabs. **Square adds or removes the selected game from favourites in Browse and Discover.** Filters open with Cross; choose with the D-pad and Cross, or close with Circle. The table below applies to the browser version.
+In the native TV app, use the D-pad or left stick to move, Cross to select, Circle to go back, and follow the on-screen action hints. In the Store interface, **L1/R1 switches tabs** and **Square adds or removes the selected game from favourites in Browse and Discover**. Filters open with Cross; choose with the D-pad and Cross, or close with Circle. In Crossbar, Cinema and Panorama, **Triangle** toggles favourites instead; section navigation also differs. See the [native controller guide](guides/appearance.md#controller-navigation-in-the-native-app). The table below applies to the browser’s Store interface.
 
 | Control | Action |
 |---|---|

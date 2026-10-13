@@ -1,8 +1,10 @@
 # When something needs attention
 
+Settings paths below use the default Store layout. In the browser’s other interfaces, use the [Settings page equivalents](appearance.md#find-settings-after-switching).
+
 ## I see two Orbit icons
 
-That's normal if you use both PS5 versions. The icon in **Games** is the TV app from `PPSA99177.ffpkg`. The icon in **Media** is the browser version, added when `orbit_store.elf` runs. Both use the same downloads, favourites and settings.
+That's normal if you use both PS5 versions. The icon in **Games** is the TV app from `PPSA99177.ffpkg`. The icon in **Media** is the browser version, added when `orbit_store.elf` runs. Both use the same downloads, favourites and service settings. Appearance is saved separately for each app or browser.
 
 If the Media icon won't open, see the next section. If the Games icon won't open, see [The native TV app will not open or start Orbit](#the-native-tv-app-will-not-open-or-start-orbit).
 
@@ -49,7 +51,7 @@ The replacement was saved for the next start. Open **App settings → Update / r
 
 ## AkiraBox does not enter Downloads
 
-Use matching Orbit Store or Orbit Zero **1.2.0** apps. Open the file page from Orbit, complete verification and wait a few seconds without pressing Download. Orbit captures the ready link; avoid advertisements and popup buttons. If the session expires, return to Orbit and open the provider step again. For a paused or failed job, use **Refresh download link**.
+Use the latest matching Orbit Store or Orbit Zero apps. AkiraBox requires **1.2.0 or later**. Open the file page from Orbit, complete verification and wait a few seconds without pressing Download. Orbit captures the ready link; avoid advertisements and popup buttons. If the session expires, return to Orbit and open the provider step again. For a paused or failed job, use **Refresh download link**.
 
 ## Archive needs a password
 
@@ -93,6 +95,18 @@ For a transfer already created on the PS5, cancellation and stopping need a resp
 
 Keep both devices awake while transferring. See [transfer recovery and cleanup](orbit-zero.md#pause-reconnect-and-clean-up) for the differences between stopping, deleting partials and clearing completed computer copies.
 
+## I cannot find a setting after changing interface
+
+Crossbar, Cinema and Panorama use a **Settings** page in the browser and Orbit Zero. In Zero, Appearance, Language and Updates move there from Store’s top bar. The native app also calls its settings page **Settings** in these layouts, keeping the same sections inside. See the [settings map](appearance.md#find-settings-after-switching).
+
+## My interface choice switches back or is not remembered
+
+Select **Keep** before the 15-second confirmation countdown ends. **Switch back**, or not answering in time, restores the previous interface. To return to the default yourself, choose **Store** in Appearance and confirm it.
+
+Each app or browser saves its own appearance. A phone, native app and desktop app can use different layouts. Browser site-data clearing, private browsing or opening a different IP/hostname may reset the choice. If it still resets after confirmation on normal launches, report the app version, chosen interface and steps. See [where your choice is saved](appearance.md#where-your-choice-is-saved).
+
+For less movement, choose **Appearance → Motion → Reduced**. Cinema and Panorama also offer **Plain black** instead of background artwork behind menus or pages.
+
 ## A game or image is missing
 
 Check the enabled Sources and clear Browse’s filters. Then try **App settings → Game catalogue → Refresh catalogue**. Use the latest matching apps; PS4 support starts with service 1.1.0, native app 1.4.0 and Orbit Zero 1.1.0. Builds without PS4 support use a PS5-compatible catalogue. Select **Platform → All platforms** or **PS4**, and check the running service version as well as the installed app version.
@@ -123,6 +137,6 @@ Open **App settings → Diagnostics → View diagnostics**, then **Copy diagnost
 
 *You choose whether to copy and share a report. This interface preview uses example diagnostic data.*
 
-When reporting a problem in [Issues](https://github.com/saawant12/orbit-store-ps5/issues), include the Orbit version, PS5 firmware, loader, the steps taken and the displayed error. Remove any private details before posting. The reported etaHEN payload-toggle interaction remains under investigation.
+When reporting a problem in [Issues](https://github.com/saawant12/orbit-store-ps5/issues), include the Orbit version, PS5 firmware, loader, the steps taken and the displayed error. For a display or navigation problem, include the interface (Store, Crossbar, Cinema or Panorama) and whether you used a controller, keyboard, mouse or touch. Remove any private details before posting. The reported etaHEN payload-toggle interaction remains under investigation.
 
-[Getting started](getting-started.md) · [Download guide](downloads.md) · [Library guide](library.md) · [Project home](../README.md)
+[Getting started](getting-started.md) · [Download guide](downloads.md) · [Library guide](library.md) · [Appearance guide](appearance.md) · [Project home](../README.md)

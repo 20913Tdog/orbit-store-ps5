@@ -15,6 +15,8 @@ The desktop app includes the compatible Orbit service and uploads it over your l
 
 Your **computer needs internet access to fetch new downloads**. Your PS5 only needs access to the computer over the local network. You do not need to download an ELF separately: Orbit Zero includes a compatible copy and can check GitHub for a compatible update from the computer.
 
+This guide names controls from the default Store interface. Other layouts keep the same connection and transfer flow; see [where to find settings after switching](appearance.md#find-settings-after-switching).
+
 ## 1. Keep the PS5 connected locally
 
 Leave the PS5 connected to your router by Wi-Fi or Ethernet. Keep your existing internet-blocking setup in place, provided it allows devices on your home network to reach each other.

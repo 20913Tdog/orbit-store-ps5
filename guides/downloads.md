@@ -4,11 +4,11 @@ Orbit 1.3.0 includes **1,601 games: 1,001 PS5 games and 600 PS4 games**, with si
 
 ## Browse and choose
 
-**Discover opens first.** Explore the featured game and **New on Orbit** first, followed by **Latest releases**. New on Orbit starts with selected highlights, then shows recent additions ordered by game release date. Move down to All games for the full collection. The grid loads more games as you scroll, largest downloads first. Each game's size is its smallest available option from your enabled sources.
+**Discover opens first.** In the default Store interface, explore the featured game and **New on Orbit** first, followed by **Latest releases**. New on Orbit starts with selected highlights, then shows recent additions ordered by game release date. Move down to All games for the full collection. The grid loads more games as you scroll, largest downloads first. Each game's size is its smallest available option from your enabled sources.
 
-![Native Discover with the 1.2.0 catalogue](../assets/1.2.0/native-discover.png)
+![Store Discover in Orbit 1.3.0 with Uncharted 4 selected](../assets/1.3.0/store-discover-uncharted.png)
 
-*Native Discover with the 1.2.0 catalogue, rendered locally from the app. Browser and desktop Discover use the same featured order.*
+*Store Discover in Orbit 1.3.0, rendered locally from the browser app. Crossbar, Cinema and Panorama arrange the same collections differently; see the [appearance guide](appearance.md).*
 
 Switch to **Browse** when you want search and filters. It defaults to **Release date (newest first)**. Games without a recorded date follow alphabetically. Search by game name or title ID, filter by platform, source, format, region or download size, and change the sort order. **Reset filters** restores the default. Missing dates and other metadata can be added later through catalogue updates.
 
@@ -18,7 +18,7 @@ Switch to **Browse** when you want search and filters. It defaults to **Release 
 
 Save a game from its details page to find it under **Favourites** later; favourites are shared with your paired devices.
 
-In the native TV app, use D-pad/left stick to move, Cross to select, Circle to go back and L1/R1 to switch tabs. Press **Square** on a game selected in Browse or Discover to add or remove it from Favourites. Select filters with Cross; choose an option with the D-pad and Cross. The controls below apply to the browser version.
+In the native TV app’s Store interface, use D-pad/left stick to move, Cross to select, Circle to go back and L1/R1 to switch tabs. Press **Square** on a game selected in Browse or Discover to add or remove it from Favourites. Select filters with Cross; choose an option with the D-pad and Cross. In the other native interfaces, **Triangle** toggles favourites and navigation follows the layout’s on-screen hints; see [native controls by interface](appearance.md#controller-navigation-in-the-native-app). The controls below apply to the browser’s Store interface.
 
 | Input | Action |
 |---|---|
@@ -44,6 +44,8 @@ Files go to the selected drive’s `homebrew` folder, including `/data/homebrew/
 **Orbit still runs on PS5.** PS4 game support does not make the ELF or TV app compatible with PS4 consoles. See [Library](library.md) for the distinction between downloaded files and installed games.
 
 ## Pick a source, format and drive
+
+Settings paths in this guide use the Store layout. For the browser’s other layouts, see the [Settings page equivalents](appearance.md#find-settings-after-switching).
 
 On the game page, select the main download button to open **Download options**. This reviews your choices without starting a transfer. Open **Source** to choose a format and provider, **Download using** for direct or TorBox delivery, and **Save to** for storage attached to the PS5. The storage panel shows **Free now**, **Unfinished downloads**, and **After queue + this download**. Back returns to your previous selection.
 
@@ -104,7 +106,7 @@ Pause and resume from Downloads as usual. Disconnecting TorBox pauses its unfini
 
 ## AkiraBox: verify, then wait
 
-**Requires Orbit Store or Orbit Zero 1.2.0.** Choose the AkiraBox option and destination, then open its download page from Orbit. Complete any human verification yourself and wait a few seconds. **Do not press AkiraBox’s Download button or an advertisement.** Orbit captures the ready file link and checks it against your selected game.
+**Requires Orbit Store or Orbit Zero 1.2.0 or later, with matching PS5 apps.** Choose the AkiraBox option and destination, then open its download page from Orbit. Complete any human verification yourself and wait a few seconds. **Do not press AkiraBox’s Download button or an advertisement.** Orbit captures the ready file link and checks it against your selected game.
 
 In Orbit’s PS5 browser version, you return to Orbit automatically when the file is queued. If you started from the native TV app, return to the app to follow verification or view the download. In Orbit Zero, the provider window closes once the matching file is ready, and the download appears in your queue.
 
@@ -112,7 +114,7 @@ If the session expires, start the provider step again. For an existing paused or
 
 ## ZIP, RAR and 7z downloads
 
-**Requires 1.2.0 and its matching apps.** Compressed options appear in the normal Format filter. Their displayed download size is the compressed archive size; keep space for both the archive and the extracted files. Multipart archives are not supported.
+**Requires 1.2.0 or later and matching apps.** Compressed options appear in the normal Format filter. Their displayed download size is the compressed archive size; keep space for both the archive and the extracted files. Multipart archives are not supported.
 
 Orbit Store extracts on the selected PS5 drive after downloading. Orbit Zero extracts on the computer first, then transfers the extracted files to your selected PS5 drive. Follow the **Extracting** progress in Downloads. Orbit tries the known source passwords automatically; see the [password list](../README.md#automatic-archive-extraction-120). If another password is needed, choose **Enter archive password**, then **Retry extraction**. This reuses the downloaded archive.
 

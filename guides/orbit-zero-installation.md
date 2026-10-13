@@ -121,7 +121,11 @@ sudo chmod 4755 chrome-sandbox
 
 ## Choose your language
 
-Select the globe-shaped **Language** button in the top bar. Orbit Zero 1.3.0 supports English, German, Spanish, French, Hungarian, Italian, Dutch, Polish, Brazilian Portuguese, Russian and Turkish. Choose **System language** to follow your computer. This changes Orbit’s interface, not a downloaded game’s language.
+Select the globe-shaped **Language** button in Store’s top bar, or **Settings → Language** in Crossbar, Cinema or Panorama. Orbit Zero 1.3.0 supports English, German, Spanish, French, Hungarian, Italian, Dutch, Polish, Brazilian Portuguese, Russian and Turkish. Choose **System language** to follow your computer. This changes Orbit’s interface, not a downloaded game’s language.
+
+## Choose your interface
+
+Use the palette-shaped **Appearance** button in Store’s top bar to choose Store, Crossbar, Cinema or Panorama. After switching, select **Keep** within 15 seconds. In the other layouts, return to **Settings → Appearance** to change it again. See the [appearance guide](appearance.md) for previews and motion/background options. Your choice is saved separately from the PS5 app’s appearance.
 
 ## Connect your PS5
 
@@ -144,8 +148,6 @@ Zero supplies the compatible Orbit payload automatically; you do not need to fin
 ### Manual fallback: download the ELF yourself
 
 Orbit Zero supplies the matching payload automatically. You can also download and select the ELF yourself:
-
-If you need to select the payload manually:
 
 1. On your **computer**, open the official [Orbit Store GitHub Releases page](https://github.com/saawant12/orbit-store-ps5/releases/latest). Under **Assets**, download **`orbit_store.elf`** and its matching **`orbit_store.elf.sha256`** checksum. Use the compatible Orbit Store build supplied with your Orbit Zero release; Zero requires Orbit Store 1.0.0 or later.
 2. Keep Payload Manager or your ELF loader running on the PS5. In Orbit Zero, open **Console**, enter the PS5's local IP address, and expand **Start Orbit on PS5**.
@@ -187,7 +189,7 @@ For new downloads, leave enough computer space for the full file. Keep Orbit Zer
 
 ## Choose how many games download at once
 
-In **Downloads → Download settings → Simultaneous computer downloads**, choose **1–8**. The default is **1**. Files transfer to your PS5 one at a time while computer downloads continue. Lowering the limit lets current downloads finish before another starts. Keep enough space for each file's full computer copy.
+In **Downloads → Download settings → Simultaneous computer downloads**, choose **1–8**. Crossbar, Cinema and Panorama also offer **Settings → Download settings**, with cache cleanup under **Settings → Computer cache**. The default is **1**. Files transfer to your PS5 one at a time while computer downloads continue. Lowering the limit lets current downloads finish before another starts. Keep enough space for each file's full computer copy.
 
 ## Choose the computer download folder
 
@@ -229,7 +231,7 @@ The improvements are now included in the standard packages. Follow **Update Orbi
 
 ## Update checks in Orbit Zero
 
-Select **Updates** in the top navigation to see your installed version or check manually. **Check for updates automatically** is on by default: Orbit Zero checks its official GitHub release on opening and every six hours, reusing a recent check when available. You can turn this off in the same window.
+Select **Updates** in Store’s top navigation, or **Settings → Updates** in the other interfaces, to see your installed version or check manually. **Check for updates automatically** is on by default: Orbit Zero checks its official GitHub release on opening and every six hours, reusing a recent check when available. You can turn this off in the same window.
 
 When **Update available** appears, select **Download update**. Zero selects the package for your operating system and processor, then checks its size and SHA-256 before offering **Open installer** (Mac/Linux) or **Open ZIP** (Windows). You can cancel an update download without affecting game transfers.
 
