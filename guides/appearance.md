@@ -35,9 +35,25 @@ To return to the default later, open Appearance again, choose **Store** and conf
 ![Crossbar Discover in the native Orbit Store app](../assets/1.3.0/discover-crossbar.png)
 
 <details>
-<summary>See more: Browse in Crossbar</summary>
+<summary>See more: Browse, game details and Downloads in Crossbar</summary>
+
+**Browse**
 
 ![Crossbar Browse in the native app with Uncharted games](../assets/1.3.0/native-crossbar-browse.png)
+
+<br>
+
+**Game details**
+
+![Uncharted 4 game details in the native Crossbar app](../assets/1.3.0/native-crossbar-game-details.png)
+
+<br>
+
+**Downloads**
+
+![Crossbar Downloads in the native app with an active and queued game](../assets/1.3.0/native-crossbar-downloads.png)
+
+*Download progress and storage in these previews are illustrative.*
 
 </details>
 
@@ -46,9 +62,25 @@ To return to the default later, open Appearance again, choose **Store** and conf
 ![Cinema Discover in Orbit Store](../assets/1.3.0/discover-cinema.png)
 
 <details>
-<summary>See more: Game details in Cinema</summary>
+<summary>See more: Browse, game details and Downloads in Cinema</summary>
+
+**Browse**
+
+![Cinema Browse with the PS4 platform filter and largest downloads first](../assets/1.3.0/cinema-browse.png)
+
+<br>
+
+**Game details**
 
 ![Uncharted 4 game details in Cinema](../assets/1.3.0/cinema-game-details.png)
+
+<br>
+
+**Downloads**
+
+![Cinema Downloads with Cyberpunk 2077 selected](../assets/1.3.0/cinema-downloads.png)
+
+*Download progress and storage in these previews are illustrative.*
 
 </details>
 
@@ -57,11 +89,25 @@ To return to the default later, open Appearance again, choose **Store** and conf
 ![Panorama Discover in Orbit Store](../assets/1.3.0/discover-panorama.png)
 
 <details>
-<summary>See more: Downloads in Panorama</summary>
+<summary>See more: Browse, game details and Downloads in Panorama</summary>
+
+**Browse**
+
+![Panorama Browse with the PS4 platform filter and largest downloads first](../assets/1.3.0/panorama-browse.png)
+
+<br>
+
+**Game details**
+
+![Uncharted 4 game details in Panorama](../assets/1.3.0/panorama-game-details.png)
+
+<br>
+
+**Downloads**
 
 ![Panorama Downloads with active, queued and completed games](../assets/1.3.0/panorama-downloads.png)
 
-*Download progress and storage in this preview are illustrative.*
+*Download progress and storage in these previews are illustrative.*
 
 </details>
 
