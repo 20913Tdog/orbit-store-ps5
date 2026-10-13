@@ -34,13 +34,36 @@ To return to the default later, open Appearance again, choose **Store** and conf
 
 ![Crossbar Discover in the native Orbit Store app](../assets/1.3.0/discover-crossbar.png)
 
+<details>
+<summary>See more: Browse in Crossbar</summary>
+
+![Crossbar Browse in the native app with Uncharted games](../assets/1.3.0/native-crossbar-browse.png)
+
+</details>
+
 ### Cinema
 
 ![Cinema Discover in Orbit Store](../assets/1.3.0/discover-cinema.png)
 
+<details>
+<summary>See more: Game details in Cinema</summary>
+
+![Uncharted 4 game details in Cinema](../assets/1.3.0/cinema-game-details.png)
+
+</details>
+
 ### Panorama
 
 ![Panorama Discover in Orbit Store](../assets/1.3.0/discover-panorama.png)
+
+<details>
+<summary>See more: Downloads in Panorama</summary>
+
+![Panorama Downloads with active, queued and completed games](../assets/1.3.0/panorama-downloads.png)
+
+*Download progress and storage in this preview are illustrative.*
+
+</details>
 
 *These previews were rendered locally from the released app code. Crossbar shows the native app; Store, Cinema and Panorama show the browser interface. Orbit Zero offers the same four choices.*
 
