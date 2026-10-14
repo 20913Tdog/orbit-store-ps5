@@ -1,0 +1,25 @@
+name: Publish reviewed Orbit PC-link prototype
+
+on:
+  push:
+    branches: [ops/publish-pc-direct-link]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: orbit-pc-link-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out publication instructions
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Verify and publish the original source and prototype commits
+        run: python3 .orbit-publication/publish.py
