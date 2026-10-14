@@ -1327,5 +1327,11 @@
   "Your verified file has been added to Downloads.": "Your verified file has been added to Downloads.",
   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.",
   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.",
-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files."
+  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.",
+  "Use a download link from your computer": "Use a download link from your computer",
+  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.",
+  "Open download page on this computer": "Open download page on this computer",
+  "Direct download link": "Direct download link",
+  "The link must point to this file:": "The link must point to this file:",
+  "Allow the download page to open in a new tab, then try again.": "Allow the download page to open in a new tab, then try again."
 }

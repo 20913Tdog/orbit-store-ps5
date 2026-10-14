@@ -130,12 +130,13 @@ export function useOrbit() {
     await polling.current;
     await refresh();
   };
-  const openProvider = async (releaseId: string, storageId: string) => {
+  const openProvider = async (releaseId: string, storageId: string, directUrl?: string) => {
     const status = await api<BrowserSession>("/browser", {
       action: "start",
       returnToOrbit: true,
       releaseId,
       storageId,
+      ...(directUrl === undefined ? {} : { directUrl }),
     });
     if (alive.current) setBrowser(status);
     await polling.current;

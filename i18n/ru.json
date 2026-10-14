@@ -1361,5 +1361,11 @@
   "Where it lives": "Где находится",
   "To {drive}": "На {drive}",
   "Educational": "Обучающие",
-  "RPG": "Ролевая игра"
+  "RPG": "Ролевая игра",
+  "Use a download link from your computer": "Использовать ссылку для скачивания с компьютера",
+  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Пройдите проверку в браузере компьютера и вставьте ниже конечную ссылку на файл. PS5 скачает файл напрямую.",
+  "Open download page on this computer": "Открыть страницу скачивания на этом компьютере",
+  "Direct download link": "Прямая ссылка для скачивания",
+  "The link must point to this file:": "Ссылка должна вести на этот файл:",
+  "Allow the download page to open in a new tab, then try again.": "Разрешите открытие страницы скачивания в новой вкладке и повторите попытку."
 }

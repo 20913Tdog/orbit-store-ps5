@@ -523,6 +523,19 @@ static enum MHD_Result route(struct MHD_Connection *c, const char *url, const ch
         }
         if (get && !strcmp(url, "/api/v1/browser"))
             return json_response(c, 200, browser_status());
+        if (get && !strcmp(url, "/api/v1/browser/page")) {
+            const char *id = MHD_lookup_connection_value(c, MHD_GET_ARGUMENT_KIND, "releaseId");
+            pthread_mutex_lock(&orbit.mutex);
+            const Release *r = id ? release_find(id) : NULL;
+            cJSON *page = NULL;
+            if (r && source_enabled_locked(r) && provider_browser_supported(r)) {
+                page = cJSON_CreateObject();
+                cJSON_AddStringToObject(page, "url", r->browser_url);
+            }
+            pthread_mutex_unlock(&orbit.mutex);
+            return page ? json_response(c, 200, page)
+                        : error(c, 400, "This option has no supported provider browser page.");
+        }
         if (post && !strcmp(url, "/api/v1/browser")) {
             char e[256] = {0};
             int code = browser_action(input, e, sizeof e);

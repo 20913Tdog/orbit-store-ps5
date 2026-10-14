@@ -15,6 +15,7 @@ static struct {
     bool ready, stop, pending, busy, thread_started, return_to_browser;
     atomic_bool cancel;
     char id[33], state[16], message[256], job_id[33], title[128];
+    char external_url[sizeof(((Release *)0)->url)];
     Release release;
     Storage storage;
     Job refresh_job;
@@ -160,14 +161,19 @@ static void *worker(void *unused) {
         if (session.stop) break;
         session.pending = false;
         Release resolved = session.release;
-        if (!strcmp(resolved.source, "akirabox"))
+        bool external = session.external_url[0] != 0;
+        if (external) {
+            copy_text(resolved.url, sizeof resolved.url, session.external_url);
+            memset(session.external_url, 0, sizeof session.external_url);
+            state_locked("validating", "Checking the selected file before adding it to Downloads…");
+        } else if (!strcmp(resolved.source, "akirabox"))
             state_locked("waiting-link", "Complete verification on AkiraBox, then wait for Orbit to check the download link.");
         else
             state_locked("waiting", "Complete the provider’s steps, select Download, then return to Orbit.");
         pthread_mutex_unlock(&orbit.mutex);
         char error[256] = {0}, etag[256] = {0}, modified[128] = {0};
         bool validated = false;
-        bool ok = capture(&resolved, etag, modified, &validated, error, sizeof error);
+        bool ok = external || capture(&resolved, etag, modified, &validated, error, sizeof error);
         pthread_mutex_lock(&orbit.mutex);
         ok = ok && !session.stop && !atomic_load(&session.cancel) && selected_locked();
         if (ok) state_locked("validating", "Checking the selected file before adding it to Downloads…");
@@ -206,6 +212,7 @@ static void *worker(void *unused) {
         memset(&resolved, 0, sizeof resolved);
         memset(&session.release, 0, sizeof session.release);
         memset(&session.refresh_job, 0, sizeof session.refresh_job);
+        memset(session.external_url, 0, sizeof session.external_url);
         session.busy = false;
     }
     pthread_mutex_unlock(&orbit.mutex);
@@ -254,6 +261,7 @@ cJSON *browser_status(void) {
 int browser_action(const cJSON *input, char *error, size_t cap) {
     int code = 202;
     const char *action = json_text(input, "action");
+    const cJSON *external_link = cJSON_GetObjectItemCaseSensitive(input, "directUrl");
     pthread_mutex_lock(&orbit.mutex);
     if (!strcmp(action, "cancel")) {
         if (!session.busy || strcmp(json_text(input, "id"), session.id)) {
@@ -280,6 +288,10 @@ int browser_action(const cJSON *input, char *error, size_t cap) {
             copy_text(error, cap, "Pause the download and enable its source before refreshing its link."); code = 409;
         } else if (!r || !provider_browser_supported(r)) {
             copy_text(error, cap, "This option has no supported provider browser page."); code = 400;
+        } else if (external_link && (!cJSON_IsString(external_link) ||
+                   !external_link->valuestring[0] ||
+                   !provider_capture_url(r, external_link->valuestring))) {
+            copy_text(error, cap, "Captured link does not match this download option."); code = 400;
         } else if (!s) {
             copy_text(error, cap, "Reconnect the selected drive first."); code = 409;
         } else if (refreshing && (strcmp(s->root, job->root) || s->device != job->device || s->inode != job->inode)) {
@@ -292,7 +304,9 @@ int browser_action(const cJSON *input, char *error, size_t cap) {
                 goto done;
             }
             session.release = *r; session.storage = *s;
-            session.return_to_browser = cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(input, "returnToOrbit"));
+            copy_text(session.external_url, sizeof session.external_url,
+                      external_link ? external_link->valuestring : "");
+            session.return_to_browser = !external_link && cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(input, "returnToOrbit"));
             memset(&session.refresh_job, 0, sizeof session.refresh_job);
             if (refreshing) session.refresh_job = *job;
             copy_text(session.title, sizeof session.title, r->title);
@@ -300,7 +314,9 @@ int browser_action(const cJSON *input, char *error, size_t cap) {
             session.job_id[0] = 0;
             session.busy = session.pending = true;
             atomic_store(&session.cancel, false);
-            state_locked("opening", "Opening the download page on your PS5…");
+            state_locked(external_link ? "validating" : "opening", external_link
+                ? "Checking the selected file before adding it to Downloads…"
+                : "Opening the download page on your PS5…");
             pthread_cond_signal(&session.changed);
             code = 202;
         }

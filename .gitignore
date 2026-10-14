@@ -10,3 +10,12 @@ node_modules/
 .venv/
 .state/
 /CATALOGUE.md
+
+# Source builds and local verification
+.deps/
+build/
+dist/
+*.tsbuildinfo
+*.o
+__pycache__/
+*.py[cod]

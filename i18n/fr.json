@@ -1344,5 +1344,11 @@
   "Where it lives": "Emplacement",
   "To {drive}": "Sur {drive}",
   "Educational": "Éducatif",
-  "RPG": "Jeu de rôle"
+  "RPG": "Jeu de rôle",
+  "Use a download link from your computer": "Utiliser un lien de téléchargement depuis votre ordinateur",
+  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Terminez la vérification dans le navigateur de votre ordinateur, puis collez le lien final du fichier ci-dessous. Votre PS5 télécharge le fichier directement.",
+  "Open download page on this computer": "Ouvrir la page de téléchargement sur cet ordinateur",
+  "Direct download link": "Lien de téléchargement direct",
+  "The link must point to this file:": "Le lien doit pointer vers ce fichier :",
+  "Allow the download page to open in a new tab, then try again.": "Autorisez l’ouverture de la page de téléchargement dans un nouvel onglet, puis réessayez."
 }

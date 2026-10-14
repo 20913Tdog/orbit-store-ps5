@@ -1,5 +1,12 @@
 # Orbit Store (Beta)
 
+> **PC link handoff prototype — 1.3.1-beta.1.** This development branch lets you
+> finish provider verification in your computer's browser and paste the final file
+> URL into Orbit so the PS5 downloads it directly. Read the
+> [setup, test results and rollback instructions](docs/pc-direct-link.md).
+> Local backend/browser tests pass; a real PS5 and a PC-generated Vikingfile link
+> still need testing. This is a development fork of the upstream project below.
+
 ### A modern, no-BS download manager for PS5.
 
 Orbit runs on your PS5. Browse games, compare their available sources and formats, and download a single file directly to the console or an attached drive. Open the native TV app from your Games row, or pair a phone or computer to manage the same queue over your local network.

@@ -168,6 +168,14 @@ build/orbit_browser_probe.elf: $(BROWSER_PROBE)/main.c backend/browser_platform.
 	$(PS5_CC) $(CFLAGS) -DORBIT_BROWSER_PROBE -Ibackend -I$(PS5_LIB)/include $(BROWSER_PROBE)/main.c backend/browser_platform.c backend/browser_services.c backend/browser_scan.c -o $@ -L$(PS5_LIB)/lib -lmicrohttpd
 
 .PHONY: test-browser-capture
+
+# PC verification / PS5 transfer. Production provider policy and worker races,
+# followed by the real API and downloader against loopback-only fixtures.
+.PHONY: test-pc-link
+test-pc-link: build/orbit-test
+	node --test tests/external-download.test.mjs
+	python3 tests/external_download_integration.py
+
 build/orbit-browser-services-test: backend/browser_services.c backend/browser_platform.h tests/browser_services_driver.c
 	$(HOST_CC) $(CFLAGS) -DORBIT_BROWSER_PROBE -Ibackend backend/browser_services.c tests/browser_services_driver.c -Wl,--wrap=dlopen -Wl,--wrap=dlsym -o $@
 .PHONY: test-browser-services

@@ -25,6 +25,7 @@ import { CrossbarList, type XbRow } from "./interfaces/CrossbarList";
 import { Glyph } from "./interfaces/Glyph";
 import { PnGroup, PnTile } from "./interfaces/PanoramaParts";
 import { menuKeys } from "./interfaces/menuKeys";
+import { ExternalDownload } from "./ExternalDownload";
 export function Details({
   initialSelection,
   back,
@@ -58,7 +59,7 @@ export function Details({
   ) => Promise<void>;
   openQueue: (id?: string) => void;
   browser: BrowserSession | null;
-  openProvider: (releaseId: string, storageId: string) => Promise<void>;
+  openProvider: (releaseId: string, storageId: string, directUrl?: string) => Promise<void>;
   favorite: boolean;
   setFavorite: (value: boolean) => Promise<void>;
   configureDebrid: (onReturn: () => void) => void;
@@ -179,12 +180,12 @@ export function Details({
       setPending(false);
     }
   }
-  async function verifyProvider() {
+  async function verifyProvider(directUrl?: string) {
     if (!drive) return;
     setPending(true);
     setError("");
     try {
-      await openProvider(release.id, drive.id);
+      await openProvider(release.id, drive.id, directUrl);
       setSheet(null);
       requestAnimationFrame(() => {
         document
@@ -306,6 +307,14 @@ export function Details({
       </ol>
       {!browser?.available && (
         <p>{t("Connect to Orbit running on your PS5 to use this option.")}</p>
+      )}
+      {system?.paired && browser?.available && (
+        <ExternalDownload
+          key={`${release.id}:${drive?.id || ""}`}
+          release={release}
+          disabled={downloadUnavailable}
+          submit={verifyProvider}
+        />
       )}
     </div>
   );
