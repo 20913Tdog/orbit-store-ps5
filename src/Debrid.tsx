@@ -135,7 +135,7 @@ export function Debrid() {
       {status?.connected && (
         <>
           <ul>
-            {status.hosts.map((host) => (
+            {status.hosts.filter((host) => host.sourceId !== "1fichier").map((host) => (
               <li key={host.sourceId}>
                 {host.sourceId === "archive" ? "Archive.org" : host.sourceId === "vikingfile" ? "Vikingfile" : host.sourceId === "datanodes" ? "DataNodes" : host.sourceId}:{" "}
                 {host.available ? t("Available") : t("Unavailable")}

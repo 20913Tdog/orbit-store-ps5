@@ -52,7 +52,7 @@ export interface Game {
   newOnOrbitRank?: number | null;
   releases: Release[];
 }
-export type SourceId = "vikingfile" | "archive" | "akirabox" | "datanodes";
+export type SourceId = "vikingfile" | "archive" | "akirabox" | "datanodes" | "1fichier";
 export interface SourceSettings {
   enabled: SourceId[];
   acknowledged: boolean;

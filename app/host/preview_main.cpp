@@ -603,6 +603,21 @@ std::vector<Scenario> scenarios()
                      pause(1.0f, "settings-updates-current"),
                      move(Direction::down),
                      pause(0.8f, "settings-more")}});
+    // App settings → Download sources → Archive.org: the row, the sign-in form
+    // (refused, then signed in) and signing out. The fixture accepts "orbit".
+    list.push_back({"archive-account", Mode::normal, false,
+        {run(1.5f, [](orbit::App &app)
+             { app.open_settings(orbit::SettingsScreen::Section::sources, true); }),
+         move(Direction::down), move(Direction::down), move(Direction::down), move(Direction::down),
+         move(Direction::down), move(Direction::down), move(Direction::down), move(Direction::down),
+         pause(1.0f, "archive-row"), tap(Action::confirm), pause(0.8f, "archive-form"),
+         tap(Action::confirm), pause(0.8f, "archive-keyboard"), tap(Action::back),
+         run(0.6f, [](orbit::App &app) { app.settings().open_archive_sign_in("player@example.com", "wrong"); }),
+         move(Direction::down), move(Direction::down), tap(Action::confirm), pause(1.0f, "archive-refused"),
+         tap(Action::back),
+         run(0.6f, [](orbit::App &app) { app.settings().open_archive_sign_in("player@example.com", "orbit"); }),
+         move(Direction::down), move(Direction::down), tap(Action::confirm), pause(1.2f, "archive-signed-in"),
+         tap(Action::confirm), pause(0.8f, "archive-sign-out")}});
     // App settings → Appearance: the cards, switching, and the keep check.
     list.push_back({"appearance", Mode::normal, true,
         {run(1.5f, [](orbit::App &app)

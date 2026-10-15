@@ -1,9 +1,12 @@
 # Download am PC freigeben, auf der PS5 laden
 
-Experimenteller Eigenbau auf Basis des offiziellen Orbit-Store-Quellpakets **1.3.0**.
+Experimenteller Eigenbau auf Basis des offiziellen Orbit-Store-Quellpakets **1.3.5**.
 Entwicklungsbranch: [`feat/pc-direct-link`](https://github.com/20913Tdog/orbit-store-ps5/tree/feat/pc-direct-link).
-Angezeigte Service-Version: **1.3.1-beta.2**.
-Die native TV-App wurde nicht neu gebaut. Orbit Zero wird nicht benötigt.
+Angezeigte Service-Version: **1.3.5-pc.1**.
+Die native TV-App wurde nicht verändert. Für die neuen nativen Bedienelemente und den verbesserten Dialogablauf die offizielle **1.3.5-TV-App** verwenden:
+[PPSA99177.ffpkg](https://github.com/saawant12/orbit-store-ps5/releases/download/v1.3.5/PPSA99177.ffpkg).
+Danach unseren Dienst über die neue `orbit_store.elf` starten. Orbit Zero wird für die PC-Link-Funktion nicht benötigt.
+Die offiziellen Orbit-Zero-1.3.5-Pakete können unabhängig davon verwendet werden.
 
 ## Testbuild starten
 
@@ -13,7 +16,7 @@ Die native TV-App wurde nicht neu gebaut. Orbit Zero wird nicht benötigt.
    Orbit zum Neustart stoppen** wählen und warten, bis der Dienst beendet ist.
 3. Die mitgelieferte `orbit_store.elf` über deinen vorhandenen Payload Manager oder
    ELF Loader starten. Am PC `http://<PS5-IP>:34177/` öffnen, neu laden und bei Bedarf koppeln.
-   Unter App-Einstellungen sollte **1.3.1-beta.2** stehen.
+   Unter App-Einstellungen sollte **1.3.5-pc.1** stehen.
 
 Orbit speichert beim Start wie gewohnt eine Laufzeitkopie unter
 `/data/orbit-store/orbit_store.elf` und aktualisiert bereits von Orbit verwaltete
@@ -48,18 +51,17 @@ eine abweichende Dateigröße wird abgelehnt. Es werden keine Browser-Cookies an
 ## Was geprüft wurde
 
 - Web-Build, TypeScript und alle zehn Übersetzungskataloge.
-- Zehn Tests des echten Backend-Workers mit der produktiven Anbieter-Allowlist:
+- Fünfzehn Tests des echten Backend-Workers mit der produktiven Anbieter-Allowlist:
   gültiger Link, falscher Host/Dateiname/Datentyp, Abbruch, parallele Anfrage,
-  Quellen- und Katalogänderung sowie Link-Erneuerung eines pausierten Jobs.
+  Quellen- und Katalogänderung, Link-Erneuerung eines pausierten Jobs sowie native Dialogbestätigung und beide Rückkehrziele aus 1.3.5.
 - Vierzehn Browser-Szenarien: alle vier Oberflächen, blockierter Tab, API-Fehler,
   unzulässige Seitenadresse, abgelehnter Datei-Link, leeres Feld sowie PS5-Erkennung über lokale Sitzung und Browserkennung.
-- HTTP-Integration mit dem vollständigen Testdienst: Kopplung, Herkunftsprüfung,
+- HTTP-Integration mit dem vollständigen Testdienst und Archive.org-An-/Abmeldung gegen lokale Testdaten: Kopplung, Herkunftsprüfung,
   Dateiname, Größe, Dateityp, stabile Datei-Identität, Byte-Probe und vollständiger
   Download mit Prüfsumme in ein temporäres Laufwerk.
 - PS5-Payload mit SDK 0.43 aus den festgelegten Bibliotheksquellen gebaut.
 
-**Praxistest:** Der erste Testbuild startet auf der echten PS5. Noch offen ist ein echter Vikingfile-Link, der am PC
-erzeugt wurde. PC und PS5 sollten dafür zunächst dasselbe Heimnetz und denselben
+**Praxistest:** Die PC-Funktion im vorherigen Build 1.3.1-beta.2 wurde auf der echten PS5 bestätigt. Die neue Kombination mit 1.3.5 muss noch auf der Konsole getestet werden. PC und PS5 sollten dafür zunächst dasselbe Heimnetz und denselben
 Internetzugang verwenden. Ob der Anbieter zusätzlich Cookies oder eine bestimmte
 Browser-Sitzung voraussetzt, entscheidet dieser Praxistest.
 
@@ -70,7 +72,7 @@ Diese erste Version verlangt das Einfügen des fertigen Links. Die automatische
 
 Der ursprüngliche öffentliche GitHub-Hauptbranch enthält Dokumentation und Releases.
 `backend/`, `src/`, `app/` und Build-Werkzeuge stammen aus dem offiziellen
-`orbit-store-1.3.0-source.tar.gz` im Release-Quellpaket. Der Änderungs-Patch bezieht
+`orbit-store-1.3.5-source.tar.gz` im Release-Quellpaket. Der Änderungs-Patch bezieht
 sich auf diesen Quellstand; die vollständige Arbeitskopie enthält ihn bereits.
 In diesem Fork liegt die Entwicklung auf `feat/pc-direct-link`. Der Import des
 offiziellen Quellstands und die Erweiterung sind in getrennten Commits abgelegt.

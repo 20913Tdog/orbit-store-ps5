@@ -17,10 +17,10 @@
 #include <time.h>
 #include <unistd.h>
 
-/* v6 adds compressed options and AkiraBox/DataNodes. Older clients keep v5 (no archives), PS5-only v4
- * or format-compatible v3, since one unknown row rejects a whole feed. */
-#define CATALOG_URL "https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/catalogue-v6.enc"
-#define CATALOG_FEED_VERSION 6
+/* v7 adds 1fichier. Keep v6 and earlier feeds compatible: one unknown
+ * source rejects a whole feed in older clients. */
+#define CATALOG_URL "https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/catalogue-v7.enc"
+#define CATALOG_FEED_VERSION 7
 #define CATALOG_LIMIT (CATALOG_SEAL_LIMIT + CATALOG_SEAL_OVERHEAD)
 #define CHECK_INTERVAL (6 * 60 * 60)
 static struct {

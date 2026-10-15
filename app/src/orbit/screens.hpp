@@ -902,6 +902,56 @@ class GamePage final : public Screen
     mutable float pn_scroll_end_ = 0.0f;
 };
 
+// Signing in to Archive.org (App settings → Download sources): the email and
+// password over the screen, typed with the look's keyboard. The console keeps
+// only Archive.org's session; this form forgets both when it closes.
+class ArchiveSignIn
+{
+  public:
+    explicit ArchiveSignIn(Context &context);
+    void open();
+    // Previews and tests: the rows as if typed.
+    void fill(std::string email, std::string password)
+    {
+        email_ = std::move(email);
+        password_ = std::move(password);
+    }
+    bool active() const
+    {
+        return open_;
+    }
+    enum class Result : std::uint8_t
+    {
+        none,
+        closed,
+        signed_in,
+    };
+    Result update(const InputFrame &input, float dt, Feedback &feedback);
+    void draw(Frame &frame) const;
+    std::vector<hui::ui::Hint> hints() const;
+
+  private:
+    enum class Field : std::uint8_t
+    {
+        email,
+        password,
+        buttons,
+    };
+    void close();
+    Context &ctx_;
+    bool open_ = false;
+    std::string email_, password_;
+    int row_ = 0;
+    int button_ = 0; // Sign in, Cancel
+    bool typing_ = false;
+    Field typing_field_ = Field::email;
+    hui::ui::Keyboard keyboard_;
+    bool waiting_ = false;
+    std::uint64_t serial_ = 0;
+    std::string error_;
+    ui::Ease in_;
+};
+
 // App settings (the browser's Sources, Pairing, Storage, Game catalogue,
 // Update / reinstall and TV app panels) as one page: sections on the left,
 // the chosen one on the right. Updates keep the two programs apart: this TV
@@ -937,6 +987,11 @@ class SettingsScreen final : public Screen
     {
         confirm_restart_ = true;
     }
+    void open_archive_sign_in(std::string email, std::string password)
+    {
+        archive_sign_in_.open();
+        archive_sign_in_.fill(std::move(email), std::move(password));
+    }
 
   private:
     enum class Kind : std::uint8_t
@@ -959,6 +1014,10 @@ class SettingsScreen final : public Screen
         open_browser,
         zero_toggle,
         archives_toggle,
+        archive_sign_in,
+        archive_sign_out, // asks first
+        archive_sign_out_confirm,
+        archive_sign_out_cancel,
         download_limit_less,
         download_limit_more,
         // Appearance (kept on this console only)
@@ -1019,7 +1078,7 @@ class SettingsScreen final : public Screen
     xb::View xb_;
     xb::Menu xb_menu_;
     bool xb_open_ = false; // inside a section, rather than on the list of them
-    int xb_menu_kind_ = 0; // Default drive, limit, TV app, service, Interface, Ribbons, Motion, Accent, Art behind
+    int xb_menu_kind_ = 0; // Default drive, limit, TV app, service, Interface, Ribbons, Motion, Accent, Art behind, Archive.org sign-out
     int xb_band_ = 0;
     ui::Ease xb_band_in_;
 
@@ -1045,8 +1104,8 @@ class SettingsScreen final : public Screen
   public:
     bool modal() const override
     {
-        // A setting's values or a question keep L1 and R1 for themselves.
-        return xb_menu_.open || crossbar_band_open();
+        // A setting's values, a question or the sign-in keep L1 and R1 for themselves.
+        return xb_menu_.open || crossbar_band_open() || archive_sign_in_.active();
     }
     bool page(int step) override;
 
@@ -1068,6 +1127,10 @@ class SettingsScreen final : public Screen
     std::uint64_t setting_serial_ = 0;
     std::string error_;
     Setting error_setting_ = Setting::none;
+    // Download sources: the Archive.org sign-in form, and the sign-out question.
+    ArchiveSignIn archive_sign_in_;
+    bool archive_sign_out_ = false;
+    void draw_look(Frame &frame, bool focused) const;
     float age_ = 0.0f;
     ui::Ease scroll_;
     std::vector<float> focus_amount_; // parallel to controls(), by position

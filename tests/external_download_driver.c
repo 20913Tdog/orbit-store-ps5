@@ -13,6 +13,15 @@ static Storage destination = {.id = "internal", .root = "/fixture", .device = 1,
 static Job job;
 static bool enabled = true;
 static unsigned created, refreshed;
+static atomic_uint browser_opens;
+int probe_browser_open(const char *url) {
+    assert(!strcmp(url, "http://127.0.0.1:34177/"));
+    cJSON *status = browser_status();
+    assert(!strcmp(json_text(status, "state"), "queued") && json_text(status, "jobId")[0]);
+    cJSON_Delete(status);
+    atomic_fetch_add(&browser_opens, 1);
+    return 0;
+}
 static atomic_bool hold_validation, validation_entered;
 static bool fail_validation;
 static const char *direct = "https://vikingfile.com/d/Abcd123456/PPSA00001-fixture.ffpfsc";
@@ -140,14 +149,52 @@ int main(int argc, char **argv) {
         copy_text(job.storage_id, sizeof job.storage_id, destination.id);
         copy_text(job.root, sizeof job.root, destination.root);
     }
-    bool legacy = !strcmp(scenario, "legacy");
+    bool native = !strcmp(scenario, "native-dialog");
+    bool browser_return = !strcmp(scenario, "browser-return");
+    bool legacy = !strcmp(scenario, "legacy") || native || browser_return;
+    if (!strcmp(scenario, "mixed-modes")) {
+        cJSON *input = request("start", true);
+        cJSON_AddBoolToObject(input, "nativeDialog", true);
+        cJSON_AddStringToObject(input, "returnTarget", "native");
+        cJSON_AddStringToObject(input, "clientId", "fixture-native");
+        assert(submit(input) == 400);
+        assert(!created && !refreshed);
+        browser_stop(); return 0;
+    }
     if (legacy) assert(setenv("ORBIT_TEST_CAPTURE_URL", direct, 1) == 0);
     else unsetenv("ORBIT_TEST_CAPTURE_URL");
     bool held = !strcmp(scenario, "cancel") || !strcmp(scenario, "source-change") ||
         !strcmp(scenario, "catalog-change") || !strcmp(scenario, "refresh-change") || !strcmp(scenario, "busy");
     atomic_store(&hold_validation, held);
     fail_validation = !strcmp(scenario, "identity-mismatch");
-    assert(submit(request(refresh ? "refresh" : "start", !legacy)) == 202);
+    cJSON *input = request(refresh ? "refresh" : "start", !legacy);
+    if (native || !strcmp(scenario, "direct-native")) cJSON_AddStringToObject(input, "returnTarget", "native");
+    if (browser_return || !strcmp(scenario, "direct-browser")) cJSON_AddStringToObject(input, "returnTarget", "browser");
+    if (native) {
+        cJSON_AddBoolToObject(input, "nativeDialog", true);
+        cJSON_AddStringToObject(input, "clientId", "fixture-native");
+    }
+    assert(submit(input) == 202);
+    if (native) {
+        cJSON *status = browser_status();
+        assert(!strcmp(json_text(status, "pageUrl"), selected.browser_url));
+        assert(cJSON_IsFalse(cJSON_GetObjectItemCaseSensitive(status, "dialogOpened")));
+        assert(!atomic_load(&validation_entered));
+        cJSON *opened = request("opened", false);
+        cJSON_AddStringToObject(opened, "id", json_text(status, "id"));
+        cJSON_AddStringToObject(opened, "clientId", "wrong-client");
+        assert(submit(opened) == 409);
+        opened = request("opened", false);
+        cJSON_AddStringToObject(opened, "id", json_text(status, "id"));
+        cJSON_AddStringToObject(opened, "clientId", "fixture-native");
+        assert(submit(opened) == 202);
+        cJSON_Delete(status);
+    } else if (!legacy) {
+        cJSON *status = browser_status();
+        assert(!cJSON_HasObjectItem(status, "pageUrl"));
+        assert(!cJSON_HasObjectItem(status, "clientId"));
+        cJSON_Delete(status);
+    }
     if (held) {
         wait_validation();
         if (!strcmp(scenario, "cancel")) {
@@ -168,6 +215,7 @@ int main(int argc, char **argv) {
     bool failed = fail_validation || !strcmp(scenario, "catalog-change") || !strcmp(scenario, "refresh-change");
     expect_state(cancelled ? "cancelled" : failed ? "failed" : "queued");
     browser_stop();
+    assert(atomic_load(&browser_opens) == (unsigned)browser_return);
     assert(created + refreshed == (unsigned)(!cancelled && !failed));
     if (!cancelled && !failed) {
         assert(!strcmp(queued.url, direct)); assert(queued.size == 4096);

@@ -99,7 +99,7 @@ static Event job_event(const Job *j) {
     if (!j) return e;
     for (size_t i = 0; i < orbit.job_count; i++)
         if (j == &orbit.jobs[i]) e.download = (unsigned)i + 1;
-    e.provider = ALLOWED(j->release.source, "archive", "vikingfile", "akirabox", "datanodes");
+    e.provider = ALLOWED(j->release.source, "archive", "vikingfile", "akirabox", "datanodes", "1fichier");
     e.status = ALLOWED(j->status, "queued", "downloading", "verifying", "inspecting", "extracting", "retrying", "paused", "cancelled", "complete", "error");
     e.reason = reason(j->error);
     e.attempts = j->attempts;
@@ -112,7 +112,7 @@ static Event job_event(const Job *j) {
 void diagnostics_event_locked(const char *phase, const Job *j, long http_status, int curl_code) {
     Event e = job_event(j);
     if (!started) started = e.at;
-    e.phase = ALLOWED(phase, "startup", "catalogue-cache", "https", "saved-state", "process-identity", "pairing", "firmware", "listener", "listener-recovery", "download-worker", "launcher", "integrations", "catalogue", "updates", "library", "browser", "tv-app", "artwork", "notification", "ready", "shutdown", "browser-modules", "browser-user-service", "browser-launch", "browser-user-cleanup", "queued", "pause", "resume", "retry", "cancel", "transfer-start", "transfer-end", "extract-start");
+    e.phase = ALLOWED(phase, "startup", "catalogue-cache", "https", "saved-state", "process-identity", "pairing", "firmware", "listener", "listener-recovery", "download-worker", "launcher", "integrations", "catalogue", "updates", "library", "browser", "tv-app", "artwork", "notification", "ready", "shutdown", "browser-modules", "browser-user-service", "browser-launch", "browser-user-cleanup", "browser-native-identity", "browser-native-identity-cleanup", "browser-native-return", "queued", "pause", "resume", "retry", "cancel", "transfer-start", "transfer-end", "extract-start");
     e.http_status = http_status >= 100 && http_status <= 599 ? http_status : 0;
     e.curl_code = curl_code >= 0 && curl_code <= 999 ? curl_code : 0;
     events[event_next] = e;
@@ -123,7 +123,7 @@ void diagnostics_stage(const char *phase, const char *status, int result) {
     pthread_mutex_lock(&orbit.mutex);
     diagnostics_event_locked(phase, NULL, 0, 0);
     Event *e = &events[(event_next + EVENT_LIMIT - 1) % EVENT_LIMIT];
-    e->status = ALLOWED(status, "started", "ok", "error", "skipped");
+    e->status = ALLOWED(status, "started", "ok", "error", "skipped", "requested");
     e->result = result;
     trace_write(e);
     pthread_mutex_unlock(&orbit.mutex);

@@ -10,7 +10,11 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-Orbit orbit = {.mutex = PTHREAD_MUTEX_INITIALIZER,
+/* Keep the large empty catalogue in BSS. Embedding it in the initialized Orbit
+ * object writes megabytes of zeroes into both the runtime and public ELF. */
+static Release releases[ORBIT_MAX_RELEASES + 1];
+Orbit orbit = {.releases = releases,
+               .mutex = PTHREAD_MUTEX_INITIALIZER,
                .changed = PTHREAD_COND_INITIALIZER,
                .port = ORBIT_HTTP_PORT,
                .state_fd = -1,

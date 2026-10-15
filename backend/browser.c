@@ -12,15 +12,23 @@
 static struct {
     pthread_t thread;
     pthread_cond_t changed;
-    bool ready, stop, pending, busy, thread_started, return_to_browser;
+    bool ready, stop, pending, busy, thread_started, return_to_browser, native_dialog, dialog_opened;
     atomic_bool cancel;
-    char id[33], state[16], message[256], job_id[33], title[128];
+    char id[33], state[16], message[256], job_id[33], title[128], client_id[65];
     char external_url[sizeof(((Release *)0)->url)];
     Release release;
     Storage storage;
     Job refresh_job;
+    int64_t started_ms, capture_ms, link_ms, validation_ms, queued_ms, finished_ms;
+    uint64_t scanned_bytes;
+    unsigned candidates, browser_processes;
 } session = {.changed = PTHREAD_COND_INITIALIZER};
 
+static int64_t milliseconds(void) {
+    struct timespec now;
+    return clock_gettime(CLOCK_MONOTONIC, &now) ? 0 :
+        (int64_t)now.tv_sec * 1000 + now.tv_nsec / 1000000;
+}
 static bool available(void) {
 #ifdef ORBIT_TEST
     return true;
@@ -63,6 +71,14 @@ static void delay(void) {
     struct timespec t = {.tv_nsec = 100000000};
     nanosleep(&t, NULL);
 }
+static int validate_capture(Release *r, char *etag, char *modified, char *error, size_t cap) {
+    const int64_t start = milliseconds();
+    int result = transfer_validate_capture(r, &session.cancel, etag, modified, error, cap);
+    pthread_mutex_lock(&orbit.mutex);
+    session.validation_ms += milliseconds() - start;
+    pthread_mutex_unlock(&orbit.mutex);
+    return result;
+}
 #ifndef ORBIT_TEST
 static bool native_active(void *context) {
     return active() && probe_target_active(context);
@@ -70,6 +86,25 @@ static bool native_active(void *context) {
 #endif
 static bool capture(Release *r, char *etag, char *modified, bool *validated, char *error, size_t cap) {
     *validated = false;
+    /* Native owns the dialog. Do not scan an old browser before it confirms
+     * opening this exact session. An abandoned prepare expires in 30 seconds. */
+    if (session.native_dialog) {
+        bool opened = false;
+        for (unsigned i = 0; i < 300 && active(); ++i) {
+            pthread_mutex_lock(&orbit.mutex);
+            opened = session.dialog_opened;
+            pthread_mutex_unlock(&orbit.mutex);
+            if (opened) break;
+            delay();
+        }
+        if (!opened || !active()) {
+            copy_text(error, cap, "The native download page did not open. Return to Orbit and try again.");
+            return false;
+        }
+    }
+    pthread_mutex_lock(&orbit.mutex);
+    session.capture_ms = milliseconds() - session.started_ms;
+    pthread_mutex_unlock(&orbit.mutex);
 #ifdef ORBIT_TEST
     (void)etag; (void)modified;
     /* Compile-time-only simulator: not exposed through the API or in ELF builds. */
@@ -83,72 +118,107 @@ static bool capture(Release *r, char *etag, char *modified, bool *validated, cha
         copy_text(error, cap, "No matching download route was found."); return false;
     }
     copy_text(r->url, sizeof r->url, candidate);
+    pthread_mutex_lock(&orbit.mutex);
+    session.link_ms = milliseconds() - session.started_ms;
+    session.candidates++;
+    pthread_mutex_unlock(&orbit.mutex);
     return true;
 #else
     if (!active()) return false;
-    if (probe_browser_open(r->browser_url)) {
+    if (!session.native_dialog && probe_browser_open(r->browser_url)) {
         copy_text(error, cap, "The PS5 browser could not open. Return to Orbit and try again.");
         return false;
     }
-    ProbeTarget target = {.cancel = &session.cancel, .deadline = monotonic() + 120};
-    int found = 0;
-    for (unsigned i = 0; i < 100 && active(); i++) {
-        found = probe_target_find(&target);
-        if (found) break;
-        delay();
-    }
-    if (found != 1) {
-        copy_text(error, cap, "The PS5 browser is unavailable or cannot be identified safely.");
-        return false;
-    }
+    const time_t deadline = monotonic() + PROBE_SESSION_SECONDS;
+    ProbeTarget targets[PROBE_TARGET_LIMIT] = {{0}};
+    int count = 0;
+    time_t missing_since = monotonic();
     char rejected[6][2048] = {{0}};
     BrowserMatch match = {.release = r, .rejected = rejected};
-    ProbeReader reader = {.context = &target, .read = probe_target_read,
+    ProbeReader reader = {.read = probe_target_read,
         .active = native_active, .match = browser_match, .match_context = &match,
-        .remaining = 128U * 1024U * 1024U};
-    while (native_active(&target) && reader.remaining) {
-        ProbeResult result = probe_target_scan(&target, &reader,
-            !strcmp(r->source, "vikingfile") ? "https://vikingfile.com/d/" : "https://");
-        if (result == PROBE_FOUND && active()) {
-            if (!strcmp(r->source, "akirabox") || !strncmp(match.url, "https://tunnel5.dlproxy.uk/", 27)) {
-                /* Signed/opaque links in browser memory may be stale or belong to an older file.
-                 * Reject those by response identity, then keep looking within
-                 * the same time/read budget, with at most six candidates. */
+        .remaining = PROBE_SESSION_BUDGET};
+    while (active() && monotonic() < deadline && reader.remaining) {
+        ProbeTarget found[PROBE_TARGET_LIMIT] = {{0}};
+        int n = probe_targets_find(found, PROBE_TARGET_LIMIT);
+        if (n < 0) {
+            copy_text(error, cap, n == -2
+                ? "Close other PS5 browser pages, then try opening this download again."
+                : "Orbit could not read the PS5 browser status. Return to Orbit and try again.");
+            return false;
+        }
+        if (!n) {
+            if (monotonic() - missing_since >= 10) {
+                copy_text(error, cap, "The PS5 browser did not become ready. Return to Orbit and try again.");
+                return false;
+            }
+            delay();
+            continue;
+        }
+        missing_since = monotonic();
+        for (int i = 0; i < n; ++i) {
+            found[i].cancel = &session.cancel;
+            found[i].deadline = deadline;
+            for (int j = 0; j < count; ++j)
+                if (found[i].pid == targets[j].pid &&
+                    found[i].started_seconds == targets[j].started_seconds &&
+                    found[i].started_microseconds == targets[j].started_microseconds &&
+                    !strcmp(found[i].name, targets[j].name))
+                    found[i].cursor = targets[j].cursor;
+        }
+        memcpy(targets, found, sizeof targets);
+        count = n;
+        const uint64_t before = reader.attempted;
+        for (int i = 0; i < count && active() && reader.remaining; ++i) {
+            reader.context = &targets[i];
+            /* Share one read/time budget fairly. An older ShellUI browser must
+             * not hide or delay the current native dialog's network process. */
+            ProbeResult result = probe_target_scan_slice(&targets[i], &reader,
+                !strcmp(r->source, "vikingfile") ? "https://vikingfile.com/d/" : "https://",
+                PROBE_SCAN_SLICE);
+            pthread_mutex_lock(&orbit.mutex);
+            session.scanned_bytes = reader.attempted;
+            session.browser_processes = count;
+            if (result == PROBE_FOUND) {
+                session.link_ms = milliseconds() - session.started_ms;
+                session.candidates++;
+            }
+            pthread_mutex_unlock(&orbit.mutex);
+            if (result == PROBE_FOUND && active()) {
+                /* All candidates still require the selected filename/host and
+                 * actual response identity. A stale link in a previous page
+                 * cannot stop us looking for the newly generated one. */
                 Release candidate = *r;
                 copy_text(candidate.url, sizeof candidate.url, match.url);
                 pthread_mutex_lock(&orbit.mutex);
                 if (!session.stop && !atomic_load(&session.cancel))
                     state_locked("validating", "Checking the selected file before adding it to Downloads…");
                 pthread_mutex_unlock(&orbit.mutex);
-                int invalid = transfer_validate_capture(&candidate, &session.cancel,
-                    etag, modified, error, cap);
+                int invalid = validate_capture(&candidate, etag, modified, error, cap);
                 memset(&candidate, 0, sizeof candidate);
                 if (invalid) {
                     pthread_mutex_lock(&orbit.mutex);
                     if (!session.stop && !atomic_load(&session.cancel))
-                        state_locked(!strcmp(r->source, "akirabox") ? "waiting-link" : "waiting",
-                            "Waiting for a fresh download link from the provider…");
+                        state_locked("waiting-link", "Waiting for a fresh download link from the provider…");
                     pthread_mutex_unlock(&orbit.mutex);
-                    if (match.rejected_count == 6) break;
                     copy_text(rejected[match.rejected_count++], sizeof rejected[0], match.url);
                     match.url[0] = 0;
-                    if (match.rejected_count == 6) break;
+                    if (match.rejected_count == 6) return false;
                     continue;
                 }
                 *validated = true;
+                copy_text(r->url, sizeof r->url, match.url);
+                memset(&match, 0, sizeof match);
+                memset(rejected, 0, sizeof rejected);
+                return true;
             }
-            copy_text(r->url, sizeof r->url, match.url);
-            memset(&match, 0, sizeof match);
-            memset(rejected, 0, sizeof rejected);
-            return true;
+            /* A process can exit/restart while the new page opens. Discovery
+             * refreshes its identity next round; never keep reading a reused PID. */
         }
-        if (result != PROBE_ABSENT) break;
-        delay();
+        if (reader.attempted == before) delay();
     }
-    if (!target.identity_changed && error[0]) return false;
-    copy_text(error, cap, target.identity_changed
-        ? "The PS5 browser restarted. Return to Orbit and try again."
-        : "No matching download was found within the verification window. Return to Orbit to try again.");
+    if (!error[0]) copy_text(error, cap,
+        "No matching download was found within the verification window. Return to Orbit to try again.");
     return false;
 #endif
 }
@@ -165,9 +235,13 @@ static void *worker(void *unused) {
         if (external) {
             copy_text(resolved.url, sizeof resolved.url, session.external_url);
             memset(session.external_url, 0, sizeof session.external_url);
+            session.link_ms = milliseconds() - session.started_ms;
+            session.candidates++;
             state_locked("validating", "Checking the selected file before adding it to Downloads…");
-        } else if (!strcmp(resolved.source, "akirabox"))
-            state_locked("waiting-link", "Complete verification on AkiraBox, then wait for Orbit to check the download link.");
+        } else if (session.native_dialog && !session.dialog_opened)
+            state_locked("opening", "Opening the download page in Orbit…");
+        else if (!strcmp(resolved.source, "akirabox") || !strcmp(resolved.source, "vikingfile"))
+            state_locked("waiting-link", "Complete verification if shown, then wait. Orbit will check the generated download link automatically.");
         else
             state_locked("waiting", "Complete the provider’s steps, select Download, then return to Orbit.");
         pthread_mutex_unlock(&orbit.mutex);
@@ -178,7 +252,7 @@ static void *worker(void *unused) {
         ok = ok && !session.stop && !atomic_load(&session.cancel) && selected_locked();
         if (ok) state_locked("validating", "Checking the selected file before adding it to Downloads…");
         pthread_mutex_unlock(&orbit.mutex);
-        if (ok && !validated) ok = !transfer_validate_capture(&resolved, &session.cancel, etag, modified, error, sizeof error);
+        if (ok && !validated) ok = !validate_capture(&resolved, etag, modified, error, sizeof error);
         pthread_mutex_lock(&orbit.mutex);
         if (session.stop || atomic_load(&session.cancel)) {
             state_locked("cancelled", "Verification cancelled. No download was added.");
@@ -192,20 +266,22 @@ static void *worker(void *unused) {
             if (code == 200 || code == 201) {
                 copy_text(session.job_id, sizeof session.job_id, job->id);
                 state_locked("queued", "Your verified file has been added to Downloads.");
+                session.queued_ms = milliseconds() - session.started_ms;
             } else state_locked("failed", error);
         } else state_locked("failed", error[0] ? error : "Verification stopped. Return to Orbit to try again.");
 #ifndef ORBIT_DESKTOP
-        /* Once AkiraBox's generated link has passed the file checks and entered
-         * the queue, leave its ad-bearing page. The destination is local and
-         * fixed; no provider URL, browser script or cookie is carried back.
-         * Keep the session busy during launch so a new session cannot race it. */
-        if (session.return_to_browser && !strcmp(resolved.source, "akirabox") && !strcmp(session.state, "queued") &&
+        /* Native closes only its own dialog after observing the committed job.
+         * Relaunching an already-running native title does not close ShellUI's
+         * browser overlay. Older native clients return manually. */
+        if (session.return_to_browser && !strcmp(session.state, "queued") &&
             !session.stop && !orbit.stop && !atomic_load(&session.cancel)) {
             char home[64];
             snprintf(home, sizeof home, "http://127.0.0.1:%d/", ORBIT_HTTP_PORT);
             pthread_mutex_unlock(&orbit.mutex);
-            (void)probe_browser_open(home);
+            int returned = probe_browser_open(home);
             pthread_mutex_lock(&orbit.mutex);
+            if (returned)
+                state_locked("queued", "Your verified file has been added to Downloads. Return to Orbit to view it.");
         }
 #endif
         /* No pending verification survives a restart. No browser bytes are saved. */
@@ -213,6 +289,7 @@ static void *worker(void *unused) {
         memset(&session.release, 0, sizeof session.release);
         memset(&session.refresh_job, 0, sizeof session.refresh_job);
         memset(session.external_url, 0, sizeof session.external_url);
+        session.finished_ms = milliseconds() - session.started_ms;
         session.busy = false;
     }
     pthread_mutex_unlock(&orbit.mutex);
@@ -250,11 +327,32 @@ cJSON *browser_status(void) {
     pthread_mutex_lock(&orbit.mutex);
     cJSON_AddBoolToObject(o, "available", session.ready && available() && !session.stop);
     cJSON_AddBoolToObject(o, "active", session.busy);
+    cJSON_AddBoolToObject(o, "nativeDialogAvailable", session.ready && available() && !session.stop);
+    if (session.native_dialog) {
+        cJSON_AddStringToObject(o, "clientId", session.client_id);
+        cJSON_AddBoolToObject(o, "dialogOpened", session.dialog_opened);
+        /* Only the catalogue's public page, never a captured/signed file URL. */
+        if (session.busy && !session.dialog_opened && !atomic_load(&session.cancel))
+            cJSON_AddStringToObject(o, "pageUrl", session.release.browser_url);
+    }
     cJSON_AddStringToObject(o, "id", session.id);
     cJSON_AddStringToObject(o, "state", session.state[0] ? session.state : "idle");
     cJSON_AddStringToObject(o, "message", session.message);
     cJSON_AddStringToObject(o, "jobId", session.job_id);
     cJSON_AddStringToObject(o, "title", session.title);
+    /* Durations/counters only. Never disclose browser bytes, file URLs, process
+     * addresses, cookies or verification data through diagnostics. */
+    if (session.started_ms) {
+        cJSON *timing = cJSON_AddObjectToObject(o, "timing");
+        cJSON_AddNumberToObject(timing, "elapsedMs", session.busy ? milliseconds() - session.started_ms : session.finished_ms);
+        cJSON_AddNumberToObject(timing, "captureStartedMs", session.capture_ms);
+        cJSON_AddNumberToObject(timing, "linkFoundMs", session.link_ms);
+        cJSON_AddNumberToObject(timing, "validationMs", session.validation_ms);
+        cJSON_AddNumberToObject(timing, "queuedMs", session.queued_ms);
+        cJSON_AddNumberToObject(timing, "scannedBytes", (double)session.scanned_bytes);
+        cJSON_AddNumberToObject(timing, "candidates", session.candidates);
+        cJSON_AddNumberToObject(timing, "browserProcesses", session.browser_processes);
+    }
     pthread_mutex_unlock(&orbit.mutex);
     return o;
 }
@@ -263,8 +361,20 @@ int browser_action(const cJSON *input, char *error, size_t cap) {
     const char *action = json_text(input, "action");
     const cJSON *external_link = cJSON_GetObjectItemCaseSensitive(input, "directUrl");
     pthread_mutex_lock(&orbit.mutex);
-    if (!strcmp(action, "cancel")) {
-        if (!session.busy || strcmp(json_text(input, "id"), session.id)) {
+    if (!strcmp(action, "opened")) {
+        if (!session.busy || !session.native_dialog || atomic_load(&session.cancel) ||
+            strcmp(json_text(input, "id"), session.id) ||
+            strcmp(json_text(input, "clientId"), session.client_id)) {
+            copy_text(error, cap, "This verification session is no longer active."); code = 409;
+        } else {
+            session.dialog_opened = true; /* idempotent acknowledgement */
+            if (!strcmp(session.state, "opening"))
+                state_locked("waiting-link", "Complete verification if shown, then wait for Orbit to check the download link.");
+        }
+    } else if (!strcmp(action, "cancel")) {
+        if (!strcmp(session.state, "queued")) {
+            copy_text(error, cap, "The file is already in Downloads. Manage it there."); code = 409;
+        } else if (!session.busy || strcmp(json_text(input, "id"), session.id)) {
             copy_text(error, cap, "This verification session is no longer active."); code = 409;
         } else {
             atomic_store(&session.cancel, true);
@@ -277,6 +387,22 @@ int browser_action(const cJSON *input, char *error, size_t cap) {
     } else if (session.busy) {
         copy_text(error, cap, "Finish or cancel the current verification first."); code = 409;
     } else {
+        const cJSON *target = cJSON_GetObjectItemCaseSensitive(input, "returnTarget");
+        const cJSON *legacy = cJSON_GetObjectItemCaseSensitive(input, "returnToOrbit");
+        if ((target && (!cJSON_IsString(target) ||
+                       (strcmp(target->valuestring, "native") && strcmp(target->valuestring, "browser")))) ||
+            (legacy && !cJSON_IsBool(legacy)) || (target && legacy)) {
+            copy_text(error, cap, "Choose a supported Orbit return target."); code = 400;
+            goto done;
+        }
+        const cJSON *dialog = cJSON_GetObjectItemCaseSensitive(input, "nativeDialog");
+        const char *client = json_text(input, "clientId");
+        if ((dialog && !cJSON_IsBool(dialog)) || (external_link && cJSON_IsTrue(dialog)) || (cJSON_IsTrue(dialog) &&
+            (!target || strcmp(target->valuestring, "native") || !*client || strlen(client) > 64 ||
+             strspn(client, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != strlen(client)))) {
+            copy_text(error, cap, "Choose a supported native browser session."); code = 400;
+            goto done;
+        }
         bool refreshing = !strcmp(action, "refresh");
         Job *job = refreshing ? job_find(json_text(input, "jobId")) : NULL;
         Release *r = refreshing ? (job ? &job->release : NULL) : release_find(json_text(input, "releaseId"));
@@ -304,14 +430,23 @@ int browser_action(const cJSON *input, char *error, size_t cap) {
                 goto done;
             }
             session.release = *r; session.storage = *s;
+            session.native_dialog = cJSON_IsTrue(dialog);
+            session.dialog_opened = false;
+            copy_text(session.client_id, sizeof session.client_id, session.native_dialog ? client : "");
             copy_text(session.external_url, sizeof session.external_url,
                       external_link ? external_link->valuestring : "");
-            session.return_to_browser = !external_link && cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(input, "returnToOrbit"));
+            session.return_to_browser = !external_link &&
+                ((target && !strcmp(target->valuestring, "browser")) || cJSON_IsTrue(legacy));
             memset(&session.refresh_job, 0, sizeof session.refresh_job);
             if (refreshing) session.refresh_job = *job;
             copy_text(session.title, sizeof session.title, r->title);
             random_hex(session.id, 16);
             session.job_id[0] = 0;
+            session.started_ms = milliseconds();
+            session.capture_ms = session.link_ms = session.validation_ms = 0;
+            session.queued_ms = session.finished_ms = 0;
+            session.scanned_bytes = 0;
+            session.candidates = session.browser_processes = 0;
             session.busy = session.pending = true;
             atomic_store(&session.cancel, false);
             state_locked(external_link ? "validating" : "opening", external_link

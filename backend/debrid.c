@@ -18,8 +18,8 @@
 #define KEY_CAP 513
 #define RESPONSE_MAX (1024 * 1024)
 #define HOST_TTL 600
-#define HOST_COUNT 3
-static const char *const host_sources[HOST_COUNT] = {"archive", "vikingfile", "datanodes"};
+#define HOST_COUNT 4
+static const char *const host_sources[HOST_COUNT] = {"archive", "vikingfile", "datanodes", "1fichier"};
 static int source_host(const char *source) {
     if (source)
         for (int i = 0; i < HOST_COUNT; i++)
@@ -30,12 +30,13 @@ static int domain_host(const char *domain) {
     if (!strcmp(domain, "archive.org")) return 0;
     if (!strcmp(domain, "vikingfile.com") || !strcmp(domain, "vik1ngfile.site")) return 1;
     if (!strcmp(domain, "datanodes.to")) return 2;
+    if (!strcmp(domain, "1fichier.com")) return 3;
     return -1;
 }
 /* Prefer DataNodes' permanent file page over an expiring browser-captured URL.
  * Existing Archive.org/Vikingfile queue identities remain unchanged. */
 static const char *source_url(const Release *release) {
-    return !strcmp(release->source, "datanodes") && provider_browser_supported(release)
+    return (!strcmp(release->source, "datanodes") || !strcmp(release->source, "1fichier")) && provider_browser_supported(release)
         ? release->browser_url : release->url;
 }
 static struct {

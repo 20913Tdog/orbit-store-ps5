@@ -3,11 +3,13 @@ import argparse
 import json
 from pathlib import Path
 from catalog import ROOT, compile_catalog, read, now
-from catalog_crypto import FEED, FEED_VERSION, unseal, source_envelopes, sealed_bytes
+from catalog_crypto import FEED, FEED_VERSION, unseal, source_envelopes, sealed_bytes, encode
 
 
 def compatible_rows(rows, version=3):
     """Keep archives and new browser providers out of feeds older applications consume."""
+    if version >= 6:
+        return [row for row in rows if row['sourceId'] in ('archive', 'vikingfile', 'akirabox', 'datanodes')]
     return [row for row in rows if 'compression' not in row and row['sourceId'] in ('archive', 'vikingfile') and
             (version >= 5 or row.get('platform', 'ps5') == 'ps5') and
             (version >= 4 or row['format'] in ('FFPFSC', 'exFAT'))]
@@ -23,7 +25,15 @@ def prepare(public_repo):
             game['addedAt'] = now()
     source_releases = read('releases.json')
     rows = compile_catalog(games, source_releases)
-    target = public_repo / 'catalogue-v6.enc'
+    # Older applications have smaller fixed buffers. Refuse an incompatible
+    # publication before writing any feed instead of letting them reject it.
+    for version in (3, 4, 5, 6):
+        compatible_feed = compatible_rows(rows, version)
+        envelope = dict(schemaVersion=1, feedVersion=version, revision=2147483646, releases=compatible_feed)
+        if len(compatible_feed) > 4096 or len(encode(envelope)) > 8 * 1024 * 1024:
+            raise ValueError(f'Catalogue v{version} exceeds older app capacity; preserve its previous feed before publishing')
+    target = public_repo / 'catalogue-v7.enc'
+    archive_target = public_repo / 'catalogue-v6.enc'
     ps4_target = public_repo / 'catalogue-v5.enc'
     ps5_target = public_repo / 'catalogue-v4.enc'
     compatible = public_repo / 'catalogue-v3.enc'
@@ -36,7 +46,7 @@ def prepare(public_repo):
     if type(revision) is not int or not 1 <= revision < 2147483647:
         raise ValueError('Invalid local catalogue revision')
     changed = False
-    for current in [*legacy, compatible, ps5_target, ps4_target, target]:
+    for current in [*legacy, compatible, ps5_target, ps4_target, archive_target, target]:
         if current.exists():
             previous = json.loads(unseal(current.read_bytes(), FEED) if current.suffix == '.enc' else current.read_bytes())
             if previous.get('schemaVersion') != 1 or type(previous.get('revision')) is not int or not 1 <= previous['revision'] < 2147483647 or not isinstance(previous.get('releases'), list):
@@ -46,11 +56,12 @@ def prepare(public_repo):
                          for row in older_rows if row['sourceId'] == 'archive']
                         if current.name == 'catalogue.json' else
                         rows if current == target else
+                        compatible_rows(rows, 6) if current == archive_target else
                         compatible_rows(rows, 5) if current == ps4_target else
                         compatible_rows(rows, 4) if current == ps5_target else older_rows)
             changed |= releases != previous['releases']
             if current.suffix == '.enc':
-                expected_version = FEED_VERSION if current == target else 5 if current == ps4_target else 4 if current == ps5_target else 3
+                expected_version = FEED_VERSION if current == target else 6 if current == archive_target else 5 if current == ps4_target else 4 if current == ps5_target else 3
                 changed |= previous.get('feedVersion') != expected_version
     if changed:
         revision += 1
@@ -60,6 +71,8 @@ def prepare(public_repo):
     # The public feed and bundled fallback are byte-for-byte the same envelope.
     encoded = next(data for path, data in writes if path.name == 'catalog.enc')
     writes.append((target, encoded))
+    writes.append((archive_target, sealed_bytes(
+        {'schemaVersion': 1, 'feedVersion': 6, 'revision': revision, 'releases': compatible_rows(rows, 6)}, FEED, archive_target)))
     writes.append((ps4_target, sealed_bytes(
         {'schemaVersion': 1, 'feedVersion': 5, 'revision': revision, 'releases': compatible_rows(rows, 5)}, FEED, ps4_target)))
     writes.append((ps5_target, sealed_bytes(
@@ -87,4 +100,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     revision, games, options = prepare(args.public_repo)
     print(f'Prepared catalogue revision {revision}: {games} games, {options} validated download options.')
-    print('Prepared catalogue-v6.enc and v5/v4/v3 compatibility feeds locally. Nothing was pushed.')
+    print('Prepared catalogue-v7.enc and v6/v5/v4/v3 compatibility feeds locally. Nothing was pushed.')

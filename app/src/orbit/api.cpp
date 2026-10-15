@@ -3,6 +3,7 @@
 
 #include "orbit/api.hpp"
 #include "orbit/i18n.hpp"
+#include <algorithm>
 #include <cstdio>
 
 namespace orbit::api
@@ -186,10 +187,18 @@ Result<BrowserSession> Client::browser_request(std::string body)
 
 Result<BrowserSession> Client::browser_session() { return browser_request(); }
 
-Result<BrowserSession> Client::start_browser(std::string_view release_id, std::string_view storage_id)
+Result<BrowserSession> Client::start_browser(std::string_view release_id, std::string_view storage_id, std::string_view client_id)
 {
-    return browser_request("{\"action\":\"start\",\"releaseId\":" + json::quote(release_id) +
-                           ",\"storageId\":" + json::quote(storage_id) + "}");
+    std::string body = "{\"action\":\"start\",\"releaseId\":" + json::quote(release_id) +
+                       ",\"storageId\":" + json::quote(storage_id) + ",\"returnTarget\":\"native\"";
+    if (!client_id.empty()) body += ",\"nativeDialog\":true,\"clientId\":" + json::quote(client_id);
+    return browser_request(body + "}");
+}
+
+Result<BrowserSession> Client::browser_opened(std::string_view session_id, std::string_view client_id)
+{
+    return browser_request("{\"action\":\"opened\",\"id\":" + json::quote(session_id) +
+                           ",\"clientId\":" + json::quote(client_id) + "}");
 }
 
 Result<BrowserSession> Client::cancel_browser(std::string_view session_id)
@@ -523,6 +532,59 @@ Result<bool> Client::set_delete_archives(bool enabled)
     if (json::parse(response.body, &value))
         result.value = value.flag("deleteArchives", enabled);
     return result;
+}
+
+namespace
+{
+// The reply to every /api/v1/archive-account request.
+template <typename Send> Result<ArchiveAccount> archive_reply(Send send)
+{
+    Result<ArchiveAccount> result;
+    const http::Response response = send();
+    result.status = response.status;
+    result.retry_after = response.retry_after;
+    if (!response.error.empty())
+        result.error = response.error;
+    else if (response.status < 200 || response.status >= 300)
+    {
+        json::Value value;
+        result.error = json::parse(response.body, &value) && !value.text("error").empty()
+                           ? value.text("error")
+                           : std::string(tr("Orbit could not complete this request."));
+    }
+    else
+    {
+        json::Value value;
+        if (!json::parse(response.body, &value) || !value.is_object())
+            result.error = tr("Orbit could not complete this request.");
+        else
+            result.value = parse_archive_account(value);
+    }
+    return result;
+}
+} // namespace
+
+Result<ArchiveAccount> Client::archive_account()
+{
+    return archive_reply([this]() { return send("GET", "/api/v1/archive-account"); });
+}
+
+Result<ArchiveAccount> Client::archive_sign_in(const std::string &email, const std::string &password)
+{
+    return archive_reply(
+        [&]()
+        {
+            std::string body = "{\"action\":\"sign-in\",\"email\":" + json::quote(email) +
+                               ",\"password\":" + json::quote(password) + "}";
+            http::Response response = send("POST", "/api/v1/archive-account", body);
+            std::fill(body.begin(), body.end(), '\0');
+            return response;
+        });
+}
+
+Result<ArchiveAccount> Client::archive_sign_out()
+{
+    return archive_reply([this]() { return send("POST", "/api/v1/archive-account", "{\"action\":\"sign-out\"}"); });
 }
 
 Result<CatalogueStatus> Client::catalogue_status()

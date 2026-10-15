@@ -4,7 +4,7 @@
 #include <strings.h>
 bool provider_browser_source(const char *source) {
     return source && (!strcmp(source, "vikingfile") || !strcmp(source, "akirabox") ||
-                      !strcmp(source, "datanodes"));
+                      !strcmp(source, "datanodes") || !strcmp(source, "1fichier"));
 }
 static bool browser_file(const Release *r) {
     if (!provider_browser_source(r->source) || strlen(r->title_id) != 9 ||
@@ -38,6 +38,14 @@ static bool browser_file(const Release *r) {
     return true;
 }
 static bool browser_page(const Release *r, const char *url) {
+    if (!strcmp(r->source, "1fichier")) {
+        const char *prefix = "https://1fichier.com/?";
+        size_t n = strlen(prefix);
+        if (strncmp(url, prefix, n) || strlen(url + n) != 20) return false;
+        for (const char *p = url + n; *p; p++)
+            if (!isalnum((unsigned char)*p)) return false;
+        return true;
+    }
     if (strcmp(r->source, "vikingfile")) {
         const char *prefixes[] = {"https://akirabox.com/", "https://akirabox.to/", "https://datanodes.to/"};
         for (size_t i = 0; i < 3; i++) {
@@ -76,6 +84,7 @@ static bool generated_route(const Release *r, const char *url) {
     if (!path || path - host > 253 || strchr(url, '#')) return false;
     size_t n = (size_t)(path - host);
     bool akira = !strcmp(r->source, "akirabox"), data = !strcmp(r->source, "datanodes");
+    bool fichier = !strcmp(r->source, "1fichier");
     bool gateway = data && n == strlen("tunnel5.dlproxy.uk") && !memcmp(host, "tunnel5.dlproxy.uk", n);
     bool allowed = akira && ((n == 12 && !strncmp(host, "akirabox.com", n)) ||
                             (n == 11 && !strncmp(host, "akirabox.to", n)));
@@ -83,6 +92,19 @@ static bool generated_route(const Release *r, const char *url) {
         const char *base = "datanodes.to"; size_t b = strlen(base);
         allowed = gateway || (n >= b && !memcmp(host + n - b, base, b) &&
                   (n == b || host[n - b - 1] == '.'));
+    }
+    /* Generated file servers only, never the file page, API or account host.
+     * The opaque token is a candidate; capture must verify the exact response. */
+    if (fichier) {
+        const char *suffix = ".1fichier.com"; size_t b = strlen(suffix);
+        if (n <= b + 2 || memcmp(host, "a-", 2) || memcmp(host + n - b, suffix, b)) return false;
+        for (size_t i = 2; i < n - b; i++)
+            if (!isalnum((unsigned char)host[i]) && host[i] != '-') return false;
+        size_t token = strlen(path + 1);
+        if (token < 10 || token > 256) return false;
+        for (const char *p = path + 1; *p; p++)
+            if (!isalnum((unsigned char)*p)) return false;
+        return true;
     }
     if (!allowed) return false;
     for (size_t i = 0; i < n; i++)
@@ -124,6 +146,11 @@ static bool generated_route(const Release *r, const char *url) {
         if (c == '%') {
             if (end - p < 3 || hex(p[1]) < 0 || hex(p[2]) < 0) return false;
             c = (unsigned char)(hex(p[1]) * 16 + hex(p[2])); p += 2;
+        } else if (akira && c == '+') {
+            /* AkiraBox form-encodes the filename in its ready-button path.
+             * Decode only for identity comparison; preserve the signed URL.
+             * A literal plus is %2B and must not be decoded a second time. */
+            c = ' ';
         }
         if (!c || !*expected || c != *expected++) return false;
     }

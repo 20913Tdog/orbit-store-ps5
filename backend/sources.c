@@ -10,6 +10,7 @@ unsigned source_flag(const char *id) {
         return ORBIT_SOURCE_VIKINGFILE;
     if (!strcmp(id, "akirabox")) return ORBIT_SOURCE_AKIRABOX;
     if (!strcmp(id, "datanodes")) return ORBIT_SOURCE_DATANODES;
+    if (!strcmp(id, "1fichier")) return ORBIT_SOURCE_ONEFICHIER;
     return 0;
 }
 
@@ -54,7 +55,7 @@ cJSON *sources_json_locked(void) {
 
 int sources_set_locked(const cJSON *input, char *err, size_t cap) {
     const cJSON *enabled = cJSON_GetObjectItemCaseSensitive(input, "enabled"), *x;
-    if (!cJSON_IsArray(enabled) || cJSON_GetArraySize(enabled) > 4) {
+    if (!cJSON_IsArray(enabled) || cJSON_GetArraySize(enabled) > 5) {
         copy_text(err, cap, "Select the sources you want to enable.");
         return 400;
     }

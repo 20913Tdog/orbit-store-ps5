@@ -1,5 +1,6 @@
 #include "ca.h"
 #include "orbit.h"
+#include "archive_account.h"
 #include "debrid.h"
 #include "extract.h"
 #include <openssl/crypto.h>
@@ -242,7 +243,7 @@ static size_t headers(char *s, size_t a, size_t b, void *arg) {
                       "Provider returned a page instead of a downloadable file.");
         }
         bool generated_provider = !strcmp(t->release->source, "akirabox") ||
-                                  !strcmp(t->release->source, "datanodes");
+                                  !strcmp(t->release->source, "datanodes") || !strcmp(t->release->source, "1fichier");
         if ((t->capture_probe && generated_provider && t->accepted && !t->disposition[0])) {
             t->accepted = false;
             copy_text(t->error, sizeof t->error, "Provider did not identify the selected filename.");
@@ -385,6 +386,10 @@ static CURL *request(Transfer *t) {
      * Only the public origin is sent, never a signed URL or browser cookies. */
     if (!torbox(t) && !strcmp(t->release->source, "akirabox"))
         curl_easy_setopt(c, CURLOPT_REFERER, "https://akirabox.to/");
+    /* Login-only Archive.org files need its session. The cookies are scoped to
+     * archive.org over HTTPS, so no redirect elsewhere can carry them. */
+    if (!torbox(t) && !strcmp(t->release->source, "archive"))
+        archive_account_apply(c);
     curl_easy_setopt(c, CURLOPT_HEADERFUNCTION, headers);
     curl_easy_setopt(c, CURLOPT_HEADERDATA, t);
     curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, body);
@@ -1112,6 +1117,7 @@ static void run_job(Job *j) {
         goto finish;
     }
     bool usb = usb_destination(j), usb_parallel = false;
+    bool single_connection = !strcmp(r->source, "1fichier") && strcmp(j->delivery, "torbox");
     if (!j->segmented) {
         unsigned count = ORBIT_MAX_RANGES;
 #ifdef ORBIT_TEST
@@ -1120,7 +1126,7 @@ static void run_job(Job *j) {
         else if (connections && !strcmp(connections, "4")) count = 4;
 #endif
         bool parallel = false;
-        if (j->etag[0] && t.offset < range_boundary(r->size, count, 1) &&
+        if (!single_connection && j->etag[0] && t.offset < range_boundary(r->size, count, 1) &&
             r->size - t.offset >= PARALLEL_MIN_REMAINING) {
             int supported = viking ? 1 : range_support(&t, conditions, &rc);
             if (supported < 0) goto finish;
@@ -1147,7 +1153,7 @@ static void run_job(Job *j) {
     }
     /* A one-cursor USB job may have used either range windows or a host that
      * ignores ranges. Recheck on resume; do not require a new queue schema. */
-    if (usb && !usb_parallel && j->etag[0] && t.offset < r->size) {
+    if (!single_connection && usb && !usb_parallel && j->etag[0] && t.offset < r->size) {
         int supported = viking ? 1 : range_support(&t, conditions, &rc);
         if (supported < 0) goto finish;
         usb_parallel = supported == 1;
@@ -1265,6 +1271,14 @@ finish:
             pthread_mutex_unlock(&orbit.mutex);
         }
         close(t.fd);
+    }
+    /* Archive.org refuses a login-only file, and one it has taken down, with
+     * 401 or 403. Say which and what to do, not an HTTP code. */
+    if (!done && (t.status == 401 || t.status == 403) && !torbox(&t) && !strcmp(r->source, "archive")) {
+        pthread_mutex_lock(&orbit.mutex);
+        bool stopping = j->cancel || j->pause || orbit.stop;
+        pthread_mutex_unlock(&orbit.mutex);
+        if (!stopping) archive_account_refusal(r->url, t.error, sizeof t.error);
     }
     pthread_mutex_lock(&orbit.mutex);
     j->speed = 0;

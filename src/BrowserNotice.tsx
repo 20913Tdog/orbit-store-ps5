@@ -49,7 +49,7 @@ export function BrowserNotice({
             ? t("Checking your file")
             : session.state === "waiting-link"
               ? t("Waiting for the download link")
-            : t("Select Download, then return to Orbit.");
+            : t("Provider verification");
   return (
     <aside
       className="update-notice provider-browser-notice"

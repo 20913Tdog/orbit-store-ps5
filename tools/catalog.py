@@ -411,6 +411,7 @@ def provider_page(source, url):
     patterns = {
         'akirabox': r'https://akirabox\.(?:com|to)/[A-Za-z0-9]{12}/file',
         'datanodes': r'https://datanodes\.to/[A-Za-z0-9]{12}',
+        '1fichier': r'https://1fichier\.com/\?[A-Za-z0-9]{20}',
     }
     if source == 'vikingfile':
         return viking_page(url)
@@ -462,7 +463,7 @@ def verify_viking_release(client, r):
 
 
 def verify_release(client, r):
-    if r.get('sourceId') in ('akirabox', 'datanodes'):
+    if r.get('sourceId') in ('akirabox', 'datanodes', '1fichier'):
         raise ValueError('Review exact filename and byte size on the public file page; download validation happens after the user completes its browser steps')
     if r.get('sourceId') == 'vikingfile':
         if viking_page(r['url']):
@@ -593,7 +594,7 @@ def compile_catalog(games, releases):
                 raise ValueError("Artwork fallback must be a bounded external HTTPS URL")
         if g["artworkLayout"] not in ("wide", "ambient"):
             raise ValueError("Unsupported artwork layout")
-        if r["url"] in urls or r["sourceId"] not in ("archive", "vikingfile", "akirabox", "datanodes") or r["format"] not in CONTENT_FORMATS:
+        if r["url"] in urls or r["sourceId"] not in ("archive", "vikingfile", "akirabox", "datanodes", "1fichier") or r["format"] not in CONTENT_FORMATS:
             raise ValueError("Duplicate or unsupported download source")
         if platforms[g['id']] == 'ps4' and r['format'] not in ('FPKG', 'PKG', 'Unknown'):
             raise ValueError('PS4 catalogue options currently require a raw package')
@@ -603,7 +604,7 @@ def compile_catalog(games, releases):
                              any(ord(c) < 32 or ord(c) == 127 for c in r['notes'])):
             raise ValueError('Source notes must be bounded plain text')
         viking = r['sourceId'] == 'vikingfile'
-        generated = r['sourceId'] in ('akirabox', 'datanodes')
+        generated = r['sourceId'] in ('akirabox', 'datanodes', '1fichier')
         if 'browserUrl' in r and not provider_page(r['sourceId'], r['browserUrl']):
             raise ValueError('Unsupported provider browser URL')
         browser_only = provider_page(r['sourceId'], r['url'])
@@ -621,7 +622,7 @@ def compile_catalog(games, releases):
         viking_filename(r)
         if viking and r['provider'] != 'Vikingfile':
             raise ValueError('Vikingfile format/provider/title identity mismatch')
-        if generated and r['provider'] != {'akirabox': 'AkiraBox', 'datanodes': 'DataNodes'}[r['sourceId']]:
+        if generated and r['provider'] != {'akirabox': 'AkiraBox', 'datanodes': 'DataNodes', '1fichier': '1fichier'}[r['sourceId']]:
             raise ValueError('Provider label/source mismatch')
         if (filename != r["filename"] or "/" in filename or "\\" in filename or ".." in filename
                 or any(ord(c) < 32 or ord(c) == 127 for c in filename)
@@ -636,7 +637,12 @@ def compile_catalog(games, releases):
             raise ValueError(f"Missing matching source verification: {r['id']}")
         if not viking and not generated and source_path != filename and evidence.get('sourcePath') != source_path:
             raise ValueError('Missing exact Archive.org subfolder verification')
-        if generated:
+        if r['sourceId'] == '1fichier':
+            if (evidence.get('kind') != 'file-metadata' or evidence.get('exists') is not True or
+                    evidence.get('metadataUrl') != 'https://1fichier.com/check_links.pl' or
+                    evidence.get('httpStatus') != 200):
+                raise ValueError('Missing exact 1fichier metadata evidence')
+        elif generated:
             if (evidence.get('kind') != 'file-page' or evidence.get('exists') is not True or
                     evidence.get('metadataUrl') != r['url'] or evidence.get('httpStatus') != 200):
                 raise ValueError('Missing exact public file-page evidence')

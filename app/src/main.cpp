@@ -25,6 +25,7 @@
 #include "platform/ps5/audio_out.hpp"
 #include "platform/ps5/display_egl.hpp"
 #include "platform/ps5/pad.hpp"
+#include "platform/ps5/provider_dialog.hpp"
 #include "platform/ps5/system.hpp"
 #include "ui/fonts.hpp"
 
@@ -174,7 +175,9 @@ int main()
         hui::sys::log("[ORBIT] language %s unavailable; using English", language.c_str());
     hui::sys::log("[ORBIT] language=%s system=%d", orbit::i18n::language().data(), system_language);
 
+    ps5::ProviderDialog provider_dialog;
     orbit::Store store(transport, &starter);
+    if (provider_dialog.initialize()) store.set_provider_window(&provider_dialog);
     orbit::ArtCache art(art_transport, textures);
     store.start();
     art.start();
@@ -223,7 +226,11 @@ int main()
         const InputFrame input = tracker.update(std::span<const PadSample>(samples, count),
                                                 static_cast<std::uint64_t>(now));
         feedback.clear();
-        app.update(input, dt, feedback);
+        // A provider dialog owns the controller until FINISHED, including the
+        // frame it closes. Keep draining service updates while it is visible.
+        const bool provider_visible = store.provider_dialog_visible();
+        store.tick();
+        app.update(provider_visible || store.provider_dialog_visible() ? InputFrame{} : input, dt, feedback);
         for (const audio::CueEvent &event : feedback.cues)
             sounds.play(mixer, audio::SoundSet::glass, event);
         if (feedback.rumble_strength > 0.0f)

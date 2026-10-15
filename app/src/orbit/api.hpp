@@ -70,7 +70,9 @@ class Client
     Result<Sources> sources();
     Result<Debrid> debrid();
     Result<BrowserSession> browser_session();
-    Result<BrowserSession> start_browser(std::string_view release_id, std::string_view storage_id);
+    Result<BrowserSession> start_browser(std::string_view release_id, std::string_view storage_id,
+                                         std::string_view client_id = {});
+    Result<BrowserSession> browser_opened(std::string_view session_id, std::string_view client_id);
     Result<BrowserSession> cancel_browser(std::string_view session_id);
     Result<std::vector<Release>> catalog();
     // The console's own session: its token, the pairing code and the console's
@@ -114,6 +116,11 @@ class Client
     // is the saved choice. A 404 means this Orbit is too old to save one.
     Result<std::string> set_preferred_storage(std::string_view storage_id);
     Result<bool> set_delete_archives(bool enabled);
+    Result<ArchiveAccount> archive_account();
+    // The email and password go to the console once; it keeps only
+    // Archive.org's session.
+    Result<ArchiveAccount> archive_sign_in(const std::string &email, const std::string &password);
+    Result<ArchiveAccount> archive_sign_out();
     Result<int> set_download_limit(int limit);
     Result<CatalogueStatus> catalogue_status();
     Result<CatalogueStatus> refresh_catalogue();

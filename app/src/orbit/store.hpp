@@ -7,6 +7,7 @@
 // so screens read a plain snapshot and never wait on the network.
 
 #pragma once
+#include "orbit/native_provider.hpp"
 
 #include "orbit/api.hpp"
 #include "orbit/model.hpp"
@@ -65,6 +66,7 @@ struct Snapshot
     bool have_sources = false;
     Sources sources;
     Debrid debrid;
+    ArchiveAccount archive_account; // read with the settings statuses
     bool have_browser = false;
     BrowserSession browser;
     std::string browser_error;
@@ -126,6 +128,8 @@ enum class Setting : std::uint8_t
     tv_install,
     archives,
     download_limit,
+    archive_sign_in,
+    archive_sign_out,
 };
 
 struct SettingResult
@@ -189,6 +193,8 @@ class Store
     void job_action(const std::string &job_id, const std::string &action, bool delete_partial, const std::string &password = {});
     const ActionState &browser_action() const { return browser_action_; }
     void start_browser(const std::string &release_id, const std::string &storage_id);
+    void set_provider_window(ProviderWindow *window) { native_provider_.set_window(window); }
+    bool provider_dialog_visible() const { return native_provider_.visible(); }
     void cancel_browser(const std::string &session_id);
 
     // Favourites and the Library each report their own outcome, so an error
@@ -230,6 +236,11 @@ class Store
     void set_zero(bool enabled) { send_setting(Setting::zero, {}, {}, enabled); }
     void set_download_limit(int limit) { send_setting(Setting::download_limit, std::to_string(limit)); }
     void set_delete_archives(bool enabled) { send_setting(Setting::archives, {}, {}, enabled); }
+    void sign_in_archive(std::string email, std::string password)
+    {
+        send_setting(Setting::archive_sign_in, std::move(email), std::move(password));
+    }
+    void sign_out_archive() { send_setting(Setting::archive_sign_out); }
     // Reads the console session again (a fresh pairing code after a restart).
     void refresh_session();
     // The frame has shown a finished restart.
@@ -263,10 +274,12 @@ class Store
             setting,
             browser_start,
             browser_cancel,
+            browser_opened,
         } kind = Kind::download;
         Setting setting = Setting::none;
         std::string a; // release, job or game ID
         std::string b; // storage ID or action name
+        std::string browser_client;
         std::string password; // transient archive-password command; never logged
         bool flag = false;
         api::Client::LibraryRequest library;
@@ -294,6 +307,9 @@ class Store
     ActionState favourite_;
     ActionState library_;
     ActionState browser_action_;
+    NativeProvider native_provider_;
+    std::string provider_error_;
+    bool browser_observed_ = false;
     SettingResult setting_;
     int pending_actions_ = 0; // frame thread: queued actions without a result yet
     std::uint64_t request_count_ = 0;
@@ -306,6 +322,7 @@ class Store
     bool start_requested_ = false;
     bool stopping_ = false;
     std::atomic<bool> fast_{false};
+    std::atomic<bool> provider_poll_{false};
     std::atomic<bool> want_storage_{false};
     std::atomic<bool> storage_refresh_{false};
     std::atomic<bool> want_settings_{false};

@@ -38,7 +38,7 @@ int wait_for(double unix_time)
 
 bool browser_source(const std::string &id)
 {
-    return id == "vikingfile" || id == "akirabox" || id == "datanodes";
+    return id == "vikingfile" || id == "akirabox" || id == "datanodes" || id == "1fichier";
 }
 
 } // namespace
@@ -67,6 +67,9 @@ std::vector<SettingsScreen::XbEntry> SettingsScreen::section_entries() const
             out.push_back({'o', i});
         out.push_back({'a', 0});
         out.push_back({'v', 0});
+        // Signing in to Archive.org, on a download service that has it.
+        if (state.archive_account.known)
+            out.push_back({'O', 0});
         break;
     case Section::storage:
         out.push_back({'d', 0});
@@ -235,8 +238,10 @@ xb::List SettingsScreen::rows_of(const std::vector<XbEntry> &entries) const
             row.toggle = contains(draft_, option.id) ? 1 : 0;
             row.off = result.busy && result.setting == Setting::sources;
             if (option.id == "vikingfile")
+                row.text = tr("Complete verification if shown, then wait. Orbit will check the generated download link automatically.");
+            else if (option.id == "1fichier")
                 row.text = tr("On {provider}, complete any verification and select the site’s {button} button.",
-                              {{"provider", "Vikingfile"}, {"button", tr("Download")}});
+                              {{"provider", option.label}, {"button", tr("Download")}});
             else if (option.id == "akirabox")
                 row.text = tr("Complete verification on AkiraBox, then wait for Orbit to check the download link.");
             else if (option.id == "datanodes")
@@ -268,6 +273,22 @@ xb::List SettingsScreen::rows_of(const std::vector<XbEntry> &entries) const
             row.sub = tr("Saved for this console and its paired devices.");
             row.off = !can_save;
             row.detail = error_for({Setting::sources});
+            row.warn = !row.detail.empty();
+            break;
+        }
+        case 'O':
+        {
+            const ArchiveAccount &account = state.archive_account;
+            row.icon = icons::Icon::key;
+            row.title = "Archive.org";
+            row.value = account.signed_in ? tr("Signed in") : tr("Not signed in");
+            if (account.signed_in && !account.name.empty())
+                row.sub = account.name;
+            row.text = tr("Some Archive.org games only download for signed-in accounts. Sign in with your "
+                          "Archive.org account to download them.");
+            row.off = result.busy && (result.setting == Setting::archive_sign_in ||
+                                      result.setting == Setting::archive_sign_out);
+            row.detail = error_for({Setting::archive_sign_out});
             row.warn = !row.detail.empty();
             break;
         }
@@ -711,6 +732,16 @@ std::vector<xb::MenuItem> SettingsScreen::crossbar_menu(xb::MenuFoot *foot) cons
         items.push_back(xb::choice(tr("Plain black"), !prefs.art_behind));
         break;
     }
+    case 9:
+    {
+        // Signing out asks first, as the Store look does.
+        xb::MenuItem out = xb::action(icons::Icon::close, tr("Sign out"));
+        out.danger = true;
+        items.push_back(out);
+        items.push_back(xb::action(icons::Icon::check, tr("Stay signed in")));
+        note.note = tr("Sign out of Archive.org? Games that need an account won't download until you sign in again.");
+        break;
+    }
     default:
         items.push_back(xb::choice(tr("Full"), !prefs.reduced_motion));
         items.push_back(xb::choice(tr("Reduced"), prefs.reduced_motion));
@@ -726,6 +757,8 @@ std::string SettingsScreen::crossbar_menu_title() const
                                          /* i18n */ "Motion", /* i18n */ "Accent colour"};
     if (xb_menu_kind_ == 8)
         return look::is(look::Interface::cinema) ? tr("Art behind menus") : tr("Art behind pages");
+    if (xb_menu_kind_ == 9)
+        return "Archive.org";
     return tr(kMenus[std::clamp(xb_menu_kind_, 0, 7)]);
 }
 
@@ -857,6 +890,10 @@ void SettingsScreen::menu_choose(int chosen, Intent &intent, Feedback &feedback)
     case 8:
         act(Kind::art_behind, chosen, intent, feedback);
         break;
+    case 9:
+        if (chosen == 0)
+            act(Kind::archive_sign_out_confirm, 0, intent, feedback);
+        break;
     default:
         act(Kind::motion, chosen, intent, feedback);
         break;
@@ -956,6 +993,16 @@ void SettingsScreen::press(const std::string &key, bool off, const InputFrame &i
         break;
     case 'w':
         act(Kind::open_browser, 0, intent, feedback);
+        break;
+    case 'O':
+        if (!state.archive_account.signed_in)
+            act(Kind::archive_sign_in, 0, intent, feedback);
+        else
+        {
+            // On to the question, focused on Stay signed in.
+            menu(9);
+            xb_menu_.show(1);
+        }
         break;
     default:
         refuse(feedback, input);
@@ -1131,6 +1178,8 @@ std::vector<hui::ui::Hint> SettingsScreen::crossbar_hints() const
         hints.push_back({hui::ui::Button::cross, tr("Change")});
     else if (kind == 't' || kind == 'r' || kind == 'w')
         hints.push_back({hui::ui::Button::cross, tr("Open")});
+    else if (kind == 'O' && !row.off)
+        hints.push_back({hui::ui::Button::cross, ctx_.store.state().archive_account.signed_in ? tr("Sign out") : tr("Sign in")});
     else if ((kind == 'c' || kind == 'u') && !row.off)
         hints.push_back({hui::ui::Button::cross, tr("Refresh")});
     else if (kind == 'a' || (kind == 'v' && !row.off))
@@ -1451,6 +1500,8 @@ std::vector<hui::ui::Hint> SettingsScreen::cinema_hints() const
         hints.push_back({hui::ui::Button::cross, tr("Change")});
     else if (kind == 't' || kind == 'r' || kind == 'w')
         hints.push_back({hui::ui::Button::cross, tr("Open")});
+    else if (kind == 'O' && !row.off)
+        hints.push_back({hui::ui::Button::cross, ctx_.store.state().archive_account.signed_in ? tr("Sign out") : tr("Sign in")});
     else if ((kind == 'c' || kind == 'u') && !row.off)
         hints.push_back({hui::ui::Button::cross, tr("Refresh")});
     else if (kind == 'a' || (kind == 'v' && !row.off))
@@ -1773,6 +1824,8 @@ std::vector<hui::ui::Hint> SettingsScreen::panorama_hints() const
         hints.push_back({hui::ui::Button::cross, tr("Change")});
     else if (kind == 't' || kind == 'r' || kind == 'w')
         hints.push_back({hui::ui::Button::cross, tr("Open")});
+    else if (kind == 'O' && !row.off)
+        hints.push_back({hui::ui::Button::cross, ctx_.store.state().archive_account.signed_in ? tr("Sign out") : tr("Sign in")});
     else if (kind == 'c' || kind == 'u')
         hints.push_back({hui::ui::Button::cross, tr("Refresh")});
     else if (kind == 'v')

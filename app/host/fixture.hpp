@@ -67,6 +67,7 @@ class Fixture final : public http::Transport
     std::vector<std::string> favourites_{"tidewater"};
     std::string library_action_; // the last accepted Library action, as JSON
     std::string browser_state_ = "idle";
+    std::string archive_name_; // signed in to Archive.org when set
     std::string browser_id_;
     std::string browser_title_;
     int browser_count_ = 0;

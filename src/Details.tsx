@@ -302,7 +302,7 @@ export function Details({
           })}
         </li>
         <li>
-          {release.sourceId === "akirabox" ? t("Complete verification on AkiraBox, then wait. Orbit will capture the ready download link and return automatically; you do not need to click an ad or popup.") :
+          {release.sourceId === "akirabox" || release.sourceId === "vikingfile" ? t("Complete verification if shown, then wait. Orbit will check the generated download link automatically.") :
           release.sourceId === "datanodes" ? t("Scroll to the bottom, select Continue to Download, then Free Download. Wait for the countdown and select Start Download.") :
           rich(
             "On {provider}, complete any verification and select the site’s {button} button.",
@@ -310,7 +310,7 @@ export function Details({
           )}
         </li>
         <li>
-          {rich(
+          {release.sourceId === "akirabox" || release.sourceId === "vikingfile" ? t("Orbit returns automatically when the file is ready. Follow progress in Downloads.") : rich(
             "Return to {app}. Open {downloads} to follow progress once Orbit has checked the file.",
             {
               app: <strong>Orbit Store</strong>,

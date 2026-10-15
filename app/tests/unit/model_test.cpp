@@ -627,5 +627,22 @@ TEST(Model, ParsesSettingsAndUpdateStatuses)
     EXPECT_TRUE(parse_session(value).address.empty());
 }
 
+TEST(Model, ParsesTheArchiveOrgSignIn)
+{
+    json::Value value;
+    ASSERT_TRUE(json::parse(R"({"signedIn":true,"name":"Player One","busy":false})", &value));
+    ArchiveAccount account = parse_archive_account(value);
+    EXPECT_TRUE(account.known);
+    EXPECT_TRUE(account.signed_in);
+    EXPECT_EQ(account.name, "Player One");
+    ASSERT_TRUE(json::parse(R"({"signedIn":false,"name":"","busy":false})", &value));
+    account = parse_archive_account(value);
+    EXPECT_TRUE(account.known);
+    EXPECT_FALSE(account.signed_in);
+    // A download service without the sign-in hides it.
+    ASSERT_TRUE(json::parse(R"({"error":"Unknown endpoint."})", &value));
+    EXPECT_FALSE(parse_archive_account(value).known);
+}
+
 } // namespace
 } // namespace orbit

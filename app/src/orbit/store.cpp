@@ -106,6 +106,22 @@ void Store::stop()
 void Store::tick()
 {
     inbox_.drain();
+    const auto event = native_provider_.tick(state_.browser, browser_observed_ && state_.have_browser && state_.link == Link::online, now_seconds());
+    browser_observed_ = false;
+    if (provider_poll_.exchange(native_provider_.busy()) != native_provider_.busy())
+        refresh_now(); // begin focused polling, or immediately refresh on return
+    if (event.kind != NativeProvider::Event::none) {
+        if (!event.error.empty()) provider_error_ = event.error;
+        browser_action_.busy = true;
+        {
+            Lock lock(mutex_);
+            Command command;
+            command.kind = event.kind == NativeProvider::Event::opened ? Command::Kind::browser_opened : Command::Kind::browser_cancel;
+            command.a = event.id; command.browser_client = event.client_id;
+            commands_.push_back(std::move(command));
+        }
+        signal_.notify();
+    }
 }
 
 void Store::refresh_now()
@@ -180,14 +196,27 @@ void Store::set_favourite(const std::string &game_id, bool favourite)
 
 void Store::start_browser(const std::string &release_id, const std::string &storage_id)
 {
-    if (browser_action_.busy) return;
+    if (browser_action_.busy || native_provider_.busy()) return;
+    provider_error_.clear();
+    std::string client;
+    if (native_provider_.available() && state_.browser.native_dialog_available) {
+        char text[64];
+        std::snprintf(text, sizeof text, "tv-%llx-%llx",
+            static_cast<unsigned long long>(unix_seconds() * 1000000.0),
+            static_cast<unsigned long long>(++request_count_));
+        client = text;
+        native_provider_.begin(client, now_seconds());
+        provider_poll_.store(true);
+    }
     browser_action_.busy = true;
     browser_action_.error.clear();
     if (!state_.browser.active)
     {
         const bool available = state_.browser.available;
+        const bool native_dialog = state_.browser.native_dialog_available;
         state_.browser = {};
         state_.browser.available = available;
+        state_.browser.native_dialog_available = native_dialog;
         state_.browser.state = "opening";
         for (const auto &game : state_.games)
             for (const auto &release : game.releases)
@@ -197,6 +226,7 @@ void Store::start_browser(const std::string &release_id, const std::string &stor
         Lock lock(mutex_);
         Command command;
         command.kind = Command::Kind::browser_start;
+        command.browser_client = client;
         command.a = release_id;
         command.b = storage_id;
         commands_.push_back(std::move(command));
@@ -225,6 +255,7 @@ void Store::poll_browser()
     inbox_.post([this, result = std::move(result)]() mutable
     {
         state_.have_browser = result.ok();
+        browser_observed_ = result.ok();
         state_.browser_error = result.status == 404
             ? tr("Update Orbit to open provider pages.") : result.error;
         if (result.ok()) state_.browser = std::move(result.value);
@@ -235,12 +266,17 @@ void Store::poll_browser()
 void Store::run_browser(Command &command)
 {
     auto result = command.kind == Command::Kind::browser_start
-        ? client_.start_browser(command.a, command.b) : client_.cancel_browser(command.a);
+        ? client_.start_browser(command.a, command.b, command.browser_client)
+        : command.kind == Command::Kind::browser_opened ? client_.browser_opened(command.a, command.browser_client)
+        : client_.cancel_browser(command.a);
     // A lost POST response may still have started verification. Read status,
     // never replay the mutation or create an unvalidated queue item here.
     poll_browser();
-    inbox_.post([this, result = std::move(result)]() mutable
+    inbox_.post([this, starting = command.kind == Command::Kind::browser_start,
+                 cancelling = command.kind == Command::Kind::browser_cancel, session_id = command.a,
+                 result = std::move(result)]() mutable
     {
+        if (starting && result.status >= 400 && result.status < 500) native_provider_.abandon();
         if (result.ok())
         {
             // The subsequent GET is fresher; keep it when it succeeded.
@@ -252,7 +288,9 @@ void Store::run_browser(Command &command)
             }
         }
         browser_action_.busy = false;
-        browser_action_.error = result.error;
+        const bool already_queued = cancelling && result.status == 409 && state_.have_browser &&
+            state_.browser.id == session_id && state_.browser.state == "queued" && !state_.browser.job_id.empty();
+        browser_action_.error = provider_error_.empty() ? (already_queued ? "" : result.error) : provider_error_;
         ++browser_action_.serial;
     });
     refresh_now();
@@ -406,7 +444,7 @@ void Store::worker()
         const bool hurry = start_waiting_ || restart_ == Restart::stopping ||
                            restart_ == Restart::starting ||
                            (want_settings_.load() && settings_busy_);
-        next_poll = now_seconds() + (hurry ? 0.5 : fast_.load() ? 1.0 : 3.0);
+        next_poll = now_seconds() + (provider_poll_.load() ? 0.25 : hurry ? 0.5 : fast_.load() ? 1.0 : 3.0);
     }
 }
 
@@ -604,6 +642,13 @@ void Store::post_queue(std::vector<Job> jobs, std::vector<Drive> drives, bool ha
 
 void Store::poll_once()
 {
+    // While our provider dialog owns the screen, only its result matters.
+    // Do not queue it behind catalogue, storage, library or update requests.
+    // The frame thread requests a full refresh when the dialog finishes.
+    if (provider_poll_.load()) {
+        poll_browser();
+        return;
+    }
     api::Result<System> system = client_.system();
     if (!system.ok())
     {
@@ -833,12 +878,16 @@ void Store::poll_settings()
     api::Result<CatalogueStatus> catalogue = client_.catalogue_status();
     api::Result<ServiceUpdate> service = client_.service_update();
     api::Result<TvAppStatus> tv = client_.tv_app();
+    api::Result<ArchiveAccount> archive = client_.archive_account();
     settings_busy_ = (catalogue.ok() && catalogue.value.busy) ||
                      (service.ok() && service.value.busy) || (tv.ok() && tv.value.busy);
     inbox_.post(
-        [this, catalogue = std::move(catalogue), service = std::move(service),
-         tv = std::move(tv)]() mutable
+        [this, catalogue = std::move(catalogue), service = std::move(service), tv = std::move(tv),
+         archive = std::move(archive)]() mutable
         {
+            // An older download service has no Archive.org sign-in.
+            if (archive.ok() || archive.status == 404)
+                state_.archive_account = archive.ok() ? std::move(archive.value) : ArchiveAccount{};
             if (catalogue.ok())
             {
                 state_.catalogue = std::move(catalogue.value);
@@ -877,6 +926,25 @@ void Store::run_setting(Command &command)
             state_.system.concurrent_downloads = limit;
             ++state_.serial;
         });
+        break;
+    }
+    case Setting::archive_sign_in:
+    case Setting::archive_sign_out:
+    {
+        api::Result<ArchiveAccount> result = command.setting == Setting::archive_sign_in
+                                                 ? client_.archive_sign_in(command.a, command.b)
+                                                 : client_.archive_sign_out();
+        // The password was needed once.
+        std::fill(command.b.begin(), command.b.end(), '\0');
+        command.b.clear();
+        error = result.status == 404 ? tr("Update the download service to change this here.") : result.error;
+        if (result.ok())
+            inbox_.post(
+                [this, account = std::move(result.value)]() mutable
+                {
+                    state_.archive_account = std::move(account);
+                    ++state_.serial;
+                });
         break;
     }
     case Setting::archives:
@@ -1073,7 +1141,7 @@ bool Store::run_next_action()
         run_setting(command);
         return true;
     }
-    if (command.kind == Command::Kind::browser_start || command.kind == Command::Kind::browser_cancel)
+    if (command.kind == Command::Kind::browser_start || command.kind == Command::Kind::browser_cancel || command.kind == Command::Kind::browser_opened)
     {
         run_browser(command);
         return true;

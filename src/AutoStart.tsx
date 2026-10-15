@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { CatalogueUpdates } from "./CatalogueUpdates";
 import { TvApp } from "./TvApp";
 import { Debrid } from "./Debrid";
+import { ArchiveAccount } from "./ArchiveAccount";
 import { Updates } from "./Updates";
 import { Diagnostics } from "./Diagnostics";
 import { api } from "./api";
@@ -313,6 +314,7 @@ export function AutoStart({
         <>
           <TvApp />
           {initialSection !== "debrid" && <Debrid />}
+          <ArchiveAccount />
           <CatalogueUpdates />
           <Diagnostics />
           <PayloadManagers system={system} auto={auto} />

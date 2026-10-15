@@ -11,6 +11,7 @@ import { CatalogueUpdates } from "../CatalogueUpdates";
 import { Updates } from "../Updates";
 import { TvApp } from "../TvApp";
 import { Debrid } from "../Debrid";
+import { ArchiveAccount } from "../ArchiveAccount";
 import { Diagnostics } from "../Diagnostics";
 import { PayloadManagers, StartAutomatically, useAutoStart } from "../AutoStart";
 import { Glyph, type GlyphName } from "./Glyph";
@@ -25,6 +26,7 @@ export type SettingsSection =
   | "updates"
   | "tvapp"
   | "torbox"
+  | "archive"
   | "payload"
   | "autostart"
   | "diagnostics";
@@ -47,6 +49,7 @@ export const settingsGroups: { label: string; sections: { id: SettingsSection; l
       { id: "updates", label: /* i18n */ "Updates", glyph: "update" },
       { id: "tvapp", label: /* i18n */ "TV app", glyph: "tv" },
       { id: "torbox", label: "TorBox", glyph: "bolt" },
+      { id: "archive", label: "Archive.org", glyph: "key" },
     ],
   },
   {
@@ -129,6 +132,7 @@ export function SettingsPage({
     updates: <Updates onStopped={() => setStopped(true)} />,
     tvapp: <TvApp />,
     torbox: <Debrid />,
+    archive: <ArchiveAccount />,
     payload: (
       <>
         <PayloadManagers system={system} auto={auto} />
@@ -171,7 +175,7 @@ export function SettingsPage({
                 <span className="settings-section-icon">
                   <Glyph name={s.glyph} size={18} />
                 </span>
-                <span className="settings-section-label">{s.label === "TorBox" ? s.label : t(s.label)}</span>
+                <span className="settings-section-label">{s.label === "TorBox" || s.label === "Archive.org" ? s.label : t(s.label)}</span>
                 {values[s.id] && <span className="settings-section-value">{values[s.id]}</span>}
                 {s.id === "updates" && updateAvailable && (
                   <i className="nav-dot" role="img" aria-label={t("Update available")} />

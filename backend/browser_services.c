@@ -1,6 +1,7 @@
 #include "browser_platform.h"
 #ifndef ORBIT_DESKTOP
 #include <dlfcn.h>
+#include <string.h>
 #ifndef ORBIT_BROWSER_PROBE
 #include "orbit.h"
 #define STAGE(phase, status, result) diagnostics_stage(phase, status, result)
@@ -8,24 +9,26 @@
 #define STAGE(phase, status, result) ((void)(result))
 #endif
 
+static void *system_service, *user_service;
+static int load_services(void) {
+    if (!system_service)
+        system_service = dlopen("libSceSystemService.sprx", RTLD_NOW | RTLD_LOCAL);
+    if (!system_service) return -1;
+    if (!user_service)
+        user_service = dlopen("libSceUserService.sprx", RTLD_NOW | RTLD_LOCAL);
+    return user_service ? 0 : -2;
+}
+
 /* Only the explicit browser-session worker calls this. Keep loaded handles for
  * the process lifetime: opening the browser is asynchronous. No native service
  * import, lookup or initialization belongs on Orbit's normal startup path. */
 int probe_browser_open(const char *url) {
-    static void *system_service, *user_service;
     if (!url || !*url) return -1;
     STAGE("browser-modules", "started", 0);
-    if (!system_service)
-        system_service = dlopen("libSceSystemService.sprx", RTLD_NOW | RTLD_LOCAL);
-    if (!system_service) {
-        STAGE("browser-modules", "error", -1);
-        return -1;
-    }
-    if (!user_service)
-        user_service = dlopen("libSceUserService.sprx", RTLD_NOW | RTLD_LOCAL);
-    if (!user_service) {
-        STAGE("browser-modules", "error", -2);
-        return -2;
+    int loaded = load_services();
+    if (loaded) {
+        STAGE("browser-modules", "error", loaded);
+        return loaded;
     }
     int (*initialize)(void *) = (int (*)(void *))dlsym(user_service, "sceUserServiceInitialize");
     int (*terminate)(void) = (int (*)(void))dlsym(user_service, "sceUserServiceTerminate");
@@ -48,6 +51,7 @@ int probe_browser_open(const char *url) {
     STAGE("browser-user-cleanup", cleanup ? "error" : "ok", cleanup);
     return result;
 }
+
 #else
 int probe_browser_open(const char *url) { (void)url; return -1; }
 #endif

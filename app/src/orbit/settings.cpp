@@ -229,7 +229,7 @@ struct SettingsScreen::Pane
 
 // ---- the screen ----
 
-SettingsScreen::SettingsScreen(Context &context) : Screen(context)
+SettingsScreen::SettingsScreen(Context &context) : Screen(context), archive_sign_in_(context)
 {
 }
 
@@ -346,14 +346,15 @@ void SettingsScreen::build_sources(Pane &pane) const
 
     // .source-card: a check and the source's name.
     float cx = pane.x;
-    const float cy = pane.y;
+    float cy = pane.y;
     bool browser_only_source = false;
     for (int i = 0; i < static_cast<int>(state.sources.options.size()); ++i)
     {
         const SourceOption &option = state.sources.options[static_cast<std::size_t>(i)];
         const bool on = contains(draft_, option.id);
-        browser_only_source = browser_only_source || option.id == "vikingfile" || option.id == "akirabox" || option.id == "datanodes";
+        browser_only_source = browser_only_source || option.id == "vikingfile" || option.id == "akirabox" || option.id == "datanodes" || option.id == "1fichier";
         const float w = type.medium.measure(option.label, 21.0f) + 104.0f;
+        if (cx > pane.x && cx + w > pane.x + pane.width) { cx = pane.x; cy += 74.0f; ++pane.row; }
         const ui::Rect r{cx, cy, w, 60.0f};
         if (pane.list != nullptr)
         {
@@ -384,8 +385,7 @@ void SettingsScreen::build_sources(Pane &pane) const
     if (browser_only_source)
     {
         if (contains(draft_, "vikingfile"))
-            pane.fine(tr("On {provider}, complete any verification and select the site’s {button} button.",
-                         {{"provider", "Vikingfile"}, {"button", tr("Download")}}));
+            pane.fine(tr("Complete verification if shown, then wait. Orbit will check the generated download link automatically."));
         if (contains(draft_, "akirabox"))
             pane.fine(tr("Complete verification on AkiraBox, then wait for Orbit to check the download link."));
         if (contains(draft_, "datanodes"))
@@ -434,6 +434,35 @@ void SettingsScreen::build_sources(Pane &pane) const
     pane.buttons({{Kind::save_sources, saving ? tr("Saving\xE2\x80\xA6") : tr("Save sources"),
                    ui::ButtonKind::primary, can_save}});
     pane.fine(tr("Saved for this console and its paired devices."));
+
+    // .archive-account-settings: signing in for login-only Archive.org games.
+    const ArchiveAccount &account = state.archive_account;
+    if (!account.known)
+        return;
+    const bool signing = result.busy && (result.setting == Setting::archive_sign_in ||
+                                         result.setting == Setting::archive_sign_out);
+    pane.gap(12.0f);
+    pane.rule();
+    pane.heading("Archive.org");
+    pane.body(tr("Some Archive.org games only download for signed-in accounts. Sign in with your Archive.org "
+                 "account to download them."));
+    pane.body(!account.signed_in   ? std::string(tr("Not signed in"))
+              : account.name.empty() ? std::string(tr("Signed in"))
+                                     : tr("Signed in as {name}", {{"name", account.name}}),
+              19.0f);
+    if (!account.signed_in)
+        pane.buttons({{Kind::archive_sign_in, tr("Sign in"), ui::ButtonKind::secondary, !signing}});
+    else if (archive_sign_out_)
+    {
+        pane.notice({}, tr("Sign out of Archive.org? Games that need an account won't download until you sign in "
+                           "again."));
+        pane.buttons({{Kind::archive_sign_out_confirm, tr("Sign out"), ui::ButtonKind::secondary, !signing},
+                      {Kind::archive_sign_out_cancel, tr("Stay signed in"), ui::ButtonKind::secondary, true}});
+    }
+    else
+        pane.buttons({{Kind::archive_sign_out, tr("Sign out"), ui::ButtonKind::secondary, !signing}});
+    if (error_setting_ == Setting::archive_sign_out)
+        pane.error(error_);
 }
 
 // ---- Storage: the default drive ----
@@ -1022,6 +1051,20 @@ void SettingsScreen::activate(const Control &control, Intent &intent, Feedback &
     look::Prefs prefs = look::prefs();
     switch (control.kind)
     {
+    case Kind::archive_sign_in:
+        archive_sign_out_ = false;
+        archive_sign_in_.open();
+        break;
+    case Kind::archive_sign_out:
+        archive_sign_out_ = true; // asks first
+        break;
+    case Kind::archive_sign_out_confirm:
+        archive_sign_out_ = false;
+        ctx_.store.sign_out_archive();
+        break;
+    case Kind::archive_sign_out_cancel:
+        archive_sign_out_ = false;
+        break;
     case Kind::interface_card:
         // The keep check (App) follows; it reverts by itself after 15 seconds.
         if (control.index != static_cast<int>(prefs.interface))
@@ -1180,6 +1223,12 @@ Intent SettingsScreen::update(const InputFrame &input, float dt, Feedback &feedb
             case Setting::storage:
                 intent.toast = tr("Default drive saved");
                 break;
+            case Setting::archive_sign_in:
+                intent.toast = tr("Signed in to Archive.org");
+                break;
+            case Setting::archive_sign_out:
+                intent.toast = tr("Signed out of Archive.org");
+                break;
             case Setting::service_restart:
                 confirm_restart_ = false;
                 break;
@@ -1190,6 +1239,13 @@ Intent SettingsScreen::update(const InputFrame &input, float dt, Feedback &feedb
                 break;
             }
         }
+    }
+    if (archive_sign_in_.active())
+    {
+        // The sign-in form takes all input until it closes.
+        if (focused)
+            archive_sign_in_.update(input, dt, feedback);
+        return intent;
     }
     if (!look::is(look::Interface::store))
     {
@@ -1410,6 +1466,12 @@ Intent SettingsScreen::update(const InputFrame &input, float dt, Feedback &feedb
 
 void SettingsScreen::draw(Frame &frame, bool focused) const
 {
+    draw_look(frame, focused);
+    archive_sign_in_.draw(frame);
+}
+
+void SettingsScreen::draw_look(Frame &frame, bool focused) const
+{
     (void)focused;
     if (look::is(look::Interface::crossbar))
     {
@@ -1475,6 +1537,8 @@ void SettingsScreen::draw(Frame &frame, bool focused) const
 
 std::vector<hui::ui::Hint> SettingsScreen::hints() const
 {
+    if (archive_sign_in_.active())
+        return archive_sign_in_.hints();
     if (look::is(look::Interface::crossbar))
         return crossbar_hints();
     if (look::is(look::Interface::cinema))

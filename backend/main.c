@@ -2,6 +2,7 @@
 #include "receive.h"
 #include "zero_probe.h"
 #include "debrid.h"
+#include "archive_account.h"
 #include <curl/curl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -248,6 +249,7 @@ int main(int argc, char **argv) {
     signal(SIGPIPE, SIG_IGN);
     diagnostics_stage("listener", "started", 0);
     debrid_start();
+    archive_account_load();
     receive_start();
     zero_probe_start();
     startup_result = api_start();
@@ -360,6 +362,7 @@ int main(int argc, char **argv) {
     pthread_mutex_unlock(&orbit.mutex);
     art_stop();
     debrid_stop();
+    archive_account_clear();
     tvapp_stop();
     browser_stop();
     library_stop();

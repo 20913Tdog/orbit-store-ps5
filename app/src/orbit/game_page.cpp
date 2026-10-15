@@ -38,12 +38,14 @@ std::string heading(std::string value)
 std::vector<std::string> provider_steps(const Release &release)
 {
     return {tr("1. Select Open {provider} on PS5. Your selected game and drive are kept.", {{"provider", release.provider}}),
-            release.source_id == "akirabox"
-                ? std::string(tr("Complete verification on AkiraBox, then wait for Orbit to check the download link."))
+            release.source_id == "akirabox" || release.source_id == "vikingfile"
+                ? std::string(tr("Complete verification if shown, then wait. Orbit will check the generated download link automatically."))
             : release.source_id == "datanodes"
                 ? std::string(tr("Scroll to the bottom, select Continue to Download, then Free Download. Wait for the countdown and select Start Download."))
                 : tr("2. On {provider}, complete any verification and select Download.", {{"provider", release.provider}}),
-            tr("3. Return to the Orbit Store app. Orbit checks the file and adds it to Downloads.")};
+            release.source_id == "akirabox" || release.source_id == "vikingfile"
+                ? tr("Orbit returns automatically when the file is ready. Follow progress in Downloads.")
+                : tr("3. Return to the Orbit Store app. Orbit checks the file and adds it to Downloads.")};
 }
 }
 
@@ -328,12 +330,14 @@ GamePage::Layout GamePage::compose(hui::gfx::DrawList *list, Sheet sheet, bool f
         {
             paragraph(tr("{provider}: start here",{{"provider",release.provider}}),116,y,width_notes,25,ui::color::text);y+=16;
             paragraph(tr("1. Select Open {provider} on PS5. Your selected game and drive are kept.",{{"provider",release.provider}}),116,y,width_notes,20);y+=12;
-            paragraph(release.source_id=="akirabox"
-                ? tr("Complete verification on AkiraBox, then wait for Orbit to check the download link.")
+            paragraph(release.source_id=="akirabox" || release.source_id=="vikingfile"
+                ? tr("Complete verification if shown, then wait. Orbit will check the generated download link automatically.")
                 : release.source_id=="datanodes"
                 ? tr("Scroll to the bottom, select Continue to Download, then Free Download. Wait for the countdown and select Start Download.")
                 : tr("2. On {provider}, complete any verification and select Download.",{{"provider",release.provider}}),116,y,width_notes,20);y+=12;
-            paragraph(tr("3. Return to the Orbit Store app. Orbit checks the file and adds it to Downloads."),116,y,width_notes,20);y+=16;
+            paragraph(release.source_id=="akirabox" || release.source_id=="vikingfile"
+                ? tr("Orbit returns automatically when the file is ready. Follow progress in Downloads.")
+                : tr("3. Return to the Orbit Store app. Orbit checks the file and adds it to Downloads."),116,y,width_notes,20);y+=16;
             if (!state.have_browser || !state.browser.available)
             {
                 paragraph(state.browser_error.empty() ? tr("Provider verification is available on the PS5 only.")

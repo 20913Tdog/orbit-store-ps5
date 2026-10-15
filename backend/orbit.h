@@ -14,20 +14,21 @@
 #define ORBIT_MAX_DOWNLOADS 8
 #define ORBIT_DEFAULT_DOWNLOADS 1
 #define ORBIT_MAX_STORAGE 17
-#define ORBIT_MAX_RELEASES 4096
+#define ORBIT_MAX_RELEASES 8192
 #define ORBIT_THREAD_STACK (1024 * 1024)
 #if defined(ORBIT_BENCHMARK)
 #define ORBIT_MAX_RANGES 16
 #else
 #define ORBIT_MAX_RANGES 8
 #endif
-#define ORBIT_VERSION "1.3.1-beta.2"
+#define ORBIT_VERSION "1.3.5-pc.1"
 #define ORBIT_SOURCE_NOTICE_VERSION 1
 #define ORBIT_SOURCE_ARCHIVE 1U
 #define ORBIT_SOURCE_VIKINGFILE 2U
 #define ORBIT_SOURCE_AKIRABOX 4U
 #define ORBIT_SOURCE_DATANODES 8U
-#define ORBIT_SOURCE_ALL (ORBIT_SOURCE_ARCHIVE | ORBIT_SOURCE_VIKINGFILE | ORBIT_SOURCE_AKIRABOX | ORBIT_SOURCE_DATANODES)
+#define ORBIT_SOURCE_ONEFICHIER 16U
+#define ORBIT_SOURCE_ALL (ORBIT_SOURCE_ARCHIVE | ORBIT_SOURCE_VIKINGFILE | ORBIT_SOURCE_AKIRABOX | ORBIT_SOURCE_DATANODES | ORBIT_SOURCE_ONEFICHIER)
 typedef struct {
     unsigned enabled, notice_version;
     time_t acknowledged_at;
@@ -85,7 +86,7 @@ typedef struct {
     pthread_cond_t changed;
     pthread_t workers[ORBIT_MAX_DOWNLOADS];
     unsigned worker_count, concurrent_downloads;
-    Release releases[ORBIT_MAX_RELEASES + 1]; /* Includes the connection diagnostic. */
+    Release *releases; /* Fixed backing array, including the connection diagnostic. */
     size_t release_count;
     cJSON *catalog;
     unsigned catalog_revision;

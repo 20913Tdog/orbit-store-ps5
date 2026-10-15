@@ -16,8 +16,8 @@ import tempfile
 ROOT = Path(__file__).resolve().parent.parent
 FEED, GAMES, RELEASES = range(1, 4)
 # Compatibility generation, independent of the envelope encoding and revision.
-FEED_VERSION = 6
-LIMIT, OVERHEAD = 8 * 1024 * 1024, 40
+FEED_VERSION = 7
+LIMIT, OVERHEAD = 16 * 1024 * 1024, 40
 
 
 def helper():

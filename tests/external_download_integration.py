@@ -23,6 +23,19 @@ class Provider(http.server.BaseHTTPRequestHandler):
     def log_message(self, *_):
         pass
 
+    def do_POST(self):
+        from urllib.parse import parse_qs
+        assert self.path == "/services/xauthn/?op=login"
+        form = parse_qs(self.rfile.read(int(self.headers["Content-Length"])).decode())
+        assert form == {"email": ["fixture@example.invalid"], "password": ["fixture-password"]}
+        body = json.dumps({"success": True, "values": {"screenname": "Fixture account",
+            "cookies": {"logged-in-user": "fixture-user; path=/", "logged-in-sig": "fixture-signature; path=/"}}}).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_GET(self):
         requests.append((self.path, self.headers.get("Range")))
         body = PAYLOAD
@@ -78,7 +91,8 @@ def main():
         env = {**os.environ, "ORBIT_TEST_URL": provider_origin + "/catalog-entry",
             "ORBIT_TEST_SIZE": str(len(PAYLOAD)), "ORBIT_TEST_SOURCE": "vikingfile",
             "ORBIT_TEST_SHA256": hashlib.sha256(PAYLOAD).hexdigest(),
-            "ORBIT_TEST_BROWSER_URL": provider_origin + "/provider-page"}
+            "ORBIT_TEST_BROWSER_URL": provider_origin + "/provider-page",
+            "ORBIT_TEST_ARCHIVE_URL": provider_origin}
         env.pop("ORBIT_TEST_CAPTURE_URL", None)
         with (temp / "server.log").open("w+") as log:
             process = subprocess.Popen([str(ROOT / "build/orbit-test"), "--port", str(port),
@@ -101,6 +115,17 @@ def main():
                 code, session = api("/session")
                 assert code == 200
                 token = session["token"]
+                assert api("/archive-account", auth=False)[0] == 401
+                assert api("/archive-account")[1] == {"signedIn": False, "name": "", "busy": False}
+                code, account = api("/archive-account", {"action": "sign-in",
+                    "email": "fixture@example.invalid", "password": "fixture-password"})
+                assert code == 200 and account == {"signedIn": True, "name": "Fixture account", "busy": False}, (code, account)
+                saved_account = temp / "state" / "archive-account.json"
+                assert saved_account.exists() and "fixture-password" not in saved_account.read_text()
+                assert api("/archive-account")[1] == account
+                code, account = api("/archive-account", {"action": "sign-out"})
+                assert code == 200 and not account["signedIn"] and not saved_account.exists()
+                print("PASS 1.3.5 Archive.org sign-in and sign-out with isolated provider fixture")
                 assert api("/sources", {"enabled": ["vikingfile"], "acknowledged": True,
                     "noticeVersion": 1})[0] == 200
                 _, catalog = api("/catalog")

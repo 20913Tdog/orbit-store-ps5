@@ -96,6 +96,10 @@ test-debrid: build/orbit-test build/orbit-debrid-network-test
 	./build/orbit-debrid-network-test
 	python3 tests/debrid_integration.py
 
+.PHONY: test-archive-account
+test-archive-account: build/orbit-test
+	python3 tests/archive_account_integration.py
+
 test-ranges: build/orbit-test
 	python3 tests/range_integration.py
 .PHONY: test-extract
@@ -168,6 +172,14 @@ build/orbit_browser_probe.elf: $(BROWSER_PROBE)/main.c backend/browser_platform.
 	$(PS5_CC) $(CFLAGS) -DORBIT_BROWSER_PROBE -Ibackend -I$(PS5_LIB)/include $(BROWSER_PROBE)/main.c backend/browser_platform.c backend/browser_services.c backend/browser_scan.c -o $@ -L$(PS5_LIB)/lib -lmicrohttpd
 
 .PHONY: test-browser-capture
+build/orbit-browser-platform-test: backend/browser_platform.c backend/browser_scan.c backend/browser_platform.h backend/browser_scan.h tests/browser_platform_driver.c $(wildcard tests/stubs/browser-platform/*/*.h)
+	$(HOST_CC) $(CFLAGS) -D_POSIX_C_SOURCE=200809L -Itests/stubs/browser-platform -Ibackend -fsanitize=undefined -fsanitize-trap=all backend/browser_platform.c backend/browser_scan.c tests/browser_platform_driver.c -o $@
+.PHONY: test-browser-platform
+build/orbit-browser-multi-process-test: backend/browser.c $(HEADERS) tests/browser_multi_process_driver.c tests/browser_return_queue_driver.c
+	$(HOST_CC) $(CPPFLAGS) $(CFLAGS) -DORBIT_DESKTOP -D_POSIX_C_SOURCE=200809L backend/browser.c .deps/cjson/cJSON.c tests/browser_multi_process_driver.c -o $@ -lpthread -lm
+test-browser-platform: build/orbit-browser-platform-test build/orbit-browser-multi-process-test
+	./build/orbit-browser-platform-test
+	python3 -c 'import subprocess; [subprocess.run(["./build/orbit-browser-multi-process-test", str(i)], check=True) for i in range(8)]'
 
 # PC verification / PS5 transfer. Production provider policy and worker races,
 # followed by the real API and downloader against loopback-only fixtures.
@@ -181,8 +193,11 @@ build/orbit-browser-services-test: backend/browser_services.c backend/browser_pl
 .PHONY: test-browser-services
 build/orbit-browser-worker-test: backend/browser.c $(HEADERS) tests/browser_worker_driver.c
 	$(HOST_CC) $(CPPFLAGS) $(CFLAGS) -DORBIT_DESKTOP -DORBIT_TEST backend/browser.c .deps/cjson/cJSON.c tests/browser_worker_driver.c -Wl,--wrap=pthread_attr_setstacksize -Wl,--wrap=pthread_create -Wl,--wrap=pthread_join -o $@ -lpthread -lm
-test-browser-services: build/orbit-browser-services-test build/orbit-browser-worker-test
+build/orbit-browser-return-queue-test: backend/browser.c $(HEADERS) tests/browser_return_queue_driver.c
+	$(HOST_CC) $(CPPFLAGS) $(CFLAGS) -D_POSIX_C_SOURCE=200809L -DORBIT_TEST backend/browser.c .deps/cjson/cJSON.c tests/browser_return_queue_driver.c -o $@ -lpthread -lm
+test-browser-services: build/orbit-browser-services-test build/orbit-browser-worker-test build/orbit-browser-return-queue-test
 	python3 -c 'import subprocess; [subprocess.run(["./build/orbit-browser-services-test", str(i)], check=True) for i in range(9)]'
+	python3 -c 'import subprocess; [subprocess.run(["./build/orbit-browser-return-queue-test", str(i)], check=True) for i in range(12)]'
 	./build/orbit-browser-worker-test idle
 	./build/orbit-browser-worker-test request
 build/orbit-browser-capture-test: backend/browser_match.c backend/browser_match.h backend/browser_scan.c backend/providers.c backend/provider_network.c tests/browser_capture_driver.c

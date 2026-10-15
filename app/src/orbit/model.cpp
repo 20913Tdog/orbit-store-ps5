@@ -118,6 +118,10 @@ int status_rank(std::string_view status)
 BrowserSession parse_browser_session(const json::Value &value)
 {
     BrowserSession session;
+    session.native_dialog_available = value.flag("nativeDialogAvailable");
+    session.dialog_opened = value.flag("dialogOpened");
+    session.client_id = value.text("clientId");
+    session.page_url = value.text("pageUrl");
     session.available = value.flag("available");
     session.active = value.flag("active");
     session.id = value.text("id");
@@ -187,6 +191,15 @@ Debrid parse_debrid(const json::Value &value)
         status.hosts.push_back(std::move(host));
     }
     return status;
+}
+
+ArchiveAccount parse_archive_account(const json::Value &value)
+{
+    ArchiveAccount account;
+    account.known = value["signedIn"].is_bool();
+    account.signed_in = value.flag("signedIn");
+    account.name = value.text("name");
+    return account;
 }
 
 bool Debrid::supports(const Release &release) const

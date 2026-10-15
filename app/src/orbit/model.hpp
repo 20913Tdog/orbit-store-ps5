@@ -111,6 +111,15 @@ struct Game
     }
 };
 
+// Archive.org sign-in (GET /api/v1/archive-account): whether, and as whom.
+// The console keeps the session; the app never sees it.
+struct ArchiveAccount
+{
+    bool known = false; // false on a download service without it
+    bool signed_in = false;
+    std::string name;
+};
+
 struct Debrid
 {
     struct Host
@@ -325,10 +334,13 @@ struct TvAppStatus
     double check_after = 0.0;
 };
 
-// Provider verification is separate from the download queue. Only the service
-// sees provider URLs; the native app carries a selected release and drive.
+// Provider verification is separate from the download queue. The native app
+// receives a public provider page only for its own native-dialog session.
 struct BrowserSession
 {
+    bool native_dialog_available = false;
+    bool dialog_opened = false;
+    std::string client_id, page_url;
     bool available = false;
     bool active = false;
     std::string id;
@@ -343,6 +355,7 @@ BrowserSession parse_browser_session(const json::Value &value);
 System parse_system(const json::Value &value);
 Sources parse_sources(const json::Value &value);
 Debrid parse_debrid(const json::Value &value);
+ArchiveAccount parse_archive_account(const json::Value &value);
 std::vector<Release> parse_catalog(const json::Value &value);
 std::vector<Drive> parse_storage(const json::Value &value);
 std::vector<Job> parse_jobs(const json::Value &value);

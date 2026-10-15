@@ -1,5 +1,6 @@
 #include "assets.h"
 #include "orbit.h"
+#include "archive_account.h"
 #include "debrid.h"
 #include "receive.h"
 #include "zero_probe.h"
@@ -239,8 +240,15 @@ static enum MHD_Result route(struct MHD_Connection *c, const char *url, const ch
     if (!strncmp(url, "/api/v1/receive", 15) && (!url[15] || url[15] == '/')) {
         if (!authorized(c)) return error(c, 401, "Pair this device first.");
         const char *auth = MHD_lookup_connection_value(c, MHD_HEADER_KIND, "Authorization");
+        /* A freshly paired client may retain its former receiver identity by
+         * proving possession of the former secret too. The old secret alone
+         * never authorizes a request; normal bearer authorization above is
+         * mandatory. Receiver ownership and all file checks remain unchanged. */
+        const char *previous = MHD_lookup_connection_value(c, MHD_HEADER_KIND, "X-Orbit-Previous-Pairing");
+        if (previous && (strlen(previous) != 64 || strspn(previous, "0123456789abcdef") != 64))
+            return error(c, 400, "Invalid previous pairing proof.");
         unsigned char hash[32]; unsigned length = 0; char owner[65];
-        if (!EVP_Digest(auth + 7, 64, hash, &length, EVP_sha256(), NULL) || length != 32)
+        if (!EVP_Digest(previous ? previous : auth + 7, 64, hash, &length, EVP_sha256(), NULL) || length != 32)
             return error(c, 503, "Could not identify the paired client.");
         for (int i = 0; i < 32; i++) snprintf(owner + i * 2, 3, "%02x", hash[i]);
         if (get && !strcmp(url, "/api/v1/receive")) return json_response(c, 200, receive_status(owner));
@@ -277,6 +285,7 @@ static enum MHD_Result route(struct MHD_Connection *c, const char *url, const ch
         cJSON_AddNumberToObject(o, "receiveProtocol", 1);
         /* Folder transfers are an addition; protocol 1 clients are unaffected. */
         cJSON_AddNumberToObject(o, "receiveFolders", 1);
+        cJSON_AddNumberToObject(o, "receivePairingRecovery", 1);
         cJSON_AddBoolToObject(o, "receiveAvailable", receive_available());
         cJSON_AddStringToObject(o, "platform", ORBIT_PLATFORM);
         cJSON_AddBoolToObject(o, "paired", authorized(c));
@@ -520,6 +529,21 @@ static enum MHD_Result route(struct MHD_Connection *c, const char *url, const ch
             if (cJSON_IsString(key)) OPENSSL_cleanse(key->valuestring, strlen(key->valuestring));
             cJSON_Delete(input);
             return code == 202 ? json_response(c, 202, debrid_status()) : error(c, (unsigned)code, e);
+        }
+        if (get && !strcmp(url, "/api/v1/archive-account")) {
+            cJSON_Delete(input);
+            return json_response(c, 200, archive_account_status());
+        }
+        if (post && !strcmp(url, "/api/v1/archive-account")) {
+            char e[256] = {0};
+            int code = archive_account_action(input, e, sizeof e);
+            const char *secrets[] = {"email", "password"};
+            for (size_t i = 0; i < 2; i++) {
+                cJSON *v = cJSON_GetObjectItemCaseSensitive(input, secrets[i]);
+                if (cJSON_IsString(v)) OPENSSL_cleanse(v->valuestring, strlen(v->valuestring));
+            }
+            cJSON_Delete(input);
+            return code == 200 ? json_response(c, 200, archive_account_status()) : error(c, (unsigned)code, e);
         }
         if (get && !strcmp(url, "/api/v1/browser"))
             return json_response(c, 200, browser_status());

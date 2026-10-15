@@ -13,7 +13,7 @@ bool App::provider_actionable() const
     const auto &browser = state.browser;
     return state.have_browser && state.link == Link::online && !ctx_.store.browser_action().busy &&
            ((!browser.active && browser.state == "queued" && !browser.job_id.empty()) ||
-            (browser.active && browser.state != "cancelled" && !browser.id.empty()));
+            (browser.active && browser.state != "cancelled" && browser.state != "queued" && !browser.id.empty()));
 }
 
 void App::update_provider(const InputFrame &input, Feedback &feedback)
@@ -70,7 +70,7 @@ void App::draw_provider(Frame &frame) const
             : browser.state == "validating" ? tr("Checking your file")
             : browser.state == "waiting-link" ? tr("Waiting for the download link")
             : browser.state == "opening" ? tr("Opening the download page on your PS5…")
-            : tr("Select Download, then return to Orbit.");
+            : tr("Provider verification");
         const std::string message = !state.have_browser ? state.browser_error
             : browser.state == "idle" && !action.busy
                 ? tr("This verification session is no longer active.") : browser.message;
@@ -155,7 +155,7 @@ void App::draw_provider(Frame &frame) const
         : browser.state == "validating" ? tr("Checking your file")
         : browser.state == "waiting-link" ? tr("Waiting for the download link")
         : browser.state == "opening" ? tr("Opening the download page on your PS5…")
-        : tr("Select Download, then return to Orbit.");
+        : tr("Provider verification");
     ui::paragraph(list,type.medium,heading,330,411,26,1260,35,ui::color::text,3);
     const std::string message = !state.have_browser ? state.browser_error
         : browser.state == "idle" && !action.busy

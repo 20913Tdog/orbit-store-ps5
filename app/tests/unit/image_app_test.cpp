@@ -391,7 +391,7 @@ TEST(App, NativeVikingStartsVerificationWithTheChosenDriveWithoutOpeningOrbitBro
     for (const auto &request : h.transport.seen)
         if (request.method == "POST" && request.path == "/api/v1/browser")
         {
-            EXPECT_EQ(request.body,R"({"action":"start","releaseId":"ironclad-skies-viking","storageId":"internal"})");
+            EXPECT_EQ(request.body,R"({"action":"start","releaseId":"ironclad-skies-viking","storageId":"internal","returnTarget":"native"})");
             started = true;
         }
     EXPECT_TRUE(started);

@@ -647,6 +647,25 @@ http::Response Fixture::send(const http::Request &request)
     json::Value input;
     if (!get)
         json::parse(request.body, &input);
+    if (path == "/api/v1/archive-account")
+    {
+        // Signs in with the password "orbit"; anything else is refused.
+        if (!get && input.text("action") == "sign-in")
+        {
+            if (input.text("password") != "orbit")
+            {
+                response.status = 409;
+                response.body = error_body("Archive.org didn't accept this email or password.");
+                return response;
+            }
+            archive_name_ = "Player One";
+        }
+        else if (!get && input.text("action") == "sign-out")
+            archive_name_.clear();
+        response.body = std::string("{\"signedIn\":") + (archive_name_.empty() ? "false" : "true") +
+                        ",\"name\":" + json::quote(archive_name_) + ",\"busy\":false}";
+        return response;
+    }
     if (path == "/api/v1/browser")
     {
         if (!get && input.text("action") == "start")
