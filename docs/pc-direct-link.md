@@ -51,8 +51,8 @@ eine abweichende Dateigröße wird abgelehnt. Es werden keine Browser-Cookies an
 - Zehn Tests des echten Backend-Workers mit der produktiven Anbieter-Allowlist:
   gültiger Link, falscher Host/Dateiname/Datentyp, Abbruch, parallele Anfrage,
   Quellen- und Katalogänderung sowie Link-Erneuerung eines pausierten Jobs.
-- Acht Browser-Szenarien: alle vier Oberflächen, blockierter Tab, API-Fehler,
-  unzulässige Seitenadresse und abgelehnter Datei-Link.
+- Vierzehn Browser-Szenarien: alle vier Oberflächen, blockierter Tab, API-Fehler,
+  unzulässige Seitenadresse, abgelehnter Datei-Link, leeres Feld sowie PS5-Erkennung über lokale Sitzung und Browserkennung.
 - HTTP-Integration mit dem vollständigen Testdienst: Kopplung, Herkunftsprüfung,
   Dateiname, Größe, Dateityp, stabile Datei-Identität, Byte-Probe und vollständiger
   Download mit Prüfsumme in ein temporäres Laufwerk.

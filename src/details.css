@@ -896,3 +896,9 @@ html:not(.pointer) .game-sheet .primary:focus {
 .source-file-button:disabled { opacity: 0.5; cursor: default; }
 .sheet-confirm .source-file-actions { margin-bottom: 0.75rem; }
 .pn-tiles > .source-file-actions { grid-column: span 2; align-self: end; }
+@media (min-width: 761px) {
+  .modal.game-sheet-downloads.game-sheet-pc-link {
+    height: min(90vh, 44rem);
+    max-height: calc(100vh - 3.6rem);
+  }
+}

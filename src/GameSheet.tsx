@@ -46,12 +46,14 @@ export function GameSheet({
   title,
   back,
   close,
+  className = "",
   children,
 }: {
   view: SheetView;
   title: string;
   back: () => void;
   close: () => void;
+  className?: string;
   children: ReactNode;
 }) {
   const previousView = useRef(view);
@@ -85,7 +87,7 @@ export function GameSheet({
     <Modal
       title={title}
       close={close}
-      className={`game-sheet game-sheet-${view}`}
+      className={`game-sheet game-sheet-${view} ${className}`}
       scrimClassName="game-sheet-scrim"
     >
       <header className="sheet-heading">

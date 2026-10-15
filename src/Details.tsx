@@ -792,7 +792,7 @@ export function Details({
               tone={primaryDisabled ? "dark" : "accent"}
               glyph={mainGlyph}
               title={actionLabel}
-              sub={showDownload && useBrowser && initialSelection ? undefined : primaryDetail}
+              sub={showDownload && useBrowser && initialSelection && !computerLinkMode ? undefined : primaryDetail}
               disabled={primaryDisabled}
               label={actionLabel}
               onClick={() => primaryAction()}
@@ -1316,6 +1316,7 @@ export function Details({
       {sheet && (
         <GameSheet
           view={sheet}
+          className={computerLinkMode ? "game-sheet-pc-link" : undefined}
           title={
             sheet === "about"
               ? t("About this game")

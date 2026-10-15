@@ -88,6 +88,12 @@ try {
     if (layout === "store") {
       assert.ok(await box.locator("h3").evaluate(el => parseFloat(getComputedStyle(el).fontSize)) >= 20);
       assert.equal(await box.locator("details").count(), 0);
+      const heading = await box.locator("h3").boundingBox();
+      const panel = await page.locator(".sheet-scroll:visible").boundingBox();
+      const filename = await box.locator("small").boundingBox();
+      assert.ok(heading && panel && filename && heading.y >= panel.y &&
+        filename.y + filename.height <= panel.y + panel.height, "PC link instructions must fit without clipping");
+
       const action = await page.locator(".source-file-button:visible").boundingBox();
       assert.ok(action && action.y >= 0 && action.y + action.height <= 885);
     }
