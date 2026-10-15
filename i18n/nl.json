@@ -1330,8 +1330,9 @@
   "RPG": "Rollenspel",
   "Use a download link from your computer": "Een downloadlink van je computer gebruiken",
   "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Voltooi de verificatie in de browser op je computer en plak hieronder de uiteindelijke bestandslink. Je PS5 downloadt het bestand rechtstreeks.",
-  "Open download page on this computer": "Downloadpagina op deze computer openen",
   "Direct download link": "Directe downloadlink",
   "The link must point to this file:": "De link moet naar dit bestand verwijzen:",
-  "Allow the download page to open in a new tab, then try again.": "Sta toe dat de downloadpagina in een nieuw tabblad wordt geopend en probeer het opnieuw."
+  "Allow the download page to open in a new tab, then try again.": "Sta toe dat de downloadpagina in een nieuw tabblad wordt geopend en probeer het opnieuw.",
+  "Open source file": "Bronbestand openen",
+  "Leave the link empty to open the download page on your PS5.": "Laat de link leeg om de downloadpagina op je PS5 te openen."
 }

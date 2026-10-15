@@ -10,7 +10,7 @@ await server.listen();
 const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
 const browser = await chromium.launch({ headless: true,
   ...(process.env.ORBIT_CHROMIUM ? { executablePath: process.env.ORBIT_CHROMIUM } : {}),
-  args: ["--no-sandbox"] });
+  args: ["--no-sandbox", ...(process.env.ORBIT_SINGLE_PROCESS ? ["--no-zygote", "--single-process"] : [])] });
 const directUrl = "https://vikingfile.com/d/Abcd123456/PPSA00001-fixture.ffpfsc";
 const providerPage = "https://vikingfile.com/f/Abcd123456";
 const release = { id: "pc-fixture", gameId: "pc-fixture", platform: "ps5", titleId: "PPSA00001",
@@ -20,7 +20,8 @@ const release = { id: "pc-fixture", gameId: "pc-fixture", platform: "ps5", title
   genre: null, tagline: null, description: null, version: null, publisher: null, releaseDate: null };
 
 async function setup(layout = "store", mode = "ok") {
-  const context = await browser.newContext({ viewport: { width: 1440, height: 1050 }, locale: "de-DE" });
+  const context = await browser.newContext({ viewport: { width: 2048, height: 885 }, locale: "de-DE",
+    ...(mode === "ps5-ua" ? { userAgent: "Mozilla/5.0 (PlayStation 5)" } : {}) });
   const commands = [], errors = [];
   let status = { available: true, active: false, state: "idle", id: "", message: "", title: "", jobId: "" };
   await context.addInitScript(({ layout }) => {
@@ -34,9 +35,9 @@ async function setup(layout = "store", mode = "ok") {
     const path = url.pathname.slice("/api/v1".length);
     let data;
     let code = 200;
-    if (path === "/system") data = { name: "Orbit Store", version: "1.3.1-beta.1", platform: "ps5",
+    if (path === "/system") data = { name: "Orbit Store", version: "1.3.1-beta.2", platform: "ps5",
       paired: true, catalogueRevision: 1, stateHealthy: true, preferredStorage: "internal",
-      localSessionAvailable: false, launcherStatus: "ready", httpPort: 34177 };
+      localSessionAvailable: mode === "ps5-session", launcherStatus: "ready", httpPort: 34177 };
     else if (path === "/sources") data = { enabled: ["vikingfile"], acknowledged: true, noticeVersion: 1,
       options: [{ id: "vikingfile", label: "Vikingfile", releaseCount: 1, downloadReady: true }] };
     else if (path === "/catalog") data = [release];
@@ -63,8 +64,8 @@ async function setup(layout = "store", mode = "ok") {
   page.on("pageerror", error => errors.push(error.message));
   await page.goto(`${origin}/#download?game=pc-fixture&release=pc-fixture&storage=internal`);
   const box = page.locator(".external-download:visible");
-  await box.locator("summary").click();
-  await box.locator("input").waitFor({ state: "visible" });
+  if (!mode.startsWith("ps5-")) await box.locator("input").waitFor({ state: "visible" });
+  else await page.locator(".provider-browser-option:visible").waitFor();
   return { context, page, box, commands, errors };
 }
 
@@ -74,7 +75,7 @@ try {
     assert.equal(await box.locator("input").isEnabled(), true);
     assert.match(await box.textContent(), /PPSA00001-fixture\.ffpfsc/);
     const popupEvent = page.waitForEvent("popup");
-    await box.locator("button").first().click();
+    await page.locator(".source-file-button:visible").click();
     const popup = await popupEvent;
     await popup.waitForURL(providerPage);
     assert.equal(await popup.evaluate(() => window.opener === null), true);
@@ -82,9 +83,13 @@ try {
     await box.locator("input").fill(`  ${directUrl}  `);
     if (layout === "store") {
       mkdirSync("build/ui", { recursive: true });
-      await box.screenshot({ path: "build/ui/pc-link-form.png" });
+      await page.screenshot({ path: "build/ui/pc-link-form.png" });
+      assert.ok(await box.locator("h3").evaluate(el => parseFloat(getComputedStyle(el).fontSize)) >= 20);
+      assert.equal(await box.locator("details").count(), 0);
+      const action = await page.locator(".source-file-button:visible").boundingBox();
+      assert.ok(action && action.y >= 0 && action.y + action.height <= 885);
     }
-    await box.locator("button[type=submit]").click();
+    await page.getByRole("button", { name: "Auf PS5 herunterladen", exact: true }).last().click();
     await page.waitForFunction(() => !!document.querySelector(".provider-browser-notice"));
     assert.equal(commands.length, 1);
     assert.deepEqual(commands[0], { action: "start", returnToOrbit: true,
@@ -94,19 +99,42 @@ try {
     console.log(`PASS ${layout}: provider tab and PS5 link handoff`);
     await context.close();
   }
+  for (const layout of ["store", "crossbar", "cinema", "panorama"]) {
+    const { context, page, box, commands, errors } = await setup(layout);
+    await box.locator("input").fill("   ");
+    await page.getByRole("button", { name: "Auf PS5 herunterladen", exact: true }).last().click();
+    await page.waitForFunction(() => !!document.querySelector(".provider-browser-notice"));
+    assert.deepEqual(commands, [{ action: "start", returnToOrbit: true,
+      releaseId: "pc-fixture", storageId: "internal" }]);
+    assert.deepEqual(errors, []);
+    console.log(`PASS ${layout}: empty link retains PS5 browser flow`);
+    await context.close();
+  }
+  for (const mode of ["ps5-session", "ps5-ua"]) {
+    const { context, page, commands, errors } = await setup("store", mode);
+    assert.equal(await page.locator(".external-download").count(), 0);
+    assert.equal(await page.locator(".source-file-button").count(), 0);
+    await page.getByRole("button", { name: "Downloadseite auf PS5 öffnen", exact: true }).last().click();
+    await page.waitForFunction(() => !!document.querySelector(".provider-browser-notice"));
+    assert.equal(commands.length, 1);
+    assert.equal(commands[0].directUrl, undefined);
+    assert.deepEqual(errors, []);
+    console.log(`PASS ${mode}: console UI unchanged`);
+    await context.close();
+  }
   for (const mode of ["blocked-popup", "page-error", "unsafe-page", "rejected-link"]) {
     const { context, page, box, commands, errors } = await setup("store", mode);
     if (mode === "rejected-link") {
       await box.locator("input").fill(directUrl);
-      await box.locator("button[type=submit]").click();
+      await page.getByRole("button", { name: "Auf PS5 herunterladen", exact: true }).last().click();
       await page.getByRole("alert").filter({ hasText: /Link|Download/ }).first().waitFor();
       assert.equal(commands.length, 1);
       assert.equal(await box.locator("input").inputValue(), directUrl);
     } else {
       if (mode === "blocked-popup") await page.evaluate(() => { window.open = () => null; });
-      await box.locator("button").first().click();
-      await box.getByRole("alert").waitFor();
-      await page.waitForFunction(() => !document.querySelector(".external-download button").disabled);
+      await page.locator(".source-file-button:visible").click();
+      await page.locator(".source-file-actions:visible").getByRole("alert").waitFor();
+      await page.waitForFunction(() => !document.querySelector(".source-file-button").disabled);
       assert.equal(commands.length, 0);
       assert.equal(context.pages().length, 1);
     }

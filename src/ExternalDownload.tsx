@@ -1,15 +1,13 @@
-import { useId, useState, type FormEvent } from "react";
+import { useId, useState } from "react";
 import { api } from "./api";
 import { t } from "./i18n";
 import type { Release } from "./types";
 
-export function ExternalDownload({ release, disabled, submit }: {
+export function OpenSourceButton({ release, disabled, onBusyChange }: {
   release: Release;
   disabled: boolean;
-  submit: (url: string) => Promise<void>;
+  onBusyChange: (busy: boolean) => void;
 }) {
-  const inputId = useId();
-  const [url, setUrl] = useState("");
   const [opening, setOpening] = useState(false);
   const [error, setError] = useState("");
 
@@ -19,6 +17,7 @@ export function ExternalDownload({ release, disabled, submit }: {
     const tab = window.open("about:blank", "_blank");
     if (tab) tab.opener = null;
     setOpening(true);
+    onBusyChange(true);
     setError("");
     try {
       const page = await api<{ url: string }>(`/browser/page?releaseId=${encodeURIComponent(release.id)}`);
@@ -34,32 +33,40 @@ export function ExternalDownload({ release, disabled, submit }: {
       setError((e as Error).message);
     } finally {
       setOpening(false);
+      onBusyChange(false);
     }
   }
 
-  async function onSubmit(event: FormEvent) {
-    event.preventDefault();
-    if (disabled || opening || !url.trim()) return;
-    await submit(url.trim());
-  }
-
   return (
-    <details className="external-download">
-      <summary>{t("Use a download link from your computer")}</summary>
-      <p>{t("Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.")}</p>
-      <button type="button" disabled={disabled || opening} onClick={() => void openPage()}>
-        {opening ? t("Please wait…") : t("Open download page on this computer")}
+    <div className="source-file-actions">
+      <button type="button" className="source-file-button" disabled={disabled || opening} onClick={() => void openPage()}>
+        {opening ? t("Please wait…") : t("Open source file")}
       </button>
-      <form onSubmit={event => void onSubmit(event)}>
+      {error && <p className="form-error" role="alert">{error}</p>}
+    </div>
+  );
+}
+
+export function ExternalDownload({ release, value, onChange, disabled }: {
+  release: Release;
+  value: string;
+  onChange: (value: string) => void;
+  disabled: boolean;
+}) {
+  const inputId = useId();
+  return (
+    <section className="external-download" id="provider-browser-steps" aria-labelledby={`${inputId}-title`}>
+      <h3 id={`${inputId}-title`}>{t("Use a download link from your computer")}</h3>
+      <p>{t("Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.")}</p>
+      <div className="external-download-field">
         <label htmlFor={inputId}>{t("Direct download link")}</label>
-        <input id={inputId} type="url" required maxLength={2047}
-          value={url} onChange={event => setUrl(event.target.value)}
-          disabled={disabled || opening} autoComplete="off" spellCheck={false}
+        <input id={inputId} type="url" maxLength={2047}
+          value={value} onChange={event => onChange(event.target.value)}
+          disabled={disabled} autoComplete="off" spellCheck={false}
           placeholder="https://…" />
+        <p className="external-download-hint">{t("Leave the link empty to open the download page on your PS5.")}</p>
         <small>{t("The link must point to this file:")} <span>{release.filename}</span></small>
-        <button type="submit" disabled={disabled || opening || !url.trim()}>{t("Download to PS5")}</button>
-      </form>
-      {error && <p role="alert">{error}</p>}
-    </details>
+      </div>
+    </section>
   );
 }

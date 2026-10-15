@@ -25,7 +25,7 @@ import { CrossbarList, type XbRow } from "./interfaces/CrossbarList";
 import { Glyph } from "./interfaces/Glyph";
 import { PnGroup, PnTile } from "./interfaces/PanoramaParts";
 import { menuKeys } from "./interfaces/menuKeys";
-import { ExternalDownload } from "./ExternalDownload";
+import { ExternalDownload, OpenSourceButton } from "./ExternalDownload";
 export function Details({
   initialSelection,
   back,
@@ -81,6 +81,8 @@ export function Details({
     [pending, setPending] = useState(false),
     [error, setError] = useState("");
   const [downloadAgain, setDownloadAgain] = useState(false);
+  const [externalUrl, setExternalUrl] = useState("");
+  const [sourceOpening, setSourceOpening] = useState(false);
   const [sheet, setSheet] = useState<SheetView | null>(
     initialSelection ? "downloads" : null,
   );
@@ -141,13 +143,15 @@ export function Details({
   const torbox = delivery === "torbox";
   const canTorbox = torboxAvailable(debrid.status, release);
   const useBrowser = !!release.browserAvailable && !torbox;
+  const computerLinkMode = !!(useBrowser && system?.paired && browser?.available &&
+    !system.localSessionAvailable && !/PlayStation/i.test(navigator.userAgent));
   const collection = releaseState(release, jobs, library);
   const libraryGame = collection?.libraryGame;
   const showDownload =
     downloadAgain || !collection || collection.kind === "related";
   const downloadUnavailable =
     !game.releases.some((option) => option.id === releaseId) ||
-    pending ||
+    pending || sourceOpening ||
     (torbox && !canTorbox) ||
     !!browser?.active ||
     !enough ||
@@ -158,6 +162,7 @@ export function Details({
   useEffect(() => {
     setError("");
     setDownloadAgain(false);
+    setExternalUrl("");
     setDelivery("direct");
   }, [releaseId]);
   useEffect(() => {
@@ -231,7 +236,7 @@ export function Details({
     else if (!downloadAgain && collection?.job) openQueue(collection.job.id);
     else if (!downloadAgain && collection?.kind === "library" && libraryGame)
       viewLibrary();
-    else void (useBrowser ? verifyProvider() : start());
+    else void (useBrowser ? verifyProvider(computerLinkMode && externalUrl.trim() ? externalUrl.trim() : undefined) : start());
   }
   const actionLabel = !system?.paired
     ? t("Pair with your PS5")
@@ -243,7 +248,9 @@ export function Details({
           ? t("Please wait…")
           : torbox
             ? t("Download via TorBox")
-            : useBrowser
+            : computerLinkMode
+              ? t("Download to PS5")
+              : useBrowser
               ? t("Open download page on PS5")
               : existing || downloadAgain
                 ? t("Download again")
@@ -270,7 +277,14 @@ export function Details({
           "TorBox is unavailable for this host or file size. Refresh TorBox in App settings to check again.",
         )
       : t("TorBox is available for this option.");
-  const instructions = (
+  const sourceButton = computerLinkMode && showDownload ? (
+    <OpenSourceButton key={release.id} release={release}
+      disabled={pending || !!browser?.active} onBusyChange={setSourceOpening} />
+  ) : null;
+  const instructions = computerLinkMode ? (
+    <ExternalDownload release={release} value={externalUrl} onChange={setExternalUrl}
+      disabled={pending || sourceOpening || !!browser?.active} />
+  ) : (
     <div
       className="provider-browser-option"
       id="provider-browser-steps"
@@ -307,14 +321,6 @@ export function Details({
       </ol>
       {!browser?.available && (
         <p>{t("Connect to Orbit running on your PS5 to use this option.")}</p>
-      )}
-      {system?.paired && browser?.available && (
-        <ExternalDownload
-          key={`${release.id}:${drive?.id || ""}`}
-          release={release}
-          disabled={downloadUnavailable}
-          submit={verifyProvider}
-        />
       )}
     </div>
   );
@@ -559,6 +565,7 @@ export function Details({
         ),
         actions: (
           <>
+            {sourceButton}
             <button
               className="primary hub-primary"
               disabled={primaryDisabled}
@@ -779,6 +786,7 @@ export function Details({
             }
           >
             <PnTile size="large" art={game.hero || game.cover} fallback={game.heroFallback || game.cover} />
+            {sourceButton}
             <PnTile
               size="wide"
               tone={primaryDisabled ? "dark" : "accent"}
@@ -1064,6 +1072,7 @@ export function Details({
                     </p>
                   )}
                   <div className="cn-actions">
+                    {sourceButton}
                     <button
                       className="cn-button primary"
                       disabled={primaryDisabled}
@@ -1627,6 +1636,7 @@ export function Details({
                   </strong>
                 </div>
               )}
+              {sourceButton}
               <button
                 className="primary sheet-primary"
                 data-long-label={actionLabel.length > 34 || undefined}

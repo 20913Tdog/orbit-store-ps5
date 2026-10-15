@@ -852,24 +852,24 @@ html:not(.pointer) .game-sheet .primary:focus {
   padding-top: 0.65rem;
 }
 .external-download {
-  margin-top: 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  padding-top: 14px;
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 1.5;
 }
-.external-download summary {
-  cursor: pointer;
+.external-download h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.3rem;
   font-weight: 650;
 }
-.external-download form {
+.external-download-field {
   display: grid;
-  gap: 9px;
-  margin-top: 15px;
+  gap: 0.6rem;
+  margin-top: 1rem;
 }
+.external-download label { font-size: 1.05rem; font-weight: 600; }
 .external-download input {
   width: 100%;
   min-width: 0;
+  min-height: 3rem;
   padding: 10px 12px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
@@ -879,8 +879,12 @@ html:not(.pointer) .game-sheet .primary:focus {
 }
 .external-download small {
   overflow-wrap: anywhere;
+  font-size: 0.9rem;
 }
-.external-download button {
+.external-download .external-download-hint { margin: 0; }
+.source-file-button {
+  width: 100%;
+  min-height: 3.3rem;
   padding: 10px 14px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
@@ -889,4 +893,6 @@ html:not(.pointer) .game-sheet .primary:focus {
   font: inherit;
   cursor: pointer;
 }
-.external-download button:disabled { opacity: 0.5; cursor: default; }
+.source-file-button:disabled { opacity: 0.5; cursor: default; }
+.sheet-confirm .source-file-actions { margin-bottom: 0.75rem; }
+.pn-tiles > .source-file-actions { grid-column: span 2; align-self: end; }

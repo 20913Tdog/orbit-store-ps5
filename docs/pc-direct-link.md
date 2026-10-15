@@ -2,7 +2,7 @@
 
 Experimenteller Eigenbau auf Basis des offiziellen Orbit-Store-Quellpakets **1.3.0**.
 Entwicklungsbranch: [`feat/pc-direct-link`](https://github.com/20913Tdog/orbit-store-ps5/tree/feat/pc-direct-link).
-Angezeigte Service-Version: **1.3.1-beta.1**.
+Angezeigte Service-Version: **1.3.1-beta.2**.
 Die native TV-App wurde nicht neu gebaut. Orbit Zero wird nicht benötigt.
 
 ## Testbuild starten
@@ -13,7 +13,7 @@ Die native TV-App wurde nicht neu gebaut. Orbit Zero wird nicht benötigt.
    Orbit zum Neustart stoppen** wählen und warten, bis der Dienst beendet ist.
 3. Die mitgelieferte `orbit_store.elf` über deinen vorhandenen Payload Manager oder
    ELF Loader starten. Am PC `http://<PS5-IP>:34177/` öffnen, neu laden und bei Bedarf koppeln.
-   Unter App-Einstellungen sollte **1.3.1-beta.1** stehen.
+   Unter App-Einstellungen sollte **1.3.1-beta.2** stehen.
 
 Orbit speichert beim Start wie gewohnt eine Laufzeitkopie unter
 `/data/orbit-store/orbit_store.elf` und aktualisiert bereits von Orbit verwaltete
@@ -24,13 +24,16 @@ Zur vollständigen Rückkehr Orbit stoppen und die gesicherten Dateien einschlie
 ## Download übergeben
 
 1. Im **PC-Browser** die Orbit-Seite öffnen, Spiel, Quelle und Ziellaufwerk wählen.
-   Den Bereich **„Download-Link vom Computer verwenden“** aufklappen.
-2. **„Downloadseite auf diesem Computer öffnen“** wählen. Im neuen Tab die normalen
+   Der Bereich **„Download-Link vom Computer verwenden“** ist immer geöffnet.
+2. **„Sourcefile öffnen“** wählen. Im neuen Tab die normalen
    Anbieter-Schritte abschließen. Deinen Popup-Blocker kannst du dabei eingeschaltet lassen;
    Orbit öffnet den angeforderten Tab direkt aus deinem Klick.
 3. Die endgültige **Datei-URL** in **„Direkter Download-Link“** einfügen und
    **„Auf PS5 herunterladen“** wählen. Die PS5 prüft die Datei und lädt sie auf
    das ausgewählte Laufwerk. Den Fortschritt zeigt Orbit unter Downloads.
+
+Ohne eingefügten Link öffnet **„Auf PS5 herunterladen“** die Anbieterseite wie bisher auf der PS5.
+Die neuen Bedienelemente erscheinen nur im PC-Browser; auf der PS5 bleibt der bisherige Ablauf erhalten.
 
 Bei Vikingfile ist die Datei-URL eine Adresse wie
 `https://vikingfile.com/d/<Token>/<Dateiname>`. Die Seite mit `/f/` ist noch kein Download-Link.
@@ -55,7 +58,7 @@ eine abweichende Dateigröße wird abgelehnt. Es werden keine Browser-Cookies an
   Download mit Prüfsumme in ein temporäres Laufwerk.
 - PS5-Payload mit SDK 0.43 aus den festgelegten Bibliotheksquellen gebaut.
 
-**Noch offen:** Start auf einer echten PS5 und ein echter Vikingfile-Link, der am PC
+**Praxistest:** Der erste Testbuild startet auf der echten PS5. Noch offen ist ein echter Vikingfile-Link, der am PC
 erzeugt wurde. PC und PS5 sollten dafür zunächst dasselbe Heimnetz und denselben
 Internetzugang verwenden. Ob der Anbieter zusätzlich Cookies oder eine bestimmte
 Browser-Sitzung voraussetzt, entscheidet dieser Praxistest.

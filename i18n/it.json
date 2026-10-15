@@ -1347,8 +1347,9 @@
   "RPG": "Gioco di ruolo",
   "Use a download link from your computer": "Usa un link di download dal computer",
   "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Completa la verifica nel browser del computer, poi incolla qui sotto il link finale del file. La PS5 scarica il file direttamente.",
-  "Open download page on this computer": "Apri la pagina di download su questo computer",
   "Direct download link": "Link per il download diretto",
   "The link must point to this file:": "Il link deve puntare a questo file:",
-  "Allow the download page to open in a new tab, then try again.": "Consenti l’apertura della pagina di download in una nuova scheda, poi riprova."
+  "Allow the download page to open in a new tab, then try again.": "Consenti l’apertura della pagina di download in una nuova scheda, poi riprova.",
+  "Open source file": "Apri file sorgente",
+  "Leave the link empty to open the download page on your PS5.": "Lascia il link vuoto per aprire la pagina di download sulla tua PS5."
 }

@@ -21,7 +21,7 @@
 #else
 #define ORBIT_MAX_RANGES 8
 #endif
-#define ORBIT_VERSION "1.3.1-beta.1"
+#define ORBIT_VERSION "1.3.1-beta.2"
 #define ORBIT_SOURCE_NOTICE_VERSION 1
 #define ORBIT_SOURCE_ARCHIVE 1U
 #define ORBIT_SOURCE_VIKINGFILE 2U
