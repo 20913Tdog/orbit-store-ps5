@@ -1,6 +1,6 @@
 {
   "branch": "feat/pc-direct-link",
-  "base": "f17d7aafc9cd1fbe4dde373e60c178fa92c10c72",
+  "base": "b377196875cf50702710f149a139ff7f4a1b6479",
   "source_url": "https://github.com/saawant12/orbit-store-ps5/releases/download/v1.3.5/orbit-store-1.3.5-source-bundle.zip",
   "bundle_sha256": "c0fe51d94b199daa77b620b5d596afc13b77902076db313891885d0e54339858",
   "tar_name": "orbit-store-1.3.5-source.tar.gz",
@@ -664,9 +664,9 @@
   ],
   "patch_sha256": "a8968584ae81f93fa9f88af90f03fcec1c353366c43d80a5d3c0f1699880d759",
   "result": {
-    "sha": "07ee9fde1d54e0f264dce4d2bdee34fad81fd8d9",
+    "sha": "88569ac009e82059fea3e8aa84a7ef021013941c",
     "tree": "7488c0ececbf34ba35368523098207fd2e942e67",
-    "raw": "dHJlZSA3NDg4YzBlY2VjYmYzNGJhMzUzNjg1MjMwOTgyMDdmZDJlOTQyZTY3CnBhcmVudCBmMTdkN2FhZmM5Y2QxZmJlNGRkZTM3M2U2MGMxNzhmYTkyYzEwYzcyCmF1dGhvciBDb2RleCA8Y29kZXhAb3BlbmFpLmNvbT4gMTc5MjA1NzI1MSArMDIwMApjb21taXR0ZXIgQ29kZXggPGNvZGV4QG9wZW5haS5jb20+IDE3OTIwNTcyNTEgKzAyMDAKClBvcnQgUEMgZG93bmxvYWQgaGFuZG9mZiB0byBPcmJpdCBTdG9yZSAxLjMuNQo="
+    "raw": "dHJlZSA3NDg4YzBlY2VjYmYzNGJhMzUzNjg1MjMwOTgyMDdmZDJlOTQyZTY3CnBhcmVudCBiMzc3MTk2ODc1Y2Y1MDcwMjcxMGYxNDlhMTM5ZmY3ZjRhMWI2NDc5CmF1dGhvciBDb2RleCA8Y29kZXhAb3BlbmFpLmNvbT4gMTc5MjA1NzI1MSArMDIwMApjb21taXR0ZXIgQ29kZXggPGNvZGV4QG9wZW5haS5jb20+IDE3OTIwNTcyNTEgKzAyMDAKClBvcnQgUEMgZG93bmxvYWQgaGFuZG9mZiB0byBPcmJpdCBTdG9yZSAxLjMuNQo="
   },
   "files": [
     {
