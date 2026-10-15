@@ -13,6 +13,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - run: npm ci
+      - name: Check PC and console browser flows
+        run: |
+          npm install --prefix /tmp/orbit-test-tools --no-package-lock --ignore-scripts playwright@1.51.1
+          node /tmp/orbit-test-tools/node_modules/playwright/cli.js install --with-deps chromium --only-shell
+          ORBIT_PLAYWRIGHT_MODULE=/tmp/orbit-test-tools/node_modules/playwright/index.mjs npm run test:pc-link:ui
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: PC-link-UI-check
+          path: build/ui/
+          if-no-files-found: ignore
+
   payload:
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -25,17 +43,6 @@ jobs:
           .venv/bin/python tools/bootstrap.py
           npm run build
           node --test tests/external-download.test.mjs
-      - name: Check PC and console browser flows
-        run: |
-          npm install --prefix /tmp/orbit-test-tools --no-package-lock --ignore-scripts playwright@1.51.1
-          node /tmp/orbit-test-tools/node_modules/playwright/cli.js install --with-deps chromium --only-shell
-          ORBIT_PLAYWRIGHT_MODULE=/tmp/orbit-test-tools/node_modules/playwright/index.mjs npm run test:pc-link:ui
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
-        with:
-          name: PC-link-UI-check
-          path: build/ui/
-          if-no-files-found: ignore
       - name: Build SDK and static libraries
         run: |
           docker build -f tools/Dockerfile.sdk -t orbit-sdk:0.43 .

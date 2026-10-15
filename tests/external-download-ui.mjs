@@ -10,7 +10,7 @@ await server.listen();
 const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
 const browser = await chromium.launch({ headless: true,
   ...(process.env.ORBIT_CHROMIUM ? { executablePath: process.env.ORBIT_CHROMIUM } : {}),
-  args: ["--no-sandbox", ...(process.env.ORBIT_SINGLE_PROCESS ? ["--no-zygote", "--single-process"] : [])] });
+  args: ["--no-sandbox"] });
 const directUrl = "https://vikingfile.com/d/Abcd123456/PPSA00001-fixture.ffpfsc";
 const providerPage = "https://vikingfile.com/f/Abcd123456";
 const release = { id: "pc-fixture", gameId: "pc-fixture", platform: "ps5", titleId: "PPSA00001",
@@ -22,6 +22,7 @@ const release = { id: "pc-fixture", gameId: "pc-fixture", platform: "ps5", title
 async function setup(layout = "store", mode = "ok") {
   const context = await browser.newContext({ viewport: { width: 2048, height: 885 }, locale: "de-DE",
     ...(mode === "ps5-ua" ? { userAgent: "Mozilla/5.0 (PlayStation 5)" } : {}) });
+  context.setDefaultTimeout(15000);
   const commands = [], errors = [];
   let status = { available: true, active: false, state: "idle", id: "", message: "", title: "", jobId: "" };
   await context.addInitScript(({ layout }) => {
@@ -38,6 +39,7 @@ async function setup(layout = "store", mode = "ok") {
     if (path === "/system") data = { name: "Orbit Store", version: "1.3.1-beta.2", platform: "ps5",
       paired: true, catalogueRevision: 1, stateHealthy: true, preferredStorage: "internal",
       localSessionAvailable: mode === "ps5-session", launcherStatus: "ready", httpPort: 34177 };
+    else if (path === "/session") data = { token: "fixture-pairing-token", pairCode: "123456" };
     else if (path === "/sources") data = { enabled: ["vikingfile"], acknowledged: true, noticeVersion: 1,
       options: [{ id: "vikingfile", label: "Vikingfile", releaseCount: 1, downloadReady: true }] };
     else if (path === "/catalog") data = [release];
@@ -81,9 +83,9 @@ try {
     assert.equal(await popup.evaluate(() => window.opener === null), true);
     await popup.close();
     await box.locator("input").fill(`  ${directUrl}  `);
+    mkdirSync("build/ui", { recursive: true });
+    await page.screenshot({ path: `build/ui/pc-link-${layout}.png` });
     if (layout === "store") {
-      mkdirSync("build/ui", { recursive: true });
-      await page.screenshot({ path: "build/ui/pc-link-form.png" });
       assert.ok(await box.locator("h3").evaluate(el => parseFloat(getComputedStyle(el).fontSize)) >= 20);
       assert.equal(await box.locator("details").count(), 0);
       const action = await page.locator(".source-file-button:visible").boundingBox();
@@ -114,7 +116,7 @@ try {
     const { context, page, commands, errors } = await setup("store", mode);
     assert.equal(await page.locator(".external-download").count(), 0);
     assert.equal(await page.locator(".source-file-button").count(), 0);
-    await page.getByRole("button", { name: "Downloadseite auf PS5 öffnen", exact: true }).last().click();
+    await page.getByRole("button", { name: "Download-Seite auf PS5 öffnen", exact: true }).last().click();
     await page.waitForFunction(() => !!document.querySelector(".provider-browser-notice"));
     assert.equal(commands.length, 1);
     assert.equal(commands[0].directUrl, undefined);
