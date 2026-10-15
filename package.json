@@ -18,7 +18,8 @@
     "catalog:build": ".venv/bin/python tools/catalog.py build",
     "catalog:check": ".venv/bin/python tools/catalog.py check",
     "test:catalog": ".venv/bin/python -m unittest discover -s tests -p '*catalog*test.py'",
-    "catalog:publish": ".venv/bin/python tools/publish_catalog.py"
+    "catalog:publish": ".venv/bin/python tools/publish_catalog.py",
+    "test:pc-link:ui": "node tests/external-download-ui.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",

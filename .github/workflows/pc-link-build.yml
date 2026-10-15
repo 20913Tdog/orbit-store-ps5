@@ -52,7 +52,7 @@ jobs:
       - name: Check HTTP download and Archive.org integration
         run: |
           docker run --rm -v "$PWD:/work" orbit-payload-build build/orbit-test
-          python3 tests/external_download_integration.py
+          docker run --rm -v "$PWD:/work" --entrypoint python3 orbit-payload-build tests/external_download_integration.py
       - name: Package test build
         run: |
           mkdir -p build/pc-link-package
