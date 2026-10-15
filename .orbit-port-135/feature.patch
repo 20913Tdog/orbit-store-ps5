@@ -1,0 +1,2012 @@
+diff --git a/.github/workflows/pc-link-build.yml b/.github/workflows/pc-link-build.yml
+new file mode 100644
+index 0000000..7caf954
+--- /dev/null
++++ b/.github/workflows/pc-link-build.yml
+@@ -0,0 +1,70 @@
++name: Build PC-link test payload
++
++on:
++  push:
++    branches: [feat/pc-direct-link]
++  workflow_dispatch:
++
++permissions:
++  contents: read
++
++concurrency:
++  group: pc-link-build-${{ github.ref }}
++  cancel-in-progress: true
++
++jobs:
++  ui:
++    runs-on: ubuntu-latest
++    timeout-minutes: 10
++    steps:
++      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
++      - run: npm ci
++      - name: Check PC and console browser flows
++        run: |
++          npm install --prefix /tmp/orbit-test-tools --no-package-lock --ignore-scripts playwright@1.51.1
++          node /tmp/orbit-test-tools/node_modules/playwright/cli.js install --with-deps chromium --only-shell
++          ORBIT_PLAYWRIGHT_MODULE=/tmp/orbit-test-tools/node_modules/playwright/index.mjs npm run test:pc-link:ui
++      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
++        if: always()
++        with:
++          name: PC-link-UI-check
++          path: build/ui/
++          if-no-files-found: ignore
++
++  payload:
++    runs-on: ubuntu-latest
++    timeout-minutes: 60
++    steps:
++      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
++      - name: Prepare frontend and pinned inputs
++        run: |
++          npm ci
++          python3 -m venv .venv
++          .venv/bin/python tools/bootstrap.py
++          npm run build
++          node --test tests/external-download.test.mjs
++      - name: Build SDK and static libraries
++        run: |
++          docker build -f tools/Dockerfile.sdk -t orbit-sdk:0.43 .
++          docker build -t orbit-payload-build .
++      - name: Build PS5 payload
++        run: docker run --rm -v "$PWD:/work" orbit-payload-build payload
++      - name: Check HTTP download and Archive.org integration
++        run: |
++          docker run --rm -v "$PWD:/work" orbit-payload-build build/orbit-test
++          python3 tests/external_download_integration.py
++      - name: Package test build
++        run: |
++          mkdir -p build/pc-link-package
++          cp build/orbit_store.elf build/pc-link-package/
++          cp docs/pc-direct-link.md build/pc-link-package/LIESMICH.md
++          cp LICENSE THIRD-PARTY-NOTICES.md build/pc-link-package/
++          git rev-parse HEAD > build/pc-link-package/SOURCE-COMMIT.txt
++          cd build/pc-link-package
++          sha256sum orbit_store.elf > SHA256SUMS
++      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
++        with:
++          name: Orbit-PC-Link-Test-1.3.5-pc.1
++          path: build/pc-link-package/
++          retention-days: 30
++          if-no-files-found: error
+diff --git a/Makefile b/Makefile
+index 77dcf37..b96ff51 100644
+--- a/Makefile
++++ b/Makefile
+@@ -180,6 +180,14 @@ build/orbit-browser-multi-process-test: backend/browser.c $(HEADERS) tests/brows
+ test-browser-platform: build/orbit-browser-platform-test build/orbit-browser-multi-process-test
+ 	./build/orbit-browser-platform-test
+ 	python3 -c 'import subprocess; [subprocess.run(["./build/orbit-browser-multi-process-test", str(i)], check=True) for i in range(8)]'
++
++# PC verification / PS5 transfer. Production provider policy and worker races,
++# followed by the real API and downloader against loopback-only fixtures.
++.PHONY: test-pc-link
++test-pc-link: build/orbit-test
++	node --test tests/external-download.test.mjs
++	python3 tests/external_download_integration.py
++
+ build/orbit-browser-services-test: backend/browser_services.c backend/browser_platform.h tests/browser_services_driver.c
+ 	$(HOST_CC) $(CFLAGS) -DORBIT_BROWSER_PROBE -Ibackend backend/browser_services.c tests/browser_services_driver.c -Wl,--wrap=dlopen -Wl,--wrap=dlsym -o $@
+ .PHONY: test-browser-services
+diff --git a/README.md b/README.md
+new file mode 100644
+index 0000000..30d4497
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1,372 @@
++# Orbit Store (Beta)
++
++> **PC link handoff prototype — 1.3.5-pc.1.** This development branch lets you
++> finish provider verification in your computer's browser and paste the final file
++> URL into Orbit so the PS5 downloads it directly. Read the
++> [setup, test results and rollback instructions](docs/pc-direct-link.md).
++> Based on official Orbit Store 1.3.5, retaining its automatic PS5 provider capture
++> and Archive.org sign-in. Use the official 1.3.5 TV app with this custom service.
++> The previous PC-link build was confirmed on a real PS5; this combined build needs a console test. This is a development fork of the upstream project below.
++
++### A modern, no-BS download manager for PS5.
++
++Orbit runs on your PS5. Browse games, compare their available sources and formats, and download a single file directly to the console or an attached drive. Open the native TV app from your Games row, or pair a phone or computer to manage the same queue over your local network.
++
++Explore **1,601 games: 1,001 PS5 games and 600 PS4 games**, with single-file options from Archive.org, Vikingfile and AkiraBox. Filter by platform, choose your source and save to your preferred drive. New games and corrected links arrive through catalogue updates.
++
++PS4 game browsing requires **Orbit Store 1.1.0** with its matching native app, or **Orbit Zero 1.1.0**. Orbit itself runs on PS5. See [PS4 games on PS5](guides/downloads.md#ps4-games-on-ps5) for package download and installation guidance.
++
++[Download Orbit](https://github.com/saawant12/orbit-store-ps5/releases/latest) · [Orbit Zero](#orbit-zero-for-mac-windows-and-linux) · [Get started](guides/getting-started.md) · [Download guide](guides/downloads.md) · [Library guide](guides/library.md) · [Appearance guide](guides/appearance.md) · [Troubleshooting](guides/troubleshooting.md) · [Bug report format](.github/ISSUE_TEMPLATE/bug_report.md) · [Report a bug](https://github.com/saawant12/orbit-store-ps5/issues/new?template=bug_report.md) · [Request a feature](https://github.com/saawant12/orbit-store-ps5/issues/new?template=feature_request.md)
++
++> **Official channels:** Orbit Store has no official social media accounts. This GitHub repository is our official source for releases, updates and support. Any social media account claiming to officially represent Orbit Store is an impersonator.
++
++> **Always free.** Orbit Store is free to use and will always remain free. We don’t accept donations or payments. Anyone asking for money on our behalf is not affiliated with the project.
++
++## Built around the console
++
++- **A native app for your TV.** Browse, Discover, Library and Downloads, built for your controller. Save favourites with Square in Store, or Triangle in the other native interfaces. Your downloads keep running when you close the app.
++- **One link per download.** Choose a single-file FFPFSC, exFAT, PKG, FPKG, ZIP, RAR or 7z option, with its source and download size shown before starting. Supported archives extract automatically; there are no archive parts to collect.
++- **Four ways to make it yours.** Choose Store, Crossbar, Cinema or Panorama, with motion and background options. See the [appearance guide](guides/appearance.md).
++- **Your queue, your pace.** Pause, resume, retry and reorder downloads. Choose 1–8 simultaneous games, with one active download by default. Check the space they need before adding more.
++- **Optional TorBox downloads.** Connect your own account to use TorBox for supported links, or download directly from the original provider. See [TorBox setup](guides/downloads.md#optional-download-through-torbox) for account and host limits.
++- **A Library for your drives.** See installed games and available files. Manage compatible sources through ShadowMount.
++- **Control from your phone.** Pair once to browse, queue downloads and check progress on the same PS5.
++- **Updates when you choose.** Orbit tells you when an update is available. In the TV app, open **App settings → Updates** to manage the TV app and download service separately. Installation, restart and payload-manager setup remain your choice.
++- **No Orbit account. No telemetry.** Your paired devices connect to Orbit on your local network.
++
++## Get started
++
++**Three ways to use Orbit**
++
++| Do this | Orbit appears in | What it is |
++|---|---|---|
++| Copy `PPSA99177.ffpkg` to `/data/homebrew/` | **Games** on your PS5 | The TV app, used with your controller. Needs kstuff and ShadowMountPlus. |
++| Run `orbit_store.elf` with your payload manager or ELF loader | **Media** on your PS5 | The browser version. It only opens while Orbit is running. |
++| Install [Orbit Zero](#orbit-zero-for-mac-windows-and-linux) | Your Mac, Windows or Linux computer | Downloads on your computer and sends the files to your PS5. The PS5 doesn't need internet. |
++
++The Games and Media versions share the same downloads, favourites and service settings, so seeing two Orbit icons on your PS5 is normal. Appearance is saved separately in each app or browser.
++
++For direct console downloads, you need a PS5 that can run homebrew ELF payloads, a payload manager or ELF loader, internet access on the console, and enough writable storage. For downloads through your computer, see [Orbit Zero](#orbit-zero-for-mac-windows-and-linux) below.
++
++1. **Choose how to open Orbit.** Download the files from the [latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest), verify them and follow the table above. Use the Games version, the Media version or both.
++2. **Choose your sources.** Choose sources in the TV app’s setup screen or **App settings → Download sources**. Select the sources you want to use, including Archive.org, Vikingfile and AkiraBox, and acknowledge the download notice. Your choices apply across both versions.
++3. **Pick a download.** Open a game and select its main download button to review **Download options**. Choose **Source**, **Download using** and **Save to**, then confirm the download. Direct options download from the TV app. Vikingfile browser options open the provider page on the PS5, keeping your selected game, source and drive. Choose **Open Vikingfile on PS5** in the native app or **Open download page on PS5** in the browser version, press **Download** on Vikingfile, then return to Orbit. For **AkiraBox**, complete verification and wait without pressing its Download button. The browser version returns to Orbit automatically once the file is ready; native-app users can return to the TV app to follow progress.
++4. **Follow your queue.** Open Downloads on the TV or a paired device to check progress, pause or resume.
++
++The TV app includes Orbit's download service and can start it through a compatible ELF loader on **port 9021**. You can also start `orbit_store.elf` yourself. The Media-tab shortcut opens the browser version while the service is running. After a reboot, start your jailbreak before opening Orbit. See the [setup and update guide](guides/getting-started.md) for installation, updates and phone pairing.
++
++## See how it works
++
++Open Orbit from your Games row and use the controller to browse, explore and choose a download. The native app shares your catalogue, favourites and download queue with the browser version.
++
++*Discover previews the 1.3.0 catalogue in the Store interface. Game details and download options show 1.2.0, and Browse shows the native app from 1.1.0. These previews are rendered locally; other screenshots show existing workflows with illustrative storage and download values.*
++
++### Discover, browse and choose a download
++
++**Start with something new.** Discover opens first. **New on Orbit** brings featured picks and recent additions to the first row, followed by **Latest releases**. Move down to All games to explore a grid that loads more games as you scroll. PS4 and PS5 editions have their own platform labels and download choices.
++
++**Store (default)**
++
++![Orbit Store 1.3.0 Discover with Uncharted 4 selected](assets/1.3.0/store-discover-uncharted.png)
++
++**Keep exploring.** All games gives each title its own tile. Move through the grid with your controller; more games appear as you keep scrolling.
++
++![Orbit Store 1.2.0 All games grid with Oblivion Remastered selected and its background artwork](assets/1.2.0/native-discover-grid.png)
++
++**Find your next game.** Search by name or title ID, narrow the collection by platform, source, format, region or size, and browse the newest known releases first.
++
++![Native TV app Browse with search and Platform, Source, Format and Region filters](assets/1.1.0/native-browse.png)
++
++**Get to know a game.** Read its description, save it to favourites, or open the three-dot menu for more information. The main download button opens your options before anything starts.
++
++![Cyberpunk 2077 in Orbit Store 1.2.0 with full artwork, description, favourites and download control](assets/1.2.0/native-details.png)
++
++**Choose how and where to download.** Review the source, format, delivery method and drive together. Direct options download from the TV app; Vikingfile browser options open the provider page on PS5 and keep your choices when you return. See the [download guide](guides/downloads.md), including [TorBox setup](guides/downloads.md#optional-download-through-torbox).
++
++![Cyberpunk 2077 download options in Orbit Store 1.2.0 with source, delivery method and USB destination controls](assets/1.2.0/native-download-options.png)
++
++### Choose your interface
++
++Make Orbit look the way you like. Open **Appearance** and choose **Store**, **Crossbar**, **Cinema** or **Panorama**. Confirm your choice to keep it. The interfaces are available in the native PS5 app, browser and Orbit Zero; switching keeps your downloads, favourites and settings. See the [appearance guide](guides/appearance.md) for the 15-second confirmation, controller shortcuts, motion options and where to find settings in each layout.
++
++**Crossbar**
++
++![Crossbar Discover in the native Orbit Store app](assets/1.3.0/discover-crossbar.png)
++
++<br>
++
++**Cinema**
++
++![Cinema Discover in Orbit Store](assets/1.3.0/discover-cinema.png)
++
++<br>
++
++**Panorama**
++
++![Panorama Discover in Orbit Store](assets/1.3.0/discover-panorama.png)
++
++### Settings without leaving the TV app
++
++The instructions below use Store’s settings names. In the browser’s Crossbar, Cinema and Panorama interfaces, use the [Settings page equivalents](guides/appearance.md#find-settings-after-switching).
++
++Choose sources, set your default drive, pair a phone and refresh your game catalogue from one place. Updates has separate controls for the TV app and its download service; you choose when to install or restart.
++
++![Native App settings with source choices](assets/0.9.0/native-settings.png)
++
++### Orbit in your language
++
++Orbit Store and Orbit Zero support **English, German, Spanish, French, Hungarian, Italian, Dutch, Polish, Brazilian Portuguese, Russian and Turkish**. The native app follows your PS5’s system language. In the browser version, use **App settings → Language** in Store, or **Settings → Language** in the other interfaces, to choose a language for that device, or leave it on **Automatic** to follow the browser.
++
++![Native Orbit Settings in Hungarian, with translated storage controls](assets/1.0.5/native-settings-hu.png)
++
++*Native app 1.3.2 rendered locally in Hungarian. Storage values are illustrative.*
++
++In Orbit Zero’s Store interface, use the globe-shaped **Language** button in the top bar. In Crossbar, Cinema or Panorama, open **Settings → Language**. Language settings change Orbit’s menus; each game keeps its own language settings. See [language settings](guides/getting-started.md#choose-your-language) for instructions and the browser selector.
++
++### The same queue on your phone
++
++Pair a phone on the same network to find a game and choose its download option. Files still go to the PS5’s selected drive. Vikingfile’s provider page and any verification open on the **PS5**, even when you start from your phone.
++
++1. **Find a game.** Search the catalogue and filter the available games.
++2. **Compare options.** Check the format, size and destination before downloading.
++3. **Start the provider step.** Open Vikingfile on PS5, press Download there, then return to Orbit.
++
++<p>
++  <a href="assets/0.9.0/phone-browse.jpg"><img src="assets/0.9.0/phone-browse.jpg" width="250" align="top" alt="Step 1: Phone Browse with search and game cards"></a>
++  <a href="assets/0.9.0/phone-details.jpg"><img src="assets/0.9.0/phone-details.jpg" width="250" align="top" alt="Step 2: Phone download options with source, delivery and destination"></a>
++  <a href="assets/0.9.0/phone-viking.jpg"><img src="assets/0.9.0/phone-viking.jpg" width="250" align="top" alt="Step 3: Phone Vikingfile instructions and Open download page on PS5 button"></a>
++</p>
++
++*Select a screenshot to open it at full size.*
++
++For your existing collection, the [Library guide](guides/library.md) explains installed, mounted and on-drive status, plus the actions available through ShadowMount.
++
++## Orbit Zero for Mac, Windows and Linux
++
++Orbit Zero is our desktop companion for Mac, Windows and Linux. [Download Orbit Zero](https://github.com/saawant12/orbit-store-ps5/releases/latest), open **Console**, enter your PS5’s local IP address and choose **Start Orbit on PS5**.
++
++Download on your computer and transfer to your PS5 over your home network. Uncompressed files can transfer while downloading; archives finish downloading and extracting before their files transfer. **Works over your local network: Wi-Fi or Ethernet. Your PS5 does not need internet access.** Keep both devices connected to your home network while the computer handles online downloads.
++
++- **Start Orbit from your computer.** Upload and launch the compatible payload without a separate ELF download or manual file selection. Your PS5 must already have its jailbreak and Payload Manager or an ELF loader running.
++- **Control downloads from either device.** Browse and manage the computer’s queue from the desktop or the matching native Orbit app on your PS5.
++- **Choose where downloads run.** Use **Computer** to download through your computer, or **Prefer PS5** to download directly when the console can reach the source. Save your preference once.
++- **Follow each stage.** See the download and PS5 transfer rates separately, plus extraction progress for archives, with controls to pause, resume and reconnect.
++- **Recover an interrupted transfer.** Reconnect and resume, remove partial files to start fresh, or stop a stuck transfer to free the queue. Stopping keeps files but prevents that transfer from resuming; [compare the recovery choices](guides/orbit-zero.md#pause-reconnect-and-clean-up).
++- **Download more at once.** Download one game to your computer at a time by default, or choose 1–8 in Download settings. PS5 transfers run one at a time while computer downloads continue.
++
++[Install on Mac, Windows or Linux](https://github.com/saawant12/orbit-store-ps5/blob/main/guides/orbit-zero-installation.md) · [Set up a PS5 without internet](https://github.com/saawant12/orbit-store-ps5/blob/main/guides/orbit-zero-offline-ps5.md)
++
++**Download and transfer improvements are included as standard.** It reconnects to your saved PS5 when reopened, lets you choose the computer download folder, and can clear completed computer copies after successful transfers. **Updates** checks for new desktop versions and downloads the correct package when you choose.
++
++### Discover on your computer
++
++Explore PS4 and PS5 games with full artwork, featured picks in New on Orbit and a shared favourites list. Browse’s **Platform** filter lets you choose PS4, PS5 or both. Choose the source and PS5 destination before starting a download.
++
++![Orbit Zero 1.1.0 Discover with Red Dead Redemption 2, PS4 favourites and New on Orbit before Latest releases](assets/1.1.0/orbit-zero-discover.jpg)
++
++### Your PS5, at a glance
++
++The Console page brings your connection, available storage, download preference and active transfers together. Pair once using **Show code on PS5**, then manage the connection from your computer.
++
++![Orbit Zero Console with connection, storage, download preference and separate download and transfer progress](assets/orbit-zero-development/console.jpg)
++
++*Desktop interface previews. Connection, storage and transfer values are illustrative.*
++
++The desktop app supports **ARM64 and x64** computers and the same **11 interface languages** as Orbit Store. Use **Language** in Store’s top bar, or **Settings → Language** in the other interfaces. Choose a language, or **System language** to follow your computer. Keep Orbit Zero and the PS5 awake while transferring; the computer needs internet to fetch new downloads.
++
++## Beta status
++
++**Orbit Store is an experimental beta.** [Download the latest release](https://github.com/saawant12/orbit-store-ps5/releases/latest). The matching components in release **1.3.0** have these version numbers:
++
++| Component | Version |
++| --- | --- |
++| Orbit Store download service and browser interface (`orbit_store.elf`) | **1.3.0** |
++| Native TV app (`PPSA99177.ffpkg`) | **1.6.0** |
++| Orbit Zero for desktop | **1.3.0** |
++
++The TV app has its own version number; these files belong to the same release. Use matching files when updating. Keep the PS5 awake while downloading or receiving transfers.
++
++**Payload-manager setup is opt-in.** Choose **App settings → Payload managers → Add Orbit** to let Orbit add and update a copy. Existing copies stay in place until you choose whether to allow updates. Auto-start is a separate choice, and Orbit leaves your manager's global Autoload switch unchanged.
++
++Compatibility varies by PS5 firmware, loader and ShadowMount version. Library requires a compatible ShadowMount v1 local API, and available actions depend on your setup. If something goes wrong, use the [bug report format](.github/ISSUE_TEMPLATE/bug_report.md) and include your versions and the error shown. The reported etaHEN payload-toggle issue remains under investigation.
++
++Earlier supported apps continue to receive their PS5-compatible catalogue; a catalogue refresh alone does not add PS4 support to an older app. App updates add features and fixes. Your queued downloads keep the files you originally chose.
++
++## Using the beta
++
++The [release downloads](https://github.com/saawant12/orbit-store-ps5/releases/latest) include:
++
++- Orbit Zero for Mac, Windows and Linux, in ARM64 and x64 builds. Follow the [desktop installation guide](guides/orbit-zero-installation.md).
++
++- [PPSA99177.ffpkg](https://github.com/saawant12/orbit-store-ps5/releases/latest/download/PPSA99177.ffpkg), the native TV app, and [its checksum](https://github.com/saawant12/orbit-store-ps5/releases/latest/download/PPSA99177.ffpkg.sha256).
++- [orbit_store.elf](https://github.com/saawant12/orbit-store-ps5/releases/latest/download/orbit_store.elf), the download service and browser interface, and [its checksum](https://github.com/saawant12/orbit-store-ps5/releases/latest/download/orbit_store.elf.sha256).
++- The complete source and licence bundle for the PS5 service, browser interface, native TV app and their open-source components, with build instructions.
++
++The ELF and FFPKG each have a matching `.sha256` file. Desktop packages use the release’s **`SHA256SUMS`** file. Follow the verification commands for [PS5 files](guides/getting-started.md#verify-the-ps5-files) or [desktop packages](guides/orbit-zero-installation.md#verify-your-download), then use the installation guide for your app.
++
++To download Orbit through **Payload Manager**, open **Settings → Manage Sources → Add Source** and paste:
++
++```text
++https://raw.githubusercontent.com/saawant12/orbit-store-ps5/main/payloads.json
++```
++
++Open the **Orbit Store** source, download **Orbit Store (Beta)**, then run `orbit_store.elf`. The feed includes its version and SHA-256 checksum using the [Payload Manager repository format](https://github.com/itsPLK/ps5-payload-manager/blob/main/CUSTOM_REPOSITORIES.md).
++
++For the browser setup, manager integration and phone pairing steps, follow [Getting started](guides/getting-started.md). Only download material you have permission to obtain and use.
++
++After a reboot, run your jailbreak as usual. Open the Games-row TV app to start Orbit through your ELF loader, or start the payload manually or through auto-start you have configured. The Media-tab browser shortcut needs Orbit already running. If auto-start does not launch Orbit on your setup, start it manually from your payload manager.
++
++Keep the PS5 awake while downloading. Closing the storefront leaves downloads running. After an Orbit restart, interrupted transfers become paused so you can review and resume them.
++
++## Updating or reinstalling Orbit
++
++**Update the service and TV app separately.** In the native app, open **App settings → Updates** for both. In the browser version, **App settings → Update / reinstall** updates the ELF; **App settings → TV app** installs or updates the native app. Close the TV app before replacing it. If ShadowMountPlus still opens the old version, restart the console when convenient and run your jailbreak again. Replacing the FFPKG does not switch an already-running Orbit service; stop Orbit deliberately before starting its new copy. The [update guide](guides/getting-started.md#update-the-tv-app) explains both steps.
++
++To restore a deleted Orbit icon, start Orbit through your payload manager. Your paired devices, source choices and download queue stay saved.
++
++Loading an ELF while Orbit is already running saves the replacement for the next start. It does not switch the active session. The notification now explains this; an existing icon is expected and does not need to be removed.
++
++**Update the browser service:**
++
++1. Open **App settings → Update / reinstall → Check for updates**.
++2. Choose **Install update**, or **Reinstall release** for the current published version. Orbit downloads the official ELF and verifies its SHA-256 checksum before replacing the saved copy.
++3. When **Restart needed** appears, select **Stop Orbit to restart** and confirm. Your queue is saved and paused; other payloads keep running.
++4. Run `/data/orbit-store/orbit_store.elf`, or a manager copy you opted to keep in sync, and reopen Orbit. Review and resume your downloads.
++
++**Stop syncing** preserves the existing manager copy and its auto-start settings, but stops updating that copy. If you prefer to keep a manually imported ELF outside sync, replace it yourself when updating or launch the saved path above. Running an old imported ELF starts that older version.
++
++The panel shows **Running**, **Saved for next start**, and **Latest release** separately. Pairing, source choices and the download queue are preserved. Updates are manual; no release is installed just by opening the panel. If a download or copy fails, Orbit reports the error and leaves the running session open for a retry.
++
++For installations from older betas and queue compatibility, see [Upgrading an older version](guides/getting-started.md#upgrading-an-older-version). For the desktop app, follow [Update Orbit Zero](guides/orbit-zero-installation.md#update-orbit-zero).
++
++## Managing your downloads
++
++New large downloads use up to eight connections when the host supports byte ranges and a strong file identity. Existing partials keep their original layout; other downloads use one connection. Pause, Resume and Cancel apply to the entire download. Speed depends on the host, network and storage.
++
++Open **Downloads** and choose **Active**, **Finished**, **Failed** or **Cancelled**. Finished contains only successfully completed downloads; cancelled items have their own view. Move waiting downloads up or down to choose what runs next. Paused items keep their place. A retry countdown tells you when Orbit will try an interrupted download again.
++
++On a cancelled download, **Delete download** offers to delete the partial file and remove the entry together. If you already deleted the partial file, it still removes the entry; completed files are kept. Reconnect the original destination if Orbit asks for it.
++
++**Remove from history** keeps files on the drive. **Clear finished history** and **Clear cancelled history** also keep files and affect only their own view; cancelled entries with kept partial files remain listed. Use **Delete download** when you want to remove a cancelled entry and its partial file.
++
++Before queuing a game, check **Free now**, **Unfinished downloads** and **After queue + this download**. Paused and failed downloads count toward the estimate; cancelled ones do not. Other apps can change free space, so Orbit checks again when a download starts.
++
++Files are saved in the selected drive’s `homebrew` folder. See [where downloads are saved](guides/downloads.md#where-downloads-are-saved) for internal, M.2 and USB paths. For computer downloads, see [Orbit Zero transfer recovery](guides/orbit-zero.md#pause-reconnect-and-clean-up).
++
++## Your Library
++
++Open **Library** to see installed games and game files reported on your drives, including their mount and availability status. Search by name, title ID or path and filter by status, location or format. Library works independently of your download-source choices.
++
++Run a compatible **ShadowMount with its v1 local HTTP API enabled** on the same PS5. Orbit reads that local inventory and shows the actions your ShadowMount version supports. It does not start ShadowMount or change its configuration.
++
++- **Refresh** updates the view. **Scan for games** asks ShadowMount to discover sources and may register or mount them after confirmation.
++- Open a game to **mount or unmount** its compatible source. Orbit does not launch games or uninstall them.
++- **Copy** keeps the original; **Move** asks ShadowMount to remove it after a successful transfer. Unmount the source first, select the destination and confirm. Pause active and queued Orbit downloads before starting.
++- Open **Storage** to check drive capacity and request game sizes. Follow copy/move progress and cancel while ShadowMount reports it is safe. A storage job can continue if Orbit stops.
++
++If ShadowMount is absent or its API is incompatible, Library explains what is missing. A disconnected source stays distinguishable from an available one; refreshing does not delete files.
++
++## Finding and saving games
++
++In **Browse**, combine platform, source, format, region and download-size filters, then choose a sort order. Size sorting uses the smallest option matching your filters. **Release date (newest first)** is the default. Games without a recorded date appear afterward, alphabetically. **Reset filters** restores this order.
++
++Open a game's details and choose **Add to favourites**, or use the favourite shortcut on a selected game in native Browse or Discover: **Square** in Store, **Triangle** in Crossbar, Cinema or Panorama. Your favourites are shared between the console and paired devices and stay saved after restarting Orbit. Disabling a source hides its games without forgetting your favourites.
++
++## Refreshing the game catalogue
++
++New games appear automatically, without reinstalling or restarting Orbit. To check for additions yourself, open **App settings → Game catalogue → Refresh catalogue**. Orbit also checks when it starts and every six hours while running.
++
++If your connection drops, you can still browse the last available catalogue. Reconnect to download games or get the latest additions. Your source choices and queued downloads stay as you left them.
++
++## Controls and formats
++
++In the native TV app, use the D-pad or left stick to move, Cross to select, Circle to go back, and follow the on-screen action hints. In the Store interface, **L1/R1 switches tabs** and **Square adds or removes the selected game from favourites in Browse and Discover**. Filters open with Cross; choose with the D-pad and Cross, or close with Circle. In Crossbar, Cinema and Panorama, **Triangle** toggles favourites instead; section navigation also differs. See the [native controller guide](guides/appearance.md#controller-navigation-in-the-native-app). The table below applies to the browser’s Store interface.
++
++| Control | Action |
++|---|---|
++| D-pad / arrow keys | Move focus |
++| Cross / Enter | Select |
++| Search: Up / Down | Return to the Browse tab / move to results; with no matches, Down reaches collection controls |
++| Search: Left / Right | Move the text cursor |
++| Circle / Escape | Back or close details |
++| Touch / mouse | Select visible controls |
++
++The catalogue offers single-file **FFPFSC**, **exFAT**, **PKG**, **FPKG**, **ZIP**, **RAR** and **7z** options across Archive.org, Vikingfile and AkiraBox. Archive sizes are marked as compressed; the extracted files need additional space.
++
++| Format | What you get | What to do after it's saved |
++|---|---|---|
++| **exFAT** | `.exfat` image | ShadowMountPlus mounts it. Nothing to install. |
++| **FFPFSC** | `.ffpfsc` image | ShadowMountPlus mounts it. Nothing to install. |
++| **Game folder** | A folder of game files, from an archive | ShadowMountPlus mounts it. Nothing to install. |
++| **PKG**, **FPKG** | `.pkg` package | Install it with a package installer. ShadowMountPlus doesn't mount packages, so the game won't appear in Library or on the home screen until it's installed. |
++| **ZIP**, **RAR**, **7z** | Archive | Orbit extracts it after downloading. The label shows what's inside, for example `7z · exFAT`; follow that row. |
++
++**PS5 FPKGs and firmware (October 2026):** PS5 FPKG games currently run only on firmware 11.60 or lower. On 12.xx and 13.xx they may install but won't start, until package support arrives for those firmwares. On those firmwares, choose exFAT or FFPFSC instead.
++
++See [which format to pick](guides/downloads.md#which-format-to-pick).
++
++Source choices are saved on the console and shared by paired devices. Turning off a source hides its download options and pauses unfinished downloads without deleting files. A game stays visible if another enabled source offers it. Re-enable a source and resume its downloads when ready. There is no user library import or custom source entry in this version.
++
++### Provider download steps
++
++- **Vikingfile:** open the provider page, complete verification, press **Download**, then return to Orbit.
++- **AkiraBox:** open the provider page, complete verification and **wait without pressing Download**. Orbit captures the ready link. The PS5 browser version returns to Orbit automatically; native-app users return to the TV app. Orbit Zero closes its provider window when the file is ready.
++
++On a paired phone, these steps open on the PS5. In Orbit Zero, they open on your computer. See the [full provider instructions](guides/downloads.md#akirabox-verify-then-wait).
++
++### Automatic archive extraction (1.2.0)
++
++Orbit automatically extracts supported single-file **ZIP, RAR and 7z** downloads. Orbit Store extracts on the selected PS5 drive; Orbit Zero extracts on your computer before transferring the extracted files to the PS5. Keep enough free space for both the archive and its extracted files.
++
++**Delete archives after extracting** is on by default. Change it under **App settings → Storage** in Orbit Store, or **Downloads → Download settings** in Orbit Zero. It removes the downloaded archive only after successful extraction. In Zero, keeping or removing the extracted computer copy after transfer is a separate **Computer cache** setting; automatic cache removal is off by default.
++
++For downloads handled by Orbit Store, open **Downloads → Finished → Location** in the browser or native app to see the saved file or extracted folder path. Moving or deleting the file afterward does not update that history. Orbit Zero download details also show the full PS5 destination path and the computer path while a cached copy remains. See [where downloads are saved](guides/downloads.md#where-downloads-are-saved).
++
++For password-protected archives, Orbit automatically tries the supplied password and these built-in passwords, so you usually don’t need to enter one yourself:
++
++- `DLPSGAME.COM`
++- `[DLPSGAME.COM]`
++- `SuperPSX`
++- `www.DLPSGAME.COM`
++- `downloadgameps3.com`
++- `hako`
++
++Passwords are case-sensitive. If none works, select **Enter archive password** on the download, enter the password provided by its source, then choose **Retry extraction**. Orbit keeps the downloaded archive so you can retry without downloading it again.
++
++Orbit does **not** directly install game packages, launch games, or download in rest mode. Library actions use ShadowMount; a confirmed scan may register or mount discovered games. “Complete” means the file was saved and passed available validation. Size-only checks are labelled separately from checksum verification.
++
++## When something needs attention
++
++When reporting a bug, follow the [bug report format](.github/ISSUE_TEMPLATE/bug_report.md) and [open a bug report](https://github.com/saawant12/orbit-store-ps5/issues/new?template=bug_report.md). Include your setup, the exact error and a diagnostic report when available, and complete the sections relevant to your issue.
++
++- **No storage:** if internal storage or your M.2 SSD disappeared in 0.9.0, update to the latest release, restart Orbit and refresh storage. For external drives, check that the drive is connected to the PS5. A drive connected to your computer is not PS5 storage.
++- **Drive disconnected:** reconnect the original destination. Orbit will not silently switch to internal storage.
++- **Not enough space:** free space on the selected destination before retrying.
++- **Source changed:** preserve the partial file until you decide to remove it and restart. Orbit will not append a different file to it.
++- **“Provider returned a page” on an older version:** update to the latest release, restart Orbit, then open **Downloads → Failed → Retry download**. Existing partial files are checked before resuming. If the provider actually returns an error page, Orbit will still reject it.
++- **Provider throttling:** let the retry delay finish. Orbit respects the provider's `Retry-After` response.
++- **Icon does not open Orbit:** start Orbit through Payload Manager, then open the icon again.
++- **Cannot connect:** check that the payload is running and your device is on the same local network. Orbit uses TCP port **34177**.
++- **Missed the pairing code:** select **Pair devices**. The PS5 keeps the code on screen; phones and computers can request the notification again every 30 seconds.
++- **Port already in use:** Orbit reports the port in its startup error. Check which service is using it before retrying.
++
++## Licence
++
++Orbit Store is free software under the GNU General Public License, version 3 or later. Every release includes the complete source for its payload and native TV app, the corresponding sources of their copyleft components, third-party licence notices and rebuild instructions.
++
++Forks are welcome, as long as they share their source under the same licence. BlackBox is built from Orbit's code but is released without its source; see [BlackBox is built from Orbit Store's code](https://blackboxisorbit.com/).
++
++---
++
++## IMPORTANT: THIRD-PARTY CONTENT & DOWNLOAD DISCLAIMER
++
++**Orbit Store is an independent download-management application. This project does not host, upload, mirror, or bundle the game files referenced by its catalogue.** File transfers happen directly between third-party providers and the user's selected device. This repository hosts Orbit's documentation and, when released, Orbit's own application files.
++
++Catalogue entries reference publicly accessible third-party URLs. **Publicly accessible does not mean authorised, licensed, or free to redistribute.** Use Orbit only for material you have permission to obtain and use, in accordance with applicable law, relevant licences, and the provider's terms. Owning a game does not, by itself, establish permission to obtain any copy found online.
++
++**Third-party files are outside this project's control.** Their hosts and uploaders control availability and contents. Orbit does not guarantee ownership, authenticity, completeness, safety, compatibility, or continued availability. Download completion, a matching file size, or a matching checksum is a technical result, not a licence or a guarantee that the file is safe to run.
++
++All game names, artwork, trademarks, and other third-party materials belong to their respective owners. Orbit is **not affiliated with or endorsed by** Sony Interactive Entertainment, PlayStation, game publishers, or download providers. The app does not supply accounts, credentials, purchase entitlements, or permission to bypass access restrictions.
++
++To report an incorrect entry or a rights concern, open an issue with the affected title, URL, and sufficient information to identify the concern. Do not post private personal information. The underlying hosting provider is responsible for files it hosts; Orbit's maintainers can review catalogue references controlled by this project.
++
+diff --git a/backend/api.c b/backend/api.c
+index 2c1a208..a4d8aaa 100644
+--- a/backend/api.c
++++ b/backend/api.c
+@@ -547,6 +547,19 @@ static enum MHD_Result route(struct MHD_Connection *c, const char *url, const ch
+         }
+         if (get && !strcmp(url, "/api/v1/browser"))
+             return json_response(c, 200, browser_status());
++        if (get && !strcmp(url, "/api/v1/browser/page")) {
++            const char *id = MHD_lookup_connection_value(c, MHD_GET_ARGUMENT_KIND, "releaseId");
++            pthread_mutex_lock(&orbit.mutex);
++            const Release *r = id ? release_find(id) : NULL;
++            cJSON *page = NULL;
++            if (r && source_enabled_locked(r) && provider_browser_supported(r)) {
++                page = cJSON_CreateObject();
++                cJSON_AddStringToObject(page, "url", r->browser_url);
++            }
++            pthread_mutex_unlock(&orbit.mutex);
++            return page ? json_response(c, 200, page)
++                        : error(c, 400, "This option has no supported provider browser page.");
++        }
+         if (post && !strcmp(url, "/api/v1/browser")) {
+             char e[256] = {0};
+             int code = browser_action(input, e, sizeof e);
+diff --git a/backend/browser.c b/backend/browser.c
+index 2816a7f..7784add 100644
+--- a/backend/browser.c
++++ b/backend/browser.c
+@@ -15,6 +15,7 @@ static struct {
+     bool ready, stop, pending, busy, thread_started, return_to_browser, native_dialog, dialog_opened;
+     atomic_bool cancel;
+     char id[33], state[16], message[256], job_id[33], title[128], client_id[65];
++    char external_url[sizeof(((Release *)0)->url)];
+     Release release;
+     Storage storage;
+     Job refresh_job;
+@@ -230,7 +231,14 @@ static void *worker(void *unused) {
+         if (session.stop) break;
+         session.pending = false;
+         Release resolved = session.release;
+-        if (session.native_dialog && !session.dialog_opened)
++        bool external = session.external_url[0] != 0;
++        if (external) {
++            copy_text(resolved.url, sizeof resolved.url, session.external_url);
++            memset(session.external_url, 0, sizeof session.external_url);
++            session.link_ms = milliseconds() - session.started_ms;
++            session.candidates++;
++            state_locked("validating", "Checking the selected file before adding it to Downloads…");
++        } else if (session.native_dialog && !session.dialog_opened)
+             state_locked("opening", "Opening the download page in Orbit…");
+         else if (!strcmp(resolved.source, "akirabox") || !strcmp(resolved.source, "vikingfile"))
+             state_locked("waiting-link", "Complete verification if shown, then wait. Orbit will check the generated download link automatically.");
+@@ -239,7 +247,7 @@ static void *worker(void *unused) {
+         pthread_mutex_unlock(&orbit.mutex);
+         char error[256] = {0}, etag[256] = {0}, modified[128] = {0};
+         bool validated = false;
+-        bool ok = capture(&resolved, etag, modified, &validated, error, sizeof error);
++        bool ok = external || capture(&resolved, etag, modified, &validated, error, sizeof error);
+         pthread_mutex_lock(&orbit.mutex);
+         ok = ok && !session.stop && !atomic_load(&session.cancel) && selected_locked();
+         if (ok) state_locked("validating", "Checking the selected file before adding it to Downloads…");
+@@ -280,6 +288,7 @@ static void *worker(void *unused) {
+         memset(&resolved, 0, sizeof resolved);
+         memset(&session.release, 0, sizeof session.release);
+         memset(&session.refresh_job, 0, sizeof session.refresh_job);
++        memset(session.external_url, 0, sizeof session.external_url);
+         session.finished_ms = milliseconds() - session.started_ms;
+         session.busy = false;
+     }
+@@ -350,6 +359,7 @@ cJSON *browser_status(void) {
+ int browser_action(const cJSON *input, char *error, size_t cap) {
+     int code = 202;
+     const char *action = json_text(input, "action");
++    const cJSON *external_link = cJSON_GetObjectItemCaseSensitive(input, "directUrl");
+     pthread_mutex_lock(&orbit.mutex);
+     if (!strcmp(action, "opened")) {
+         if (!session.busy || !session.native_dialog || atomic_load(&session.cancel) ||
+@@ -387,7 +397,7 @@ int browser_action(const cJSON *input, char *error, size_t cap) {
+         }
+         const cJSON *dialog = cJSON_GetObjectItemCaseSensitive(input, "nativeDialog");
+         const char *client = json_text(input, "clientId");
+-        if ((dialog && !cJSON_IsBool(dialog)) || (cJSON_IsTrue(dialog) &&
++        if ((dialog && !cJSON_IsBool(dialog)) || (external_link && cJSON_IsTrue(dialog)) || (cJSON_IsTrue(dialog) &&
+             (!target || strcmp(target->valuestring, "native") || !*client || strlen(client) > 64 ||
+              strspn(client, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != strlen(client)))) {
+             copy_text(error, cap, "Choose a supported native browser session."); code = 400;
+@@ -404,6 +414,10 @@ int browser_action(const cJSON *input, char *error, size_t cap) {
+             copy_text(error, cap, "Pause the download and enable its source before refreshing its link."); code = 409;
+         } else if (!r || !provider_browser_supported(r)) {
+             copy_text(error, cap, "This option has no supported provider browser page."); code = 400;
++        } else if (external_link && (!cJSON_IsString(external_link) ||
++                   !external_link->valuestring[0] ||
++                   !provider_capture_url(r, external_link->valuestring))) {
++            copy_text(error, cap, "Captured link does not match this download option."); code = 400;
+         } else if (!s) {
+             copy_text(error, cap, "Reconnect the selected drive first."); code = 409;
+         } else if (refreshing && (strcmp(s->root, job->root) || s->device != job->device || s->inode != job->inode)) {
+@@ -419,7 +433,10 @@ int browser_action(const cJSON *input, char *error, size_t cap) {
+             session.native_dialog = cJSON_IsTrue(dialog);
+             session.dialog_opened = false;
+             copy_text(session.client_id, sizeof session.client_id, session.native_dialog ? client : "");
+-            session.return_to_browser = (target && !strcmp(target->valuestring, "browser")) || cJSON_IsTrue(legacy);
++            copy_text(session.external_url, sizeof session.external_url,
++                      external_link ? external_link->valuestring : "");
++            session.return_to_browser = !external_link &&
++                ((target && !strcmp(target->valuestring, "browser")) || cJSON_IsTrue(legacy));
+             memset(&session.refresh_job, 0, sizeof session.refresh_job);
+             if (refreshing) session.refresh_job = *job;
+             copy_text(session.title, sizeof session.title, r->title);
+@@ -432,7 +449,9 @@ int browser_action(const cJSON *input, char *error, size_t cap) {
+             session.candidates = session.browser_processes = 0;
+             session.busy = session.pending = true;
+             atomic_store(&session.cancel, false);
+-            state_locked("opening", "Opening the download page on your PS5…");
++            state_locked(external_link ? "validating" : "opening", external_link
++                ? "Checking the selected file before adding it to Downloads…"
++                : "Opening the download page on your PS5…");
+             pthread_cond_signal(&session.changed);
+             code = 202;
+         }
+diff --git a/backend/orbit.h b/backend/orbit.h
+index 0d36376..e001c7a 100644
+--- a/backend/orbit.h
++++ b/backend/orbit.h
+@@ -21,7 +21,7 @@
+ #else
+ #define ORBIT_MAX_RANGES 8
+ #endif
+-#define ORBIT_VERSION "1.3.5"
++#define ORBIT_VERSION "1.3.5-pc.1"
+ #define ORBIT_SOURCE_NOTICE_VERSION 1
+ #define ORBIT_SOURCE_ARCHIVE 1U
+ #define ORBIT_SOURCE_VIKINGFILE 2U
+diff --git a/docs/pc-direct-link.md b/docs/pc-direct-link.md
+new file mode 100644
+index 0000000..36b501c
+--- /dev/null
++++ b/docs/pc-direct-link.md
+@@ -0,0 +1,110 @@
++# Download am PC freigeben, auf der PS5 laden
++
++Experimenteller Eigenbau auf Basis des offiziellen Orbit-Store-Quellpakets **1.3.5**.
++Entwicklungsbranch: [`feat/pc-direct-link`](https://github.com/20913Tdog/orbit-store-ps5/tree/feat/pc-direct-link).
++Angezeigte Service-Version: **1.3.5-pc.1**.
++Die native TV-App wurde nicht verändert. Für die neuen nativen Bedienelemente und den verbesserten Dialogablauf die offizielle **1.3.5-TV-App** verwenden:
++[PPSA99177.ffpkg](https://github.com/saawant12/orbit-store-ps5/releases/download/v1.3.5/PPSA99177.ffpkg).
++Danach unseren Dienst über die neue `orbit_store.elf` starten. Orbit Zero wird für die PC-Link-Funktion nicht benötigt.
++Die offiziellen Orbit-Zero-1.3.5-Pakete können unabhängig davon verwendet werden.
++
++## Testbuild starten
++
++1. Deine bisherige Orbit-ELF aufbewahren. Für eine vollständige Rückkehr zusätzlich
++   `/data/orbit-store/` und den bestehenden Orbit-Eintrag im Payload Manager sichern.
++2. Laufende Downloads pausieren. In Orbit **App-Einstellungen → Update / neu installieren →
++   Orbit zum Neustart stoppen** wählen und warten, bis der Dienst beendet ist.
++3. Die mitgelieferte `orbit_store.elf` über deinen vorhandenen Payload Manager oder
++   ELF Loader starten. Am PC `http://<PS5-IP>:34177/` öffnen, neu laden und bei Bedarf koppeln.
++   Unter App-Einstellungen sollte **1.3.5-pc.1** stehen.
++
++Orbit speichert beim Start wie gewohnt eine Laufzeitkopie unter
++`/data/orbit-store/orbit_store.elf` und aktualisiert bereits von Orbit verwaltete
++Manager-Kopien. Der Test ist deshalb nicht auf die laufende Sitzung beschränkt.
++Zur vollständigen Rückkehr Orbit stoppen und die gesicherten Dateien einschließlich
++`saved-version.txt` und des verwalteten Manager-Eintrags wiederherstellen.
++
++## Download übergeben
++
++1. Im **PC-Browser** die Orbit-Seite öffnen, Spiel, Quelle und Ziellaufwerk wählen.
++   Der Bereich **„Download-Link vom Computer verwenden“** ist immer geöffnet.
++2. **„Sourcefile öffnen“** wählen. Im neuen Tab die normalen
++   Anbieter-Schritte abschließen. Deinen Popup-Blocker kannst du dabei eingeschaltet lassen;
++   Orbit öffnet den angeforderten Tab direkt aus deinem Klick.
++3. Die endgültige **Datei-URL** in **„Direkter Download-Link“** einfügen und
++   **„Auf PS5 herunterladen“** wählen. Die PS5 prüft die Datei und lädt sie auf
++   das ausgewählte Laufwerk. Den Fortschritt zeigt Orbit unter Downloads.
++
++Ohne eingefügten Link öffnet **„Auf PS5 herunterladen“** die Anbieterseite wie bisher auf der PS5.
++Die neuen Bedienelemente erscheinen nur im PC-Browser; auf der PS5 bleibt der bisherige Ablauf erhalten.
++
++Bei Vikingfile ist die Datei-URL eine Adresse wie
++`https://vikingfile.com/d/<Token>/<Dateiname>`. Die Seite mit `/f/` ist noch kein Download-Link.
++Du kannst den fertigen Link aus dem Download-Eintrag deines Browsers kopieren.
++Falls der Browser ihn dort nicht anbietet: Entwicklerwerkzeuge → Netzwerk öffnen,
++Protokoll beibehalten, den Download auslösen und die URL der tatsächlichen Datei-Anfrage kopieren.
++Einen versehentlich begonnenen PC-Download anschließend abbrechen.
++
++Das Feld nennt den erwarteten Dateinamen. Eine andere Datei, eine HTML-Seite oder
++eine abweichende Dateigröße wird abgelehnt. Es werden keine Browser-Cookies an Orbit übertragen.
++
++## Was geprüft wurde
++
++- Web-Build, TypeScript und alle zehn Übersetzungskataloge.
++- Fünfzehn Tests des echten Backend-Workers mit der produktiven Anbieter-Allowlist:
++  gültiger Link, falscher Host/Dateiname/Datentyp, Abbruch, parallele Anfrage,
++  Quellen- und Katalogänderung, Link-Erneuerung eines pausierten Jobs sowie native Dialogbestätigung und beide Rückkehrziele aus 1.3.5.
++- Vierzehn Browser-Szenarien: alle vier Oberflächen, blockierter Tab, API-Fehler,
++  unzulässige Seitenadresse, abgelehnter Datei-Link, leeres Feld sowie PS5-Erkennung über lokale Sitzung und Browserkennung.
++- HTTP-Integration mit dem vollständigen Testdienst und Archive.org-An-/Abmeldung gegen lokale Testdaten: Kopplung, Herkunftsprüfung,
++  Dateiname, Größe, Dateityp, stabile Datei-Identität, Byte-Probe und vollständiger
++  Download mit Prüfsumme in ein temporäres Laufwerk.
++- PS5-Payload mit SDK 0.43 aus den festgelegten Bibliotheksquellen gebaut.
++
++**Praxistest:** Die PC-Funktion im vorherigen Build 1.3.1-beta.2 wurde auf der echten PS5 bestätigt. Die neue Kombination mit 1.3.5 muss noch auf der Konsole getestet werden. PC und PS5 sollten dafür zunächst dasselbe Heimnetz und denselben
++Internetzugang verwenden. Ob der Anbieter zusätzlich Cookies oder eine bestimmte
++Browser-Sitzung voraussetzt, entscheidet dieser Praxistest.
++
++Diese erste Version verlangt das Einfügen des fertigen Links. Die automatische
++Übernahme per Browser-Erweiterung ist ein möglicher nächster Schritt.
++
++## Entwicklung
++
++Der ursprüngliche öffentliche GitHub-Hauptbranch enthält Dokumentation und Releases.
++`backend/`, `src/`, `app/` und Build-Werkzeuge stammen aus dem offiziellen
++`orbit-store-1.3.5-source.tar.gz` im Release-Quellpaket. Der Änderungs-Patch bezieht
++sich auf diesen Quellstand; die vollständige Arbeitskopie enthält ihn bereits.
++In diesem Fork liegt die Entwicklung auf `feat/pc-direct-link`. Der Import des
++offiziellen Quellstands und die Erweiterung sind in getrennten Commits abgelegt.
++
++Neue Schnittstellen:
++
++- `GET /api/v1/browser/page?releaseId=…`: liefert nach Kopplung und Prüfung der
++  aktivierten Quelle die zum Katalogeintrag gehörende Anbieterseite.
++- `POST /api/v1/browser` mit `action: "start"` oder `"refresh"` akzeptiert optional
++  `directUrl`. Ohne dieses Feld bleibt der bisherige PS5-Browserablauf erhalten.
++  Mit dem Feld folgen dieselben Datei- und Queue-Prüfungen ohne Browser-Capture.
++
++Der Link wird weder in Navigationsparametern noch im Browser-Status zurückgegeben.
++Bestehende Abbruch-, Quellen-, Speicher- und Dateiprüfungen bleiben wirksam.
++
++Gezielte Tests nach Einrichtung der Build-Umgebung aus `BUILDING.md`:
++
++```sh
++npm ci
++npm run typecheck
++npm test
++make test-pc-link
++```
++
++Für die Browser-Tests zusätzlich Playwright in der Entwicklungsumgebung installieren
++(nicht auf der PS5 und nicht für normale Anwender erforderlich):
++
++```sh
++npm install --no-save --package-lock=false playwright
++npx playwright install chromium --only-shell
++npm run test:pc-link:ui
++```
++
++Die Browser-Tests starten nur einen lokalen Testserver und ersetzen alle Anbieter-
++und PS5-Anfragen durch Testdaten. Sie öffnen keinen Browser auf deinem Computer.
+diff --git a/i18n/de.json b/i18n/de.json
+index 5079a28..1bb2ebf 100644
+--- a/i18n/de.json
++++ b/i18n/de.json
+@@ -1002,7 +1002,6 @@
+   "See your PS5’s downloads": "Sieh dir die Downloads deiner PS5 an",
+   "Select": "Auswählen",
+   "Select an option": "Option wählen",
+-  "Select Download, then return to Orbit.": "Wähle Download und kehre zu Orbit zurück.",
+   "Select drive": "Laufwerk wählen",
+   "Select report": "Bericht markieren",
+   "Select storage": "Speicher wählen",
+@@ -1368,5 +1367,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Deine geprüfte Datei wurde zu Downloads hinzugefügt. Kehre zu Orbit zurück, um sie anzusehen.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "ZIP-, 7z- und RAR-Downloads werden nach Abschluss auf dem Laufwerk entpackt. Orbit lehnt passwortgeschützte Archive und alles ab, was keine normalen Dateien und Ordner sind.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "ZIP-, 7z- und RAR-Downloads werden auf dem Laufwerk entpackt. Das Archiv wird gelöscht, sobald seine Dateien an ihrem Platz sind.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "ZIP-, 7z- und RAR-Downloads werden auf dem Laufwerk entpackt. Das Archiv bleibt neben seinen Dateien erhalten."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "ZIP-, 7z- und RAR-Downloads werden auf dem Laufwerk entpackt. Das Archiv bleibt neben seinen Dateien erhalten.",
++  "Use a download link from your computer": "Download-Link vom Computer verwenden",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Schließe die Verifizierung im Browser deines Computers ab und füge unten den endgültigen Datei-Link ein. Deine PS5 lädt die Datei direkt herunter.",
++  "Direct download link": "Direkter Download-Link",
++  "The link must point to this file:": "Der Link muss auf diese Datei verweisen:",
++  "Allow the download page to open in a new tab, then try again.": "Erlaube das Öffnen der Downloadseite in einem neuen Tab und versuche es erneut.",
++  "Open source file": "Sourcefile öffnen",
++  "Leave the link empty to open the download page on your PS5.": "Lass den Link leer, um die Downloadseite auf deiner PS5 zu öffnen."
+ }
+diff --git a/i18n/en.json b/i18n/en.json
+index 74b9681..44159e6 100644
+--- a/i18n/en.json
++++ b/i18n/en.json
+@@ -1367,5 +1367,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Your verified file has been added to Downloads. Return to Orbit to view it.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.",
++  "Use a download link from your computer": "Use a download link from your computer",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.",
++  "Direct download link": "Direct download link",
++  "The link must point to this file:": "The link must point to this file:",
++  "Allow the download page to open in a new tab, then try again.": "Allow the download page to open in a new tab, then try again.",
++  "Open source file": "Open source file",
++  "Leave the link empty to open the download page on your PS5.": "Leave the link empty to open the download page on your PS5."
+ }
+diff --git a/i18n/es.json b/i18n/es.json
+index 7a908ec..d2854ec 100644
+--- a/i18n/es.json
++++ b/i18n/es.json
+@@ -1018,7 +1018,6 @@
+   "See your PS5’s downloads": "Mira las descargas de tu PS5",
+   "Select": "Seleccionar",
+   "Select an option": "Selecciona una opción",
+-  "Select Download, then return to Orbit.": "Selecciona Descargar y vuelve a Orbit.",
+   "Select drive": "Seleccionar unidad",
+   "Select report": "Seleccionar informe",
+   "Select storage": "Selecciona almacenamiento",
+@@ -1385,5 +1384,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Tu archivo verificado se ha añadido a Descargas. Vuelve a Orbit para verlo.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "Las descargas ZIP, 7z y RAR se extraen en la unidad al terminar. Orbit rechaza los archivos comprimidos protegidos con contraseña y todo lo que no sean archivos y carpetas normales.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "Las descargas ZIP, 7z y RAR se extraen en la unidad. El archivo comprimido se elimina cuando sus archivos están en su sitio.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "Las descargas ZIP, 7z y RAR se extraen en la unidad. El archivo comprimido se conserva junto a sus archivos."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "Las descargas ZIP, 7z y RAR se extraen en la unidad. El archivo comprimido se conserva junto a sus archivos.",
++  "Use a download link from your computer": "Usar un enlace de descarga del ordenador",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Completa la verificación en el navegador del ordenador y pega abajo el enlace final del archivo. Tu PS5 descarga el archivo directamente.",
++  "Direct download link": "Enlace de descarga directa",
++  "The link must point to this file:": "El enlace debe apuntar a este archivo:",
++  "Allow the download page to open in a new tab, then try again.": "Permite abrir la página de descarga en una pestaña nueva y vuelve a intentarlo.",
++  "Open source file": "Abrir archivo de origen",
++  "Leave the link empty to open the download page on your PS5.": "Deja el enlace vacío para abrir la página de descarga en tu PS5."
+ }
+diff --git a/i18n/fr.json b/i18n/fr.json
+index d81e248..bc60405 100644
+--- a/i18n/fr.json
++++ b/i18n/fr.json
+@@ -1018,7 +1018,6 @@
+   "See your PS5’s downloads": "Voir les téléchargements de votre PS5",
+   "Select": "Sélectionner",
+   "Select an option": "Sélectionnez une option",
+-  "Select Download, then return to Orbit.": "Sélectionnez Télécharger, puis revenez à Orbit.",
+   "Select drive": "Sélectionner un disque",
+   "Select report": "Sélectionner le rapport",
+   "Select storage": "Sélectionnez un stockage",
+@@ -1385,5 +1384,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Votre fichier vérifié a été ajouté à Téléchargements. Revenez dans Orbit pour le consulter.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "Les téléchargements ZIP, 7z et RAR sont extraits sur le disque une fois terminés. Orbit refuse les archives protégées par mot de passe et tout ce qui n’est pas un simple fichier ou dossier.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "Les téléchargements ZIP, 7z et RAR sont extraits sur le disque. L’archive est supprimée une fois ses fichiers en place.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "Les téléchargements ZIP, 7z et RAR sont extraits sur le disque. L’archive est conservée à côté de ses fichiers."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "Les téléchargements ZIP, 7z et RAR sont extraits sur le disque. L’archive est conservée à côté de ses fichiers.",
++  "Use a download link from your computer": "Utiliser un lien de téléchargement depuis votre ordinateur",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Terminez la vérification dans le navigateur de votre ordinateur, puis collez le lien final du fichier ci-dessous. Votre PS5 télécharge le fichier directement.",
++  "Direct download link": "Lien de téléchargement direct",
++  "The link must point to this file:": "Le lien doit pointer vers ce fichier :",
++  "Allow the download page to open in a new tab, then try again.": "Autorisez l’ouverture de la page de téléchargement dans un nouvel onglet, puis réessayez.",
++  "Open source file": "Ouvrir le fichier source",
++  "Leave the link empty to open the download page on your PS5.": "Laissez le lien vide pour ouvrir la page de téléchargement sur votre PS5."
+ }
+diff --git a/i18n/hu.json b/i18n/hu.json
+index 0514931..6455629 100644
+--- a/i18n/hu.json
++++ b/i18n/hu.json
+@@ -1002,7 +1002,6 @@
+   "See your PS5’s downloads": "A PS5 letöltéseinek megtekintése",
+   "Select": "Kiválasztás",
+   "Select an option": "Válassz egy lehetőséget",
+-  "Select Download, then return to Orbit.": "Válaszd a Letöltés lehetőséget, majd térj vissza az Orbitba.",
+   "Select drive": "Meghajtó kiválasztása",
+   "Select report": "Jelentés kiválasztása",
+   "Select storage": "Tárhely kiválasztása",
+@@ -1368,5 +1367,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Az ellenőrzött fájl bekerült a Letöltések közé. Térj vissza az Orbitba a megtekintéséhez.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "A ZIP, 7z és RAR letöltések befejezés után a meghajtón kicsomagolódnak. Az Orbit elutasítja a jelszóval védett archívumokat és mindent, ami nem egyszerű fájl vagy mappa.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "A ZIP, 7z és RAR letöltések a meghajtón kicsomagolódnak. Az archívum törlődik, amint a fájljai a helyükre kerültek.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "A ZIP, 7z és RAR letöltések a meghajtón kicsomagolódnak. Az archívum a fájljai mellett megmarad."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "A ZIP, 7z és RAR letöltések a meghajtón kicsomagolódnak. Az archívum a fájljai mellett megmarad.",
++  "Use a download link from your computer": "Letöltési hivatkozás használata a számítógépről",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Végezd el az ellenőrzést a számítógép böngészőjében, majd illeszd be alább a végleges fájlhivatkozást. A PS5 közvetlenül tölti le a fájlt.",
++  "Direct download link": "Közvetlen letöltési hivatkozás",
++  "The link must point to this file:": "A hivatkozásnak erre a fájlra kell mutatnia:",
++  "Allow the download page to open in a new tab, then try again.": "Engedélyezd a letöltési oldal megnyitását új lapon, majd próbáld újra.",
++  "Open source file": "Forrásfájl megnyitása",
++  "Leave the link empty to open the download page on your PS5.": "Hagyd üresen a hivatkozást a letöltési oldal megnyitásához a PS5-ön."
+ }
+diff --git a/i18n/it.json b/i18n/it.json
+index 4e16f9c..b85b2c4 100644
+--- a/i18n/it.json
++++ b/i18n/it.json
+@@ -1018,7 +1018,6 @@
+   "See your PS5’s downloads": "Vedi i download della tua PS5",
+   "Select": "Seleziona",
+   "Select an option": "Seleziona un’opzione",
+-  "Select Download, then return to Orbit.": "Seleziona Download e torna a Orbit.",
+   "Select drive": "Seleziona unità",
+   "Select report": "Seleziona rapporto",
+   "Select storage": "Seleziona memoria",
+@@ -1385,5 +1384,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Il file verificato è stato aggiunto a Download. Torna a Orbit per visualizzarlo.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "I download ZIP, 7z e RAR vengono estratti sull’unità al termine. Orbit rifiuta gli archivi protetti da password e tutto ciò che non sia un semplice file o cartella.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "I download ZIP, 7z e RAR vengono estratti sull’unità. L’archivio viene eliminato quando i suoi file sono al loro posto.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "I download ZIP, 7z e RAR vengono estratti sull’unità. L’archivio viene conservato accanto ai suoi file."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "I download ZIP, 7z e RAR vengono estratti sull’unità. L’archivio viene conservato accanto ai suoi file.",
++  "Use a download link from your computer": "Usa un link di download dal computer",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Completa la verifica nel browser del computer, poi incolla qui sotto il link finale del file. La PS5 scarica il file direttamente.",
++  "Direct download link": "Link per il download diretto",
++  "The link must point to this file:": "Il link deve puntare a questo file:",
++  "Allow the download page to open in a new tab, then try again.": "Consenti l’apertura della pagina di download in una nuova scheda, poi riprova.",
++  "Open source file": "Apri file sorgente",
++  "Leave the link empty to open the download page on your PS5.": "Lascia il link vuoto per aprire la pagina di download sulla tua PS5."
+ }
+diff --git a/i18n/nl.json b/i18n/nl.json
+index b862e4f..8d58164 100644
+--- a/i18n/nl.json
++++ b/i18n/nl.json
+@@ -1002,7 +1002,6 @@
+   "See your PS5’s downloads": "Bekijk de downloads van je PS5",
+   "Select": "Selecteren",
+   "Select an option": "Kies een optie",
+-  "Select Download, then return to Orbit.": "Kies Downloaden en keer terug naar Orbit.",
+   "Select drive": "Schijf kiezen",
+   "Select report": "Rapport selecteren",
+   "Select storage": "Kies opslag",
+@@ -1368,5 +1367,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Je gecontroleerde bestand is toegevoegd aan Downloads. Ga terug naar Orbit om het te bekijken.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "ZIP-, 7z- en RAR-downloads worden na afloop op de schijf uitgepakt. Orbit weigert met een wachtwoord beveiligde archieven en alles wat geen gewone bestanden en mappen zijn.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "ZIP-, 7z- en RAR-downloads worden op de schijf uitgepakt. Het archief wordt verwijderd zodra de bestanden op hun plaats staan.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "ZIP-, 7z- en RAR-downloads worden op de schijf uitgepakt. Het archief blijft naast de bestanden bewaard."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "ZIP-, 7z- en RAR-downloads worden op de schijf uitgepakt. Het archief blijft naast de bestanden bewaard.",
++  "Use a download link from your computer": "Een downloadlink van je computer gebruiken",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Voltooi de verificatie in de browser op je computer en plak hieronder de uiteindelijke bestandslink. Je PS5 downloadt het bestand rechtstreeks.",
++  "Direct download link": "Directe downloadlink",
++  "The link must point to this file:": "De link moet naar dit bestand verwijzen:",
++  "Allow the download page to open in a new tab, then try again.": "Sta toe dat de downloadpagina in een nieuw tabblad wordt geopend en probeer het opnieuw.",
++  "Open source file": "Bronbestand openen",
++  "Leave the link empty to open the download page on your PS5.": "Laat de link leeg om de downloadpagina op je PS5 te openen."
+ }
+diff --git a/i18n/pl.json b/i18n/pl.json
+index 9067357..35c8e61 100644
+--- a/i18n/pl.json
++++ b/i18n/pl.json
+@@ -1034,7 +1034,6 @@
+   "See your PS5’s downloads": "Zobacz pobierania na PS5",
+   "Select": "Wybierz",
+   "Select an option": "Wybierz opcję",
+-  "Select Download, then return to Orbit.": "Wybierz Pobierz i wróć do Orbit.",
+   "Select drive": "Wybierz dysk",
+   "Select report": "Zaznacz raport",
+   "Select storage": "Wybierz pamięć",
+@@ -1402,5 +1401,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Zweryfikowany plik dodano do Pobranych. Wróć do Orbit, aby go zobaczyć.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "Pobrania ZIP, 7z i RAR są po zakończeniu wypakowywane na dysku. Orbit odrzuca archiwa chronione hasłem i wszystko, co nie jest zwykłymi plikami i folderami.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "Pobrania ZIP, 7z i RAR są wypakowywane na dysku. Archiwum jest usuwane, gdy jego pliki są już na miejscu.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "Pobrania ZIP, 7z i RAR są wypakowywane na dysku. Archiwum zostaje obok swoich plików."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "Pobrania ZIP, 7z i RAR są wypakowywane na dysku. Archiwum zostaje obok swoich plików.",
++  "Use a download link from your computer": "Użyj linku do pobrania z komputera",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Dokończ weryfikację w przeglądarce komputera, a następnie wklej poniżej końcowy link do pliku. PS5 pobierze plik bezpośrednio.",
++  "Direct download link": "Bezpośredni link do pobrania",
++  "The link must point to this file:": "Link musi prowadzić do tego pliku:",
++  "Allow the download page to open in a new tab, then try again.": "Zezwól na otwarcie strony pobierania w nowej karcie i spróbuj ponownie.",
++  "Open source file": "Otwórz plik źródłowy",
++  "Leave the link empty to open the download page on your PS5.": "Pozostaw link pusty, aby otworzyć stronę pobierania na PS5."
+ }
+diff --git a/i18n/pt-BR.json b/i18n/pt-BR.json
+index 49f98bd..76d9c81 100644
+--- a/i18n/pt-BR.json
++++ b/i18n/pt-BR.json
+@@ -1018,7 +1018,6 @@
+   "See your PS5’s downloads": "Veja os downloads do seu PS5",
+   "Select": "Selecionar",
+   "Select an option": "Selecione uma opção",
+-  "Select Download, then return to Orbit.": "Selecione Baixar e volte ao Orbit.",
+   "Select drive": "Selecionar unidade",
+   "Select report": "Selecionar relatório",
+   "Select storage": "Selecione o armazenamento",
+@@ -1385,5 +1384,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Seu arquivo verificado foi adicionado a Downloads. Volte ao Orbit para vê-lo.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "Downloads ZIP, 7z e RAR são extraídos na unidade ao terminar. O Orbit recusa arquivos compactados protegidos por senha e tudo o que não for arquivos e pastas comuns.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "Downloads ZIP, 7z e RAR são extraídos na unidade. O arquivo compactado é excluído quando os arquivos estão no lugar.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "Downloads ZIP, 7z e RAR são extraídos na unidade. O arquivo compactado é mantido ao lado dos arquivos."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "Downloads ZIP, 7z e RAR são extraídos na unidade. O arquivo compactado é mantido ao lado dos arquivos.",
++  "Use a download link from your computer": "Usar um link de download do computador",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Conclua a verificação no navegador do computador e cole abaixo o link final do arquivo. Seu PS5 baixa o arquivo diretamente.",
++  "Direct download link": "Link direto de download",
++  "The link must point to this file:": "O link deve apontar para este arquivo:",
++  "Allow the download page to open in a new tab, then try again.": "Permita abrir a página de download em uma nova aba e tente novamente.",
++  "Open source file": "Abrir arquivo de origem",
++  "Leave the link empty to open the download page on your PS5.": "Deixe o link vazio para abrir a página de download no seu PS5."
+ }
+diff --git a/i18n/ru.json b/i18n/ru.json
+index a176000..ade2479 100644
+--- a/i18n/ru.json
++++ b/i18n/ru.json
+@@ -1034,7 +1034,6 @@
+   "See your PS5’s downloads": "Загрузки вашей PS5",
+   "Select": "Выбрать",
+   "Select an option": "Выберите вариант",
+-  "Select Download, then return to Orbit.": "Выберите «Скачать» и вернитесь в Orbit.",
+   "Select drive": "Выбрать накопитель",
+   "Select report": "Выделить отчёт",
+   "Select storage": "Выберите хранилище",
+@@ -1402,5 +1401,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Проверенный файл добавлен в раздел «Загрузки». Вернитесь в Orbit, чтобы увидеть его.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "Загрузки ZIP, 7z и RAR после завершения распаковываются на накопителе. Orbit отклоняет архивы с паролем и всё, что не является обычными файлами и папками.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "Загрузки ZIP, 7z и RAR распаковываются на накопителе. Архив удаляется, когда его файлы окажутся на месте.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "Загрузки ZIP, 7z и RAR распаковываются на накопителе. Архив сохраняется рядом с его файлами."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "Загрузки ZIP, 7z и RAR распаковываются на накопителе. Архив сохраняется рядом с его файлами.",
++  "Use a download link from your computer": "Использовать ссылку для скачивания с компьютера",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Пройдите проверку в браузере компьютера и вставьте ниже конечную ссылку на файл. PS5 скачает файл напрямую.",
++  "Direct download link": "Прямая ссылка для скачивания",
++  "The link must point to this file:": "Ссылка должна вести на этот файл:",
++  "Allow the download page to open in a new tab, then try again.": "Разрешите открытие страницы скачивания в новой вкладке и повторите попытку.",
++  "Open source file": "Открыть исходный файл",
++  "Leave the link empty to open the download page on your PS5.": "Оставьте ссылку пустой, чтобы открыть страницу загрузки на PS5."
+ }
+diff --git a/i18n/tr.json b/i18n/tr.json
+index 836031b..e7c28d4 100644
+--- a/i18n/tr.json
++++ b/i18n/tr.json
+@@ -1002,7 +1002,6 @@
+   "See your PS5’s downloads": "PS5'inizin indirmelerini görün",
+   "Select": "Seç",
+   "Select an option": "Bir seçenek belirleyin",
+-  "Select Download, then return to Orbit.": "İndir’i seçin ve Orbit’e dönün.",
+   "Select drive": "Sürücü seç",
+   "Select report": "Raporu seç",
+   "Select storage": "Depolama seçin",
+@@ -1368,5 +1367,12 @@
+   "Your verified file has been added to Downloads. Return to Orbit to view it.": "Doğrulanan dosyanız İndirilenler’e eklendi. Görmek için Orbit’e dönün.",
+   "ZIP, 7z and RAR downloads are extracted on the drive after they finish. Orbit refuses password-protected archives and anything that isn’t plain files and folders.": "ZIP, 7z ve RAR indirmeleri tamamlandıktan sonra sürücüde çıkarılır. Orbit, parola korumalı arşivleri ve sıradan dosya ve klasör olmayan her şeyi reddeder.",
+   "ZIP, 7z and RAR downloads are extracted on the drive. The archive is deleted once its files are in place.": "ZIP, 7z ve RAR indirmeleri sürücüde çıkarılır. Dosyaları yerine yerleştiğinde arşiv silinir.",
+-  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "ZIP, 7z ve RAR indirmeleri sürücüde çıkarılır. Arşiv, dosyalarının yanında saklanır."
++  "ZIP, 7z and RAR downloads are extracted on the drive. The archive is kept next to its files.": "ZIP, 7z ve RAR indirmeleri sürücüde çıkarılır. Arşiv, dosyalarının yanında saklanır.",
++  "Use a download link from your computer": "Bilgisayarınızdaki indirme bağlantısını kullanın",
++  "Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.": "Bilgisayarınızın tarayıcısında doğrulamayı tamamlayın, ardından dosyanın son bağlantısını aşağıya yapıştırın. PS5 dosyayı doğrudan indirir.",
++  "Direct download link": "Doğrudan indirme bağlantısı",
++  "The link must point to this file:": "Bağlantı şu dosyaya yönlendirmelidir:",
++  "Allow the download page to open in a new tab, then try again.": "İndirme sayfasının yeni sekmede açılmasına izin verin ve yeniden deneyin.",
++  "Open source file": "Kaynak dosyayı aç",
++  "Leave the link empty to open the download page on your PS5.": "İndirme sayfasını PS5 üzerinde açmak için bağlantıyı boş bırakın."
+ }
+diff --git a/package-lock.json b/package-lock.json
+index 6b10ead..242721d 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "name": "orbit-store-ps5-source",
+-  "version": "1.3.5",
++  "version": "1.3.5-pc.1",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "orbit-store-ps5-source",
+-      "version": "1.3.5",
++      "version": "1.3.5-pc.1",
+       "dependencies": {
+         "react": "^19.1.0",
+         "react-dom": "^19.1.0"
+diff --git a/package.json b/package.json
+index 2e472cd..c384e8c 100644
+--- a/package.json
++++ b/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "orbit-store-ps5-source",
+-  "version": "1.3.5",
++  "version": "1.3.5-pc.1",
+   "license": "GPL-3.0-or-later",
+   "private": true,
+   "type": "module",
+diff --git a/src/Details.tsx b/src/Details.tsx
+index 75d6550..720e19d 100644
+--- a/src/Details.tsx
++++ b/src/Details.tsx
+@@ -25,6 +25,7 @@ import { CrossbarList, type XbRow } from "./interfaces/CrossbarList";
+ import { Glyph } from "./interfaces/Glyph";
+ import { PnGroup, PnTile } from "./interfaces/PanoramaParts";
+ import { menuKeys } from "./interfaces/menuKeys";
++import { ExternalDownload, OpenSourceButton } from "./ExternalDownload";
+ export function Details({
+   initialSelection,
+   back,
+@@ -58,7 +59,7 @@ export function Details({
+   ) => Promise<void>;
+   openQueue: (id?: string) => void;
+   browser: BrowserSession | null;
+-  openProvider: (releaseId: string, storageId: string) => Promise<void>;
++  openProvider: (releaseId: string, storageId: string, directUrl?: string) => Promise<void>;
+   favorite: boolean;
+   setFavorite: (value: boolean) => Promise<void>;
+   configureDebrid: (onReturn: () => void) => void;
+@@ -80,6 +81,8 @@ export function Details({
+     [pending, setPending] = useState(false),
+     [error, setError] = useState("");
+   const [downloadAgain, setDownloadAgain] = useState(false);
++  const [externalUrl, setExternalUrl] = useState("");
++  const [sourceOpening, setSourceOpening] = useState(false);
+   const [sheet, setSheet] = useState<SheetView | null>(
+     initialSelection ? "downloads" : null,
+   );
+@@ -140,13 +143,15 @@ export function Details({
+   const torbox = delivery === "torbox";
+   const canTorbox = torboxAvailable(debrid.status, release);
+   const useBrowser = !!release.browserAvailable && !torbox;
++  const computerLinkMode = !!(useBrowser && system?.paired && browser?.available &&
++    !system.localSessionAvailable && !/PlayStation/i.test(navigator.userAgent));
+   const collection = releaseState(release, jobs, library);
+   const libraryGame = collection?.libraryGame;
+   const showDownload =
+     downloadAgain || !collection || collection.kind === "related";
+   const downloadUnavailable =
+     !game.releases.some((option) => option.id === releaseId) ||
+-    pending ||
++    pending || sourceOpening ||
+     (torbox && !canTorbox) ||
+     !!browser?.active ||
+     !enough ||
+@@ -157,6 +162,7 @@ export function Details({
+   useEffect(() => {
+     setError("");
+     setDownloadAgain(false);
++    setExternalUrl("");
+     setDelivery("direct");
+   }, [releaseId]);
+   useEffect(() => {
+@@ -179,12 +185,12 @@ export function Details({
+       setPending(false);
+     }
+   }
+-  async function verifyProvider() {
++  async function verifyProvider(directUrl?: string) {
+     if (!drive) return;
+     setPending(true);
+     setError("");
+     try {
+-      await openProvider(release.id, drive.id);
++      await openProvider(release.id, drive.id, directUrl);
+       setSheet(null);
+       requestAnimationFrame(() => {
+         document
+@@ -230,7 +236,7 @@ export function Details({
+     else if (!downloadAgain && collection?.job) openQueue(collection.job.id);
+     else if (!downloadAgain && collection?.kind === "library" && libraryGame)
+       viewLibrary();
+-    else void (useBrowser ? verifyProvider() : start());
++    else void (useBrowser ? verifyProvider(computerLinkMode && externalUrl.trim() ? externalUrl.trim() : undefined) : start());
+   }
+   const actionLabel = !system?.paired
+     ? t("Pair with your PS5")
+@@ -242,7 +248,9 @@ export function Details({
+           ? t("Please wait…")
+           : torbox
+             ? t("Download via TorBox")
+-            : useBrowser
++            : computerLinkMode
++              ? t("Download to PS5")
++              : useBrowser
+               ? t("Open download page on PS5")
+               : existing || downloadAgain
+                 ? t("Download again")
+@@ -269,7 +277,14 @@ export function Details({
+           "TorBox is unavailable for this host or file size. Refresh TorBox in App settings to check again.",
+         )
+       : t("TorBox is available for this option.");
+-  const instructions = (
++  const sourceButton = computerLinkMode && showDownload ? (
++    <OpenSourceButton key={release.id} release={release}
++      disabled={pending || !!browser?.active} onBusyChange={setSourceOpening} />
++  ) : null;
++  const instructions = computerLinkMode ? (
++    <ExternalDownload release={release} value={externalUrl} onChange={setExternalUrl}
++      disabled={pending || sourceOpening || !!browser?.active} />
++  ) : (
+     <div
+       className="provider-browser-option"
+       id="provider-browser-steps"
+@@ -465,7 +480,7 @@ export function Details({
+       : pending;
+   // The notes Store shows around its download button, for Crossbar and Panorama.
+   const noteList: { key: string; text: string; warn?: boolean }[] = [
+-    ...(initialSelection
++    ...(initialSelection && !computerLinkMode
+       ? [{ key: "handoff", text: t("Your game and source are selected from the app. Check the save location, then open the download page below.") }]
+       : []),
+     ...(!game.releases.some((option) => option.id === releaseId)
+@@ -550,6 +565,7 @@ export function Details({
+         ),
+         actions: (
+           <>
++            {sourceButton}
+             <button
+               className="primary hub-primary"
+               disabled={primaryDisabled}
+@@ -770,12 +786,13 @@ export function Details({
+             }
+           >
+             <PnTile size="large" art={game.hero || game.cover} fallback={game.heroFallback || game.cover} />
++            {sourceButton}
+             <PnTile
+               size="wide"
+               tone={primaryDisabled ? "dark" : "accent"}
+               glyph={mainGlyph}
+               title={actionLabel}
+-              sub={showDownload && useBrowser && initialSelection ? undefined : primaryDetail}
++              sub={showDownload && useBrowser && initialSelection && !computerLinkMode ? undefined : primaryDetail}
+               disabled={primaryDisabled}
+               label={actionLabel}
+               onClick={() => primaryAction()}
+@@ -937,7 +954,7 @@ export function Details({
+           <div className="cn-game-intro">
+             {tagline && <p className="cn-sheet-tagline">{tagline}</p>}
+             {description && <p className="cn-body">{description}</p>}
+-            {initialSelection && (
++            {initialSelection && !computerLinkMode && (
+               <p className="cn-note">
+                 {t(
+                   "Your game and source are selected from the app. Check the save location, then open the download page below.",
+@@ -1055,6 +1072,7 @@ export function Details({
+                     </p>
+                   )}
+                   <div className="cn-actions">
++                    {sourceButton}
+                     <button
+                       className="cn-button primary"
+                       disabled={primaryDisabled}
+@@ -1298,6 +1316,7 @@ export function Details({
+       {sheet && (
+         <GameSheet
+           view={sheet}
++          className={computerLinkMode ? "game-sheet-pc-link" : undefined}
+           title={
+             sheet === "about"
+               ? t("About this game")
+@@ -1488,7 +1507,7 @@ export function Details({
+               </div>
+             ) : (
+               <>
+-                {initialSelection && (
++                {initialSelection && !computerLinkMode && (
+                   <p className="notice">
+                     {t(
+                       "Your game and source are selected from the app. Check the save location, then open the download page below.",
+@@ -1618,6 +1637,7 @@ export function Details({
+                   </strong>
+                 </div>
+               )}
++              {sourceButton}
+               <button
+                 className="primary sheet-primary"
+                 data-long-label={actionLabel.length > 34 || undefined}
+diff --git a/src/ExternalDownload.tsx b/src/ExternalDownload.tsx
+new file mode 100644
+index 0000000..b543993
+--- /dev/null
++++ b/src/ExternalDownload.tsx
+@@ -0,0 +1,72 @@
++import { useId, useState } from "react";
++import { api } from "./api";
++import { t } from "./i18n";
++import type { Release } from "./types";
++
++export function OpenSourceButton({ release, disabled, onBusyChange }: {
++  release: Release;
++  disabled: boolean;
++  onBusyChange: (busy: boolean) => void;
++}) {
++  const [opening, setOpening] = useState(false);
++  const [error, setError] = useState("");
++
++  async function openPage() {
++    // Open synchronously from the click so the browser's popup blocker can
++    // distinguish this requested tab from advertisements on the provider page.
++    const tab = window.open("about:blank", "_blank");
++    if (tab) tab.opener = null;
++    setOpening(true);
++    onBusyChange(true);
++    setError("");
++    try {
++      const page = await api<{ url: string }>(`/browser/page?releaseId=${encodeURIComponent(release.id)}`);
++      const target = new URL(page.url);
++      if (target.protocol !== "https:" || target.username || target.password)
++        throw new Error(t("This option has no supported provider browser page."));
++      if (!tab) {
++        throw new Error(t("Allow the download page to open in a new tab, then try again."));
++      }
++      tab.location.replace(target.href);
++    } catch (e) {
++      tab?.close();
++      setError((e as Error).message);
++    } finally {
++      setOpening(false);
++      onBusyChange(false);
++    }
++  }
++
++  return (
++    <div className="source-file-actions">
++      <button type="button" className="source-file-button" disabled={disabled || opening} onClick={() => void openPage()}>
++        {opening ? t("Please wait…") : t("Open source file")}
++      </button>
++      {error && <p className="form-error" role="alert">{error}</p>}
++    </div>
++  );
++}
++
++export function ExternalDownload({ release, value, onChange, disabled }: {
++  release: Release;
++  value: string;
++  onChange: (value: string) => void;
++  disabled: boolean;
++}) {
++  const inputId = useId();
++  return (
++    <section className="external-download" id="provider-browser-steps" aria-labelledby={`${inputId}-title`}>
++      <h3 id={`${inputId}-title`}>{t("Use a download link from your computer")}</h3>
++      <p>{t("Complete verification in your computer’s browser, then paste the final file URL below. Your PS5 downloads the file directly.")}</p>
++      <div className="external-download-field">
++        <label htmlFor={inputId}>{t("Direct download link")}</label>
++        <input id={inputId} type="url" maxLength={2047}
++          value={value} onChange={event => onChange(event.target.value)}
++          disabled={disabled} autoComplete="off" spellCheck={false}
++          placeholder="https://…" />
++        <p className="external-download-hint">{t("Leave the link empty to open the download page on your PS5.")}</p>
++        <small>{t("The link must point to this file:")} <span>{release.filename}</span></small>
++      </div>
++    </section>
++  );
++}
+diff --git a/src/GameSheet.tsx b/src/GameSheet.tsx
+index c1af61b..f085f5e 100644
+--- a/src/GameSheet.tsx
++++ b/src/GameSheet.tsx
+@@ -46,12 +46,14 @@ export function GameSheet({
+   title,
+   back,
+   close,
++  className = "",
+   children,
+ }: {
+   view: SheetView;
+   title: string;
+   back: () => void;
+   close: () => void;
++  className?: string;
+   children: ReactNode;
+ }) {
+   const previousView = useRef(view);
+@@ -85,7 +87,7 @@ export function GameSheet({
+     <Modal
+       title={title}
+       close={close}
+-      className={`game-sheet game-sheet-${view}`}
++      className={`game-sheet game-sheet-${view} ${className}`}
+       scrimClassName="game-sheet-scrim"
+     >
+       <header className="sheet-heading">
+diff --git a/src/details.css b/src/details.css
+index 9ec5035..5b1f0b5 100644
+--- a/src/details.css
++++ b/src/details.css
+@@ -851,3 +851,54 @@ html:not(.pointer) .game-sheet .primary:focus {
+   margin-top: 0;
+   padding-top: 0.65rem;
+ }
++.external-download {
++  font-size: 1rem;
++  line-height: 1.5;
++}
++.external-download h3 {
++  margin: 0 0 0.75rem;
++  font-size: 1.3rem;
++  font-weight: 650;
++}
++.external-download-field {
++  display: grid;
++  gap: 0.6rem;
++  margin-top: 1rem;
++}
++.external-download label { font-size: 1.05rem; font-weight: 600; }
++.external-download input {
++  width: 100%;
++  min-width: 0;
++  min-height: 3rem;
++  padding: 10px 12px;
++  border: 1px solid rgba(255, 255, 255, 0.25);
++  border-radius: 8px;
++  background: rgba(0, 0, 0, 0.3);
++  color: inherit;
++  font: inherit;
++}
++.external-download small {
++  overflow-wrap: anywhere;
++  font-size: 0.9rem;
++}
++.external-download .external-download-hint { margin: 0; }
++.source-file-button {
++  width: 100%;
++  min-height: 3.3rem;
++  padding: 10px 14px;
++  border: 1px solid rgba(255, 255, 255, 0.25);
++  border-radius: 8px;
++  background: rgba(255, 255, 255, 0.08);
++  color: inherit;
++  font: inherit;
++  cursor: pointer;
++}
++.source-file-button:disabled { opacity: 0.5; cursor: default; }
++.sheet-confirm .source-file-actions { margin-bottom: 0.75rem; }
++.pn-tiles > .source-file-actions { grid-column: span 2; align-self: end; }
++@media (min-width: 761px) {
++  .modal.game-sheet-downloads.game-sheet-pc-link {
++    height: min(90vh, 44rem);
++    max-height: calc(100vh - 3.6rem);
++  }
++}
+diff --git a/src/useOrbit.ts b/src/useOrbit.ts
+index b28fc18..1dda2cb 100644
+--- a/src/useOrbit.ts
++++ b/src/useOrbit.ts
+@@ -130,12 +130,13 @@ export function useOrbit() {
+     await polling.current;
+     await refresh();
+   };
+-  const openProvider = async (releaseId: string, storageId: string) => {
++  const openProvider = async (releaseId: string, storageId: string, directUrl?: string) => {
+     const status = await api<BrowserSession>("/browser", {
+       action: "start",
+       returnToOrbit: true,
+       releaseId,
+       storageId,
++      ...(directUrl === undefined ? {} : { directUrl }),
+     });
+     if (alive.current) setBrowser(status);
+     await polling.current;
+diff --git a/tests/external-download-ui.mjs b/tests/external-download-ui.mjs
+new file mode 100644
+index 0000000..4e26eb8
+--- /dev/null
++++ b/tests/external-download-ui.mjs
+@@ -0,0 +1,156 @@
++// Run after installing Playwright and its Chromium browser. This starts an
++// isolated local Vite server; all console/provider requests use fixtures.
++import assert from "node:assert/strict";
++import { mkdirSync } from "node:fs";
++import { createServer } from "vite";
++
++const { chromium } = await import(process.env.ORBIT_PLAYWRIGHT_MODULE || "playwright");
++const server = await createServer({ server: { host: "127.0.0.1", port: 0, strictPort: false } });
++await server.listen();
++const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
++const browser = await chromium.launch({ headless: true,
++  ...(process.env.ORBIT_CHROMIUM ? { executablePath: process.env.ORBIT_CHROMIUM } : {}),
++  args: ["--no-sandbox"] });
++const directUrl = "https://vikingfile.com/d/Abcd123456/PPSA00001-fixture.ffpfsc";
++const providerPage = "https://vikingfile.com/f/Abcd123456";
++const release = { id: "pc-fixture", gameId: "pc-fixture", platform: "ps5", titleId: "PPSA00001",
++  title: "PC link test", sizeBytes: 4096, provider: "Vikingfile", sourceId: "vikingfile",
++  format: "FFPFSC", filename: "PPSA00001-fixture.ffpfsc", browserAvailable: true,
++  directAvailable: false, consoleVerified: false, artworkLayout: "ambient", cover: "", hero: "",
++  genre: null, tagline: null, description: null, version: null, publisher: null, releaseDate: null };
++
++async function setup(layout = "store", mode = "ok") {
++  const context = await browser.newContext({ viewport: { width: 2048, height: 885 }, locale: "de-DE",
++    ...(mode === "ps5-ua" ? { userAgent: "Mozilla/5.0 (PlayStation 5)" } : {}) });
++  context.setDefaultTimeout(15000);
++  const commands = [], errors = [];
++  let status = { available: true, active: false, state: "idle", id: "", message: "", title: "", jobId: "" };
++  await context.addInitScript(({ layout }) => {
++    localStorage.setItem("orbit.interface.v1", JSON.stringify({ name: layout, motion: "reduced" }));
++    localStorage.setItem("orbit.language.v1", "de");
++    localStorage.setItem("orbit.pairing.v1", "fixture-pairing-token");
++  }, { layout });
++  await context.route("https://vikingfile.com/**", route => route.fulfill({ contentType: "text/html", body: "Provider fixture" }));
++  await context.route("**/api/v1/**", async route => {
++    const request = route.request(), url = new URL(request.url());
++    const path = url.pathname.slice("/api/v1".length);
++    let data;
++    let code = 200;
++    if (path === "/system") data = { name: "Orbit Store", version: "1.3.5-pc.1", platform: "ps5",
++      paired: true, catalogueRevision: 1, stateHealthy: true, preferredStorage: "internal",
++      localSessionAvailable: mode === "ps5-session", launcherStatus: "ready", httpPort: 34177 };
++    else if (path === "/session") data = { token: "fixture-pairing-token", pairCode: "123456" };
++    else if (path === "/sources") data = { enabled: ["vikingfile"], acknowledged: true, noticeVersion: 1,
++      options: [{ id: "vikingfile", label: "Vikingfile", releaseCount: 1, downloadReady: true }] };
++    else if (path === "/catalog") data = [release];
++    else if (path === "/storage") data = [{ id: "internal", label: "PS5", path: "/data/fixture",
++      freeBytes: 1e12, totalBytes: 2e12, pendingBytes: 0, projectedFreeBytes: 1e12, external: false }];
++    else if (["/downloads", "/favorites"].includes(path)) data = [];
++    else if (path === "/browser/page") {
++      assert.equal(url.searchParams.get("releaseId"), release.id);
++      assert.equal(request.headers().authorization, "Bearer fixture-pairing-token");
++      if (mode === "page-error") { code = 400; data = { error: "This option has no supported provider browser page." }; }
++      else data = { url: mode === "unsafe-page" ? "http://127.0.0.1/private" : providerPage };
++    } else if (path === "/browser") {
++      if (request.method() === "POST") {
++        commands.push(request.postDataJSON());
++        if (mode === "rejected-link") { code = 400; data = { error: "Captured link does not match this download option." }; }
++        else { code = 202; data = status = { ...status, active: true, state: "validating", id: "fixture-session", title: release.title }; }
++      } else data = status;
++    } else if (path === "/library") data = { available: false, games: [], revision: 0, busy: false, roots: [], warnings: [] };
++    else if (path === "/debrid") data = { provider: "torbox", available: false, connected: false, busy: false, hosts: [] };
++    else data = { available: false, busy: false };
++    await route.fulfill({ status: code, contentType: "application/json", body: JSON.stringify(data) });
++  });
++  const page = await context.newPage();
++  page.on("pageerror", error => errors.push(error.message));
++  await page.goto(`${origin}/#download?game=pc-fixture&release=pc-fixture&storage=internal`);
++  const box = page.locator(".external-download:visible");
++  if (!mode.startsWith("ps5-")) await box.locator("input").waitFor({ state: "visible" });
++  else await page.locator(".provider-browser-option:visible").waitFor();
++  return { context, page, box, commands, errors };
++}
++
++try {
++  for (const layout of ["store", "crossbar", "cinema", "panorama"]) {
++    const { context, page, box, commands, errors } = await setup(layout);
++    assert.equal(await box.locator("input").isEnabled(), true);
++    assert.match(await box.textContent(), /PPSA00001-fixture\.ffpfsc/);
++    const popupEvent = page.waitForEvent("popup");
++    await page.locator(".source-file-button:visible").click();
++    const popup = await popupEvent;
++    await popup.waitForURL(providerPage);
++    assert.equal(await popup.evaluate(() => window.opener === null), true);
++    await popup.close();
++    await box.locator("input").fill(`  ${directUrl}  `);
++    mkdirSync("build/ui", { recursive: true });
++    await page.screenshot({ path: `build/ui/pc-link-${layout}.png` });
++    if (layout === "store") {
++      assert.ok(await box.locator("h3").evaluate(el => parseFloat(getComputedStyle(el).fontSize)) >= 20);
++      assert.equal(await box.locator("details").count(), 0);
++      const heading = await box.locator("h3").boundingBox();
++      const panel = await page.locator(".sheet-scroll:visible").boundingBox();
++      const filename = await box.locator("small").boundingBox();
++      assert.ok(heading && panel && filename && heading.y >= panel.y &&
++        filename.y + filename.height <= panel.y + panel.height, "PC link instructions must fit without clipping");
++
++      const action = await page.locator(".source-file-button:visible").boundingBox();
++      assert.ok(action && action.y >= 0 && action.y + action.height <= 885);
++    }
++    await page.getByRole("button", { name: "Auf PS5 herunterladen", exact: true }).last().click();
++    await page.waitForFunction(() => !!document.querySelector(".provider-browser-notice"));
++    assert.equal(commands.length, 1);
++    assert.deepEqual(commands[0], { action: "start", returnToOrbit: true,
++      releaseId: "pc-fixture", storageId: "internal", directUrl });
++    assert.equal(new URL(page.url()).hash, "");
++    assert.deepEqual(errors, []);
++    console.log(`PASS ${layout}: provider tab and PS5 link handoff`);
++    await context.close();
++  }
++  for (const layout of ["store", "crossbar", "cinema", "panorama"]) {
++    const { context, page, box, commands, errors } = await setup(layout);
++    await box.locator("input").fill("   ");
++    await page.getByRole("button", { name: "Auf PS5 herunterladen", exact: true }).last().click();
++    await page.waitForFunction(() => !!document.querySelector(".provider-browser-notice"));
++    assert.deepEqual(commands, [{ action: "start", returnToOrbit: true,
++      releaseId: "pc-fixture", storageId: "internal" }]);
++    assert.deepEqual(errors, []);
++    console.log(`PASS ${layout}: empty link retains PS5 browser flow`);
++    await context.close();
++  }
++  for (const mode of ["ps5-session", "ps5-ua"]) {
++    const { context, page, commands, errors } = await setup("store", mode);
++    assert.equal(await page.locator(".external-download").count(), 0);
++    assert.equal(await page.locator(".source-file-button").count(), 0);
++    await page.getByRole("button", { name: "Download-Seite auf PS5 öffnen", exact: true }).last().click();
++    await page.waitForFunction(() => !!document.querySelector(".provider-browser-notice"));
++    assert.equal(commands.length, 1);
++    assert.equal(commands[0].directUrl, undefined);
++    assert.deepEqual(errors, []);
++    console.log(`PASS ${mode}: console UI unchanged`);
++    await context.close();
++  }
++  for (const mode of ["blocked-popup", "page-error", "unsafe-page", "rejected-link"]) {
++    const { context, page, box, commands, errors } = await setup("store", mode);
++    if (mode === "rejected-link") {
++      await box.locator("input").fill(directUrl);
++      await page.getByRole("button", { name: "Auf PS5 herunterladen", exact: true }).last().click();
++      await page.getByRole("alert").filter({ hasText: /Link|Download/ }).first().waitFor();
++      assert.equal(commands.length, 1);
++      assert.equal(await box.locator("input").inputValue(), directUrl);
++    } else {
++      if (mode === "blocked-popup") await page.evaluate(() => { window.open = () => null; });
++      await page.locator(".source-file-button:visible").click();
++      await page.locator(".source-file-actions:visible").getByRole("alert").waitFor();
++      await page.waitForFunction(() => !document.querySelector(".source-file-button").disabled);
++      assert.equal(commands.length, 0);
++      assert.equal(context.pages().length, 1);
++    }
++    assert.deepEqual(errors, []);
++    console.log(`PASS ${mode}: recoverable error`);
++    await context.close();
++  }
++} finally {
++  await browser.close();
++  await server.close();
++}
+diff --git a/tests/external-download.test.mjs b/tests/external-download.test.mjs
+new file mode 100644
+index 0000000..3e7ff8b
+--- /dev/null
++++ b/tests/external-download.test.mjs
+@@ -0,0 +1,22 @@
++import { test } from "node:test";
++import { execFileSync } from "node:child_process";
++import { mkdirSync } from "node:fs";
++
++mkdirSync("build", { recursive: true });
++execFileSync("python3", ["tools/embed-launcher.py"], { stdio: "pipe" });
++const cc = process.env.CC || "cc";
++const flags = ["-std=c11", "-O1", "-g", "-Wall", "-Wextra", "-Werror", "-D_POSIX_C_SOURCE=200809L",
++  "-Ibackend", "-I.deps/cjson", "-Ibuild/generated", "-fsanitize=undefined", "-fno-sanitize-recover=all"];
++// The worker's platform simulator is useful for checking the legacy path, but
++// links must be checked against the production allowlist, not localhost fixtures.
++execFileSync(cc, [...flags, "-c", "backend/providers.c", "-o", "build/external-providers.o"], { stdio: "pipe" });
++execFileSync(cc, [...flags, "-DORBIT_TEST", "backend/browser.c", ".deps/cjson/cJSON.c",
++  "tests/external_download_driver.c", "build/external-providers.o", "-lpthread", "-lm", "-o", "build/external-download-test"], { stdio: "pipe" });
++
++for (const scenario of ["rejects", "direct", "legacy", "busy", "cancel", "source-change",
++  "catalog-change", "identity-mismatch", "refresh", "refresh-change",
++  "native-dialog", "browser-return", "direct-native", "direct-browser", "mixed-modes"]) {
++  test(`PC link handoff: ${scenario}`, () => {
++    execFileSync("build/external-download-test", [scenario], { stdio: "pipe", timeout: 15000 });
++  });
++}
+diff --git a/tests/external_download_driver.c b/tests/external_download_driver.c
+new file mode 100644
+index 0000000..51a129b
+--- /dev/null
++++ b/tests/external_download_driver.c
+@@ -0,0 +1,226 @@
++#include "orbit.h"
++#include <assert.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <time.h>
++
++/* Exercise the real browser worker and the production provider URL policy.
++ * Only storage, network I/O and the final queue write are fixtures. */
++Orbit orbit = {.mutex = PTHREAD_MUTEX_INITIALIZER};
++static Release selected, queued;
++static Storage destination = {.id = "internal", .root = "/fixture", .device = 1, .inode = 2};
++static Job job;
++static bool enabled = true;
++static unsigned created, refreshed;
++static atomic_uint browser_opens;
++int probe_browser_open(const char *url) {
++    assert(!strcmp(url, "http://127.0.0.1:34177/"));
++    cJSON *status = browser_status();
++    assert(!strcmp(json_text(status, "state"), "queued") && json_text(status, "jobId")[0]);
++    cJSON_Delete(status);
++    atomic_fetch_add(&browser_opens, 1);
++    return 0;
++}
++static atomic_bool hold_validation, validation_entered;
++static bool fail_validation;
++static const char *direct = "https://vikingfile.com/d/Abcd123456/PPSA00001-fixture.ffpfsc";
++
++void copy_text(char *to, size_t cap, const char *s) { snprintf(to, cap, "%s", s ? s : ""); }
++const char *json_text(const cJSON *o, const char *key) {
++    const cJSON *v = cJSON_GetObjectItemCaseSensitive(o, key);
++    return cJSON_IsString(v) ? v->valuestring : "";
++}
++void random_hex(char *out, size_t bytes) { memset(out, 'a', bytes * 2); out[bytes * 2] = 0; }
++Release *release_find(const char *id) { return !strcmp(id, selected.id) ? &selected : NULL; }
++Job *job_find(const char *id) { return job.id[0] && !strcmp(id, job.id) ? &job : NULL; }
++bool source_enabled_locked(const Release *r) { (void)r; return enabled; }
++size_t storage_list(Storage *out) { *out = destination; return 1; }
++bool job_can_refresh_link(const Job *j) { return j && !strcmp(j->status, "paused"); }
++int job_check_capture_locked(const Release *r, const Storage *s, char *error, size_t cap) {
++    (void)r; (void)s;
++    if (enabled) return 200;
++    copy_text(error, cap, "Source disabled."); return 409;
++}
++int job_create_captured_locked(const Release *r, const Storage *s, const char *etag,
++        const char *modified, char *error, size_t cap, Job **result) {
++    (void)s; (void)modified; (void)error; (void)cap;
++    assert(!strcmp(etag, "\"fixture\""));
++    queued = *r; created++;
++    copy_text(job.id, sizeof job.id, "fixture-job"); *result = &job;
++    return 201;
++}
++int job_refresh_link_locked(Job *j, const Release *r, const Storage *s, const char *etag,
++        const char *modified, char *error, size_t cap) {
++    (void)s; (void)modified; (void)error; (void)cap;
++    assert(j == &job && j->received == 1024 && !strcmp(etag, "\"fixture\""));
++    queued = *r; refreshed++; return 200;
++}
++static void tick(void) { struct timespec t = {.tv_nsec = 1000000}; nanosleep(&t, NULL); }
++int transfer_validate_capture(Release *r, atomic_bool *cancel, char *etag,
++        char *modified, char *error, size_t cap) {
++    (void)modified;
++    assert(!strcmp(r->url, direct));
++    atomic_store(&validation_entered, true);
++    for (unsigned i = 0; atomic_load(&hold_validation) && i < 5000; i++) tick();
++    assert(!atomic_load(&hold_validation));
++    if (atomic_load(cancel)) return 1;
++    if (fail_validation) { copy_text(error, cap, "File identity mismatch."); return 1; }
++    copy_text(etag, 256, "\"fixture\""); return 0;
++}
++static cJSON *request(const char *action, bool with_link) {
++    cJSON *o = cJSON_CreateObject();
++    cJSON_AddStringToObject(o, "action", action);
++    cJSON_AddStringToObject(o, "releaseId", selected.id);
++    cJSON_AddStringToObject(o, "storageId", destination.id);
++    cJSON_AddStringToObject(o, "jobId", job.id);
++    if (with_link) cJSON_AddStringToObject(o, "directUrl", direct);
++    return o;
++}
++static int submit(cJSON *o) {
++    char error[256] = {0}; int code = browser_action(o, error, sizeof error);
++    cJSON_Delete(o); return code;
++}
++static void wait_validation(void) {
++    for (unsigned i = 0; i < 5000 && !atomic_load(&validation_entered); i++) tick();
++    assert(atomic_load(&validation_entered));
++}
++static void expect_state(const char *state) {
++    for (unsigned i = 0; i < 5000; i++) {
++        cJSON *s = browser_status();
++        bool active = cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(s, "active"));
++        if (!active) {
++            if (strcmp(json_text(s, "state"), state)) {
++                char *text = cJSON_PrintUnformatted(s); fprintf(stderr, "%s\n", text); free(text);
++            }
++            assert(!strcmp(json_text(s, "state"), state));
++            char *text = cJSON_PrintUnformatted(s); assert(!strstr(text, "https://")); free(text);
++            cJSON_Delete(s); return;
++        }
++        cJSON_Delete(s); tick();
++    }
++    assert(!"worker timeout");
++}
++static void rejects(void) {
++    const char *bad[] = {"", "https://vikingfile.com/f/Abcd123456",
++        "https://vikingfile.com/d/Abcd123456/other.ffpfsc",
++        "http://vikingfile.com/d/Abcd123456/PPSA00001-fixture.ffpfsc",
++        "https://127.0.0.1/d/Abcd123456/PPSA00001-fixture.ffpfsc",
++        "https://vikingfile.com.evil.test/d/Abcd123456/PPSA00001-fixture.ffpfsc",
++        "https://user@vikingfile.com/d/Abcd123456/PPSA00001-fixture.ffpfsc",
++        "https://vikingfile.com/d/Abcd123456/PPSA00001-fixture.ffpfsc?extra=1",
++        "https://vikingfile.com/d/Abcd123456/PPSA00001-fixture.ffpfsc#fragment",
++        "https://vikingfile.com/d/Abcd123456/%2e%2e%2fPPSA00001-fixture.ffpfsc"};
++    for (size_t i = 0; i < sizeof bad / sizeof bad[0]; i++) {
++        cJSON *o = request("start", false); cJSON_AddStringToObject(o, "directUrl", bad[i]);
++        assert(submit(o) == 400);
++    }
++    const char *types[] = {"null", "true", "123", "[]", "{}"};
++    for (size_t i = 0; i < sizeof types / sizeof types[0]; i++) {
++        cJSON *o = request("start", false);
++        cJSON_AddItemToObject(o, "directUrl", cJSON_Parse(types[i])); assert(submit(o) == 400);
++    }
++    char huge[3000]; memset(huge, 'a', sizeof huge - 1); huge[sizeof huge - 1] = 0;
++    cJSON *o = request("start", false); cJSON_AddStringToObject(o, "directUrl", huge);
++    assert(submit(o) == 400);
++    o = request("start", true); cJSON_ReplaceItemInObject(o, "storageId", cJSON_CreateString("missing"));
++    assert(submit(o) == 409);
++    enabled = false; assert(submit(request("start", true)) == 409);
++    assert(!created && !refreshed && !atomic_load(&validation_entered));
++}
++int main(int argc, char **argv) {
++    assert(argc == 2);
++    copy_text(selected.id, sizeof selected.id, "pc-fixture");
++    copy_text(selected.title_id, sizeof selected.title_id, "PPSA00001");
++    copy_text(selected.filename, sizeof selected.filename, "PPSA00001-fixture.ffpfsc");
++    copy_text(selected.format, sizeof selected.format, "FFPFSC");
++    copy_text(selected.source, sizeof selected.source, "vikingfile");
++    copy_text(selected.browser_url, sizeof selected.browser_url, "https://vikingfile.com/f/Abcd123456");
++    copy_text(selected.url, sizeof selected.url, selected.browser_url);
++    selected.size = 4096;
++    assert(browser_start() == 0);
++    const char *scenario = argv[1];
++    if (!strcmp(scenario, "rejects")) { rejects(); browser_stop(); return 0; }
++    bool refresh = !strncmp(scenario, "refresh", 7);
++    if (refresh) {
++        job.release = selected; job.received = 1024; job.device = 1; job.inode = 2;
++        copy_text(job.id, sizeof job.id, "paused-job");
++        copy_text(job.status, sizeof job.status, "paused");
++        copy_text(job.storage_id, sizeof job.storage_id, destination.id);
++        copy_text(job.root, sizeof job.root, destination.root);
++    }
++    bool native = !strcmp(scenario, "native-dialog");
++    bool browser_return = !strcmp(scenario, "browser-return");
++    bool legacy = !strcmp(scenario, "legacy") || native || browser_return;
++    if (!strcmp(scenario, "mixed-modes")) {
++        cJSON *input = request("start", true);
++        cJSON_AddBoolToObject(input, "nativeDialog", true);
++        cJSON_AddStringToObject(input, "returnTarget", "native");
++        cJSON_AddStringToObject(input, "clientId", "fixture-native");
++        assert(submit(input) == 400);
++        assert(!created && !refreshed);
++        browser_stop(); return 0;
++    }
++    if (legacy) assert(setenv("ORBIT_TEST_CAPTURE_URL", direct, 1) == 0);
++    else unsetenv("ORBIT_TEST_CAPTURE_URL");
++    bool held = !strcmp(scenario, "cancel") || !strcmp(scenario, "source-change") ||
++        !strcmp(scenario, "catalog-change") || !strcmp(scenario, "refresh-change") || !strcmp(scenario, "busy");
++    atomic_store(&hold_validation, held);
++    fail_validation = !strcmp(scenario, "identity-mismatch");
++    cJSON *input = request(refresh ? "refresh" : "start", !legacy);
++    if (native || !strcmp(scenario, "direct-native")) cJSON_AddStringToObject(input, "returnTarget", "native");
++    if (browser_return || !strcmp(scenario, "direct-browser")) cJSON_AddStringToObject(input, "returnTarget", "browser");
++    if (native) {
++        cJSON_AddBoolToObject(input, "nativeDialog", true);
++        cJSON_AddStringToObject(input, "clientId", "fixture-native");
++    }
++    assert(submit(input) == 202);
++    if (native) {
++        cJSON *status = browser_status();
++        assert(!strcmp(json_text(status, "pageUrl"), selected.browser_url));
++        assert(cJSON_IsFalse(cJSON_GetObjectItemCaseSensitive(status, "dialogOpened")));
++        assert(!atomic_load(&validation_entered));
++        cJSON *opened = request("opened", false);
++        cJSON_AddStringToObject(opened, "id", json_text(status, "id"));
++        cJSON_AddStringToObject(opened, "clientId", "wrong-client");
++        assert(submit(opened) == 409);
++        opened = request("opened", false);
++        cJSON_AddStringToObject(opened, "id", json_text(status, "id"));
++        cJSON_AddStringToObject(opened, "clientId", "fixture-native");
++        assert(submit(opened) == 202);
++        cJSON_Delete(status);
++    } else if (!legacy) {
++        cJSON *status = browser_status();
++        assert(!cJSON_HasObjectItem(status, "pageUrl"));
++        assert(!cJSON_HasObjectItem(status, "clientId"));
++        cJSON_Delete(status);
++    }
++    if (held) {
++        wait_validation();
++        if (!strcmp(scenario, "cancel")) {
++            cJSON *s = browser_status(), *o = request("cancel", false);
++            cJSON_AddStringToObject(o, "id", json_text(s, "id"));
++            cJSON_Delete(s); assert(submit(o) == 202);
++        } else if (!strcmp(scenario, "busy")) assert(submit(request("start", true)) == 409);
++        else {
++            pthread_mutex_lock(&orbit.mutex);
++            if (!strcmp(scenario, "source-change")) { enabled = false; browser_source_changed_locked(); }
++            if (!strcmp(scenario, "catalog-change")) selected.size++;
++            if (!strcmp(scenario, "refresh-change")) job.received++;
++            pthread_mutex_unlock(&orbit.mutex);
++        }
++        atomic_store(&hold_validation, false);
++    }
++    bool cancelled = !strcmp(scenario, "cancel") || !strcmp(scenario, "source-change");
++    bool failed = fail_validation || !strcmp(scenario, "catalog-change") || !strcmp(scenario, "refresh-change");
++    expect_state(cancelled ? "cancelled" : failed ? "failed" : "queued");
++    browser_stop();
++    assert(atomic_load(&browser_opens) == (unsigned)browser_return);
++    assert(created + refreshed == (unsigned)(!cancelled && !failed));
++    if (!cancelled && !failed) {
++        assert(!strcmp(queued.url, direct)); assert(queued.size == 4096);
++        assert(refreshed == (unsigned)refresh);
++        assert(!strcmp(selected.url, selected.browser_url));
++    }
++    return 0;
++}
+diff --git a/tests/external_download_integration.py b/tests/external_download_integration.py
+new file mode 100644
+index 0000000..a844aa5
+--- /dev/null
++++ b/tests/external_download_integration.py
+@@ -0,0 +1,189 @@
++"""Real HTTP/API/transfer test; ORBIT_TEST can only download loopback fixtures."""
++import hashlib
++import http.server
++import json
++import os
++from pathlib import Path
++import re
++import socket
++import subprocess
++import tempfile
++import threading
++import time
++import urllib.error
++import urllib.request
++
++ROOT = Path(__file__).resolve().parents[1]
++PAYLOAD = bytes(range(256)) * 32
++expected_filename = "fixture.ffpfsc"
++requests = []
++
++
++class Provider(http.server.BaseHTTPRequestHandler):
++    def log_message(self, *_):
++        pass
++
++    def do_POST(self):
++        from urllib.parse import parse_qs
++        assert self.path == "/services/xauthn/?op=login"
++        form = parse_qs(self.rfile.read(int(self.headers["Content-Length"])).decode())
++        assert form == {"email": ["fixture@example.invalid"], "password": ["fixture-password"]}
++        body = json.dumps({"success": True, "values": {"screenname": "Fixture account",
++            "cookies": {"logged-in-user": "fixture-user; path=/", "logged-in-sig": "fixture-signature; path=/"}}}).encode()
++        self.send_response(200)
++        self.send_header("Content-Type", "application/json")
++        self.send_header("Content-Length", str(len(body)))
++        self.end_headers()
++        self.wfile.write(body)
++
++    def do_GET(self):
++        requests.append((self.path, self.headers.get("Range")))
++        body = PAYLOAD
++        total = len(body) + (1 if self.path == "/wrong-size" else 0)
++        match = re.fullmatch(r"bytes=(\d+)-(\d+)", self.headers.get("Range", ""))
++        start, end = (int(v) for v in match.groups()) if match else (0, len(body) - 1)
++        assert 0 <= start <= end < len(body)
++        body = body[start:end + 1]
++        self.send_response(206 if match else 200)
++        self.send_header("Content-Type", "text/html" if self.path == "/html" else "application/octet-stream")
++        self.send_header("Content-Length", str(len(body)))
++        self.send_header("Accept-Ranges", "bytes")
++        if match:
++            self.send_header("Content-Range", f"bytes {start}-{end}/{total}")
++        name = "wrong.ffpfsc" if self.path == "/wrong-name" else expected_filename
++        self.send_header("Content-Disposition", f'attachment; filename="{name}"')
++        if self.path != "/no-identity":
++            self.send_header("ETag", '"fixture-identity"')
++        self.end_headers()
++        self.wfile.write(body)
++
++
++def main():
++    global expected_filename
++    provider = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Provider)
++    threading.Thread(target=provider.serve_forever, daemon=True).start()
++    provider_origin = f"http://127.0.0.1:{provider.server_port}"
++    with socket.socket() as reserved:
++        reserved.bind(("127.0.0.1", 0))
++        port = reserved.getsockname()[1]
++    origin = f"http://127.0.0.1:{port}"
++    token = ""
++    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
++
++    def api(path, body=None, auth=True, headers=None):
++        h = {"Content-Type": "application/json"} if body is not None else {}
++        if auth and token:
++            h["Authorization"] = "Bearer " + token
++        h.update(headers or {})
++        request = urllib.request.Request(origin + "/api/v1" + path,
++            data=json.dumps(body).encode() if body is not None else None, headers=h)
++        try:
++            response = opener.open(request, timeout=10)
++        except urllib.error.HTTPError as response_error:
++            response = response_error
++        with response:
++            return response.status, json.load(response)
++
++    with tempfile.TemporaryDirectory(prefix="orbit-pc-link-") as tmp:
++        temp = Path(tmp)
++        storage = temp / "storage"
++        storage.mkdir()
++        env = {**os.environ, "ORBIT_TEST_URL": provider_origin + "/catalog-entry",
++            "ORBIT_TEST_SIZE": str(len(PAYLOAD)), "ORBIT_TEST_SOURCE": "vikingfile",
++            "ORBIT_TEST_SHA256": hashlib.sha256(PAYLOAD).hexdigest(),
++            "ORBIT_TEST_BROWSER_URL": provider_origin + "/provider-page",
++            "ORBIT_TEST_ARCHIVE_URL": provider_origin}
++        env.pop("ORBIT_TEST_CAPTURE_URL", None)
++        with (temp / "server.log").open("w+") as log:
++            process = subprocess.Popen([str(ROOT / "build/orbit-test"), "--port", str(port),
++                "--state", str(temp / "state"), "--storage", str(storage)],
++                cwd=ROOT, env=env, stdout=log, stderr=log)
++            try:
++                for _ in range(200):
++                    if process.poll() is not None:
++                        log.seek(0)
++                        raise AssertionError(log.read())
++                    try:
++                        if api("/system")[0] == 200:
++                            break
++                    except (OSError, ValueError):
++                        pass
++                    time.sleep(0.05)
++                else:
++                    raise AssertionError("API did not start")
++                assert api("/browser/page?releaseId=missing", auth=False)[0] == 401
++                code, session = api("/session")
++                assert code == 200
++                token = session["token"]
++                assert api("/archive-account", auth=False)[0] == 401
++                assert api("/archive-account")[1] == {"signedIn": False, "name": "", "busy": False}
++                code, account = api("/archive-account", {"action": "sign-in",
++                    "email": "fixture@example.invalid", "password": "fixture-password"})
++                assert code == 200 and account == {"signedIn": True, "name": "Fixture account", "busy": False}, (code, account)
++                saved_account = temp / "state" / "archive-account.json"
++                assert saved_account.exists() and "fixture-password" not in saved_account.read_text()
++                assert api("/archive-account")[1] == account
++                code, account = api("/archive-account", {"action": "sign-out"})
++                assert code == 200 and not account["signedIn"] and not saved_account.exists()
++                print("PASS 1.3.5 Archive.org sign-in and sign-out with isolated provider fixture")
++                assert api("/sources", {"enabled": ["vikingfile"], "acknowledged": True,
++                    "noticeVersion": 1})[0] == 200
++                _, catalog = api("/catalog")
++                release = next(r for r in catalog if r["id"] == "ppsa04029-ffpfsc")
++                expected_filename = release["filename"]
++                _, drives = api("/storage")
++                assert drives
++                destination = drives[0]["id"]
++                page_path = "/browser/page?releaseId=" + release["id"]
++                assert api(page_path) == (200, {"url": provider_origin + "/provider-page"})
++                assert api("/browser/page?releaseId=missing")[0] == 400
++                assert api(page_path, headers={"Origin": "https://unrelated.example"})[0] == 403
++                assert api(page_path, headers={"Sec-Fetch-Site": "cross-site"})[0] == 403
++                print("PASS API: pairing, enabled source and origin checks")
++
++                def submit(path):
++                    code, status = api("/browser", {"action": "start", "releaseId": release["id"],
++                        "storageId": destination, "directUrl": provider_origin + path})
++                    assert code == 202, (code, status)
++                    for _ in range(200):
++                        _, status = api("/browser")
++                        if not status["active"]:
++                            return status
++                        time.sleep(0.025)
++                    raise AssertionError("Verification timeout")
++
++                for path in ["/wrong-size", "/wrong-name", "/html", "/no-identity"]:
++                    status = submit(path)
++                    assert status["state"] == "failed", (path, status)
++                    assert api("/downloads")[1] == []
++                    print("PASS transfer rejects " + path)
++                status = submit("/file")
++                assert status["state"] == "queued", status
++                for _ in range(400):
++                    _, jobs = api("/downloads")
++                    assert len(jobs) == 1
++                    if jobs[0]["status"] == "complete":
++                        break
++                    assert jobs[0]["status"] not in ("error", "cancelled"), jobs[0]
++                    time.sleep(0.025)
++                else:
++                    raise AssertionError("Download did not complete")
++                files = list(storage.rglob(expected_filename))
++                assert len(files) == 1 and files[0].read_bytes() == PAYLOAD
++                assert not any(path in ("/provider-page", "/catalog-entry") for path, _ in requests)
++                assert any(path == "/file" and byte_range == "bytes=0-0" for path, byte_range in requests)
++                assert api("/sources", {"enabled": [], "acknowledged": True, "noticeVersion": 1})[0] == 200
++                assert api(page_path)[0] == 400
++                print("PASS complete download: external URL, byte probe, checksum and published file")
++            finally:
++                process.terminate()
++                try:
++                    process.wait(timeout=10)
++                except subprocess.TimeoutExpired:
++                    process.kill()
++                    process.wait()
++    provider.shutdown()
++
++
++if __name__ == "__main__":
++    main()

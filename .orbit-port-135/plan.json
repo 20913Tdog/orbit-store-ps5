@@ -1,0 +1,3943 @@
+{
+  "branch": "feat/pc-direct-link",
+  "base": "f17d7aafc9cd1fbe4dde373e60c178fa92c10c72",
+  "source_url": "https://github.com/saawant12/orbit-store-ps5/releases/download/v1.3.5/orbit-store-1.3.5-source-bundle.zip",
+  "bundle_sha256": "c0fe51d94b199daa77b620b5d596afc13b77902076db313891885d0e54339858",
+  "tar_name": "orbit-store-1.3.5-source.tar.gz",
+  "source_tar_sha256": "74bdf1d37e821d1d622134420104ea99cfdd763d006d28c2fbdf3025580e3cc6",
+  "prefix": "orbit-store-1.3.5/",
+  "reset_paths": [
+    ".clang-format",
+    ".dockerignore",
+    ".gitattributes",
+    ".github/workflows/pc-link-build.yml",
+    ".gitignore",
+    ".prettierignore",
+    "AGENTS.md",
+    "BUILDING.md",
+    "Dockerfile",
+    "LICENSE",
+    "Makefile",
+    "README.md",
+    "SOURCE-BUNDLE.md",
+    "THIRD-PARTY-NOTICES.md",
+    "app/.clang-format",
+    "app/.gitignore",
+    "app/Dockerfile",
+    "app/Makefile",
+    "app/README.md",
+    "app/assets/audio/sfx/glass/back_01.wav",
+    "app/assets/audio/sfx/glass/error_01.wav",
+    "app/assets/audio/sfx/glass/focus_01.wav",
+    "app/assets/audio/sfx/glass/focus_02.wav",
+    "app/assets/audio/sfx/glass/launch_01.wav",
+    "app/assets/audio/sfx/glass/modal_close_01.wav",
+    "app/assets/audio/sfx/glass/modal_open_01.wav",
+    "app/assets/audio/sfx/glass/notify_01.wav",
+    "app/assets/audio/sfx/glass/open_01.wav",
+    "app/assets/audio/sfx/glass/resume_01.wav",
+    "app/assets/audio/sfx/glass/saved_01.wav",
+    "app/assets/audio/sfx/glass/select_01.wav",
+    "app/assets/audio/sfx/glass/slider_01.wav",
+    "app/assets/audio/sfx/glass/slider_02.wav",
+    "app/assets/audio/sfx/glass/slider_03.wav",
+    "app/assets/audio/sfx/glass/tab_01.wav",
+    "app/assets/audio/sfx/glass/toggle_01.wav",
+    "app/assets/audio/sfx/glass/toggle_02.wav",
+    "app/assets/audio/sfx/glass/toggle_03.wav",
+    "app/assets/audio/sfx/glass/welcome_01.wav",
+    "app/assets/fonts/Inter-LICENSE.txt",
+    "app/assets/fonts/InterTight-LICENSE.txt",
+    "app/assets/fonts/Sora-LICENSE.txt",
+    "app/assets/fonts/inter-display-light.huifont",
+    "app/assets/fonts/inter-medium.huifont",
+    "app/assets/fonts/inter-regular.huifont",
+    "app/assets/fonts/inter-semibold.huifont",
+    "app/assets/fonts/inter-tight-extralight.huifont",
+    "app/assets/fonts/inter-tight-light.huifont",
+    "app/assets/fonts/inter-tight-medium.huifont",
+    "app/assets/fonts/inter-tight-semibold.huifont",
+    "app/assets/fonts/sora-regular.huifont",
+    "app/assets/fonts/sora-semibold.huifont",
+    "app/host/fixture.cpp",
+    "app/host/fixture.hpp",
+    "app/host/platform_host.cpp",
+    "app/host/preview_main.cpp",
+    "app/host/stb_write.c",
+    "app/runtime/README.md",
+    "app/runtime/libc.prx.sha256",
+    "app/sce_sys/icon0.png",
+    "app/sce_sys/param.json",
+    "app/src/audio/cues.cpp",
+    "app/src/audio/cues.hpp",
+    "app/src/audio/mixer.cpp",
+    "app/src/audio/mixer.hpp",
+    "app/src/audio/music.cpp",
+    "app/src/audio/music.hpp",
+    "app/src/audio/stream_ring.hpp",
+    "app/src/audio/wav.cpp",
+    "app/src/audio/wav.hpp",
+    "app/src/core/bytes.hpp",
+    "app/src/core/frame_stats.cpp",
+    "app/src/core/frame_stats.hpp",
+    "app/src/core/held_step.hpp",
+    "app/src/core/input.cpp",
+    "app/src/core/input.hpp",
+    "app/src/core/save_file.cpp",
+    "app/src/core/save_file.hpp",
+    "app/src/core/settings.cpp",
+    "app/src/core/settings.hpp",
+    "app/src/core/tween.hpp",
+    "app/src/core/version.cpp",
+    "app/src/core/version.hpp",
+    "app/src/gfx/backdrop.cpp",
+    "app/src/gfx/backdrop.hpp",
+    "app/src/gfx/backdrop_spec.hpp",
+    "app/src/gfx/canvas.cpp",
+    "app/src/gfx/canvas.hpp",
+    "app/src/gfx/draw_list.cpp",
+    "app/src/gfx/draw_list.hpp",
+    "app/src/gfx/font.cpp",
+    "app/src/gfx/font.hpp",
+    "app/src/gfx/font_format.hpp",
+    "app/src/gfx/gl_batch.cpp",
+    "app/src/gfx/gl_batch.hpp",
+    "app/src/gfx/gl_program.cpp",
+    "app/src/gfx/gl_program.hpp",
+    "app/src/gfx/renderer.cpp",
+    "app/src/gfx/renderer.hpp",
+    "app/src/gfx/triangulate.cpp",
+    "app/src/gfx/triangulate.hpp",
+    "app/src/main.cpp",
+    "app/src/orbit/api.cpp",
+    "app/src/orbit/api.hpp",
+    "app/src/orbit/app.cpp",
+    "app/src/orbit/archive_sign_in.cpp",
+    "app/src/orbit/art.cpp",
+    "app/src/orbit/art.hpp",
+    "app/src/orbit/browse.cpp",
+    "app/src/orbit/browse_looks.cpp",
+    "app/src/orbit/browser_handoff.hpp",
+    "app/src/orbit/cn.cpp",
+    "app/src/orbit/cn.hpp",
+    "app/src/orbit/discover.cpp",
+    "app/src/orbit/discover_looks.cpp",
+    "app/src/orbit/downloads.cpp",
+    "app/src/orbit/game_page.cpp",
+    "app/src/orbit/gl_textures.hpp",
+    "app/src/orbit/http.cpp",
+    "app/src/orbit/http.hpp",
+    "app/src/orbit/i18n.cpp",
+    "app/src/orbit/i18n.hpp",
+    "app/src/orbit/icons.cpp",
+    "app/src/orbit/icons.hpp",
+    "app/src/orbit/iface_common.cpp",
+    "app/src/orbit/image.cpp",
+    "app/src/orbit/image.hpp",
+    "app/src/orbit/json.cpp",
+    "app/src/orbit/json.hpp",
+    "app/src/orbit/library.cpp",
+    "app/src/orbit/library_looks.cpp",
+    "app/src/orbit/look.cpp",
+    "app/src/orbit/look.hpp",
+    "app/src/orbit/mark.cpp",
+    "app/src/orbit/mark.hpp",
+    "app/src/orbit/model.cpp",
+    "app/src/orbit/model.hpp",
+    "app/src/orbit/native_provider.cpp",
+    "app/src/orbit/native_provider.hpp",
+    "app/src/orbit/pano.cpp",
+    "app/src/orbit/pano.hpp",
+    "app/src/orbit/pano_ui.cpp",
+    "app/src/orbit/provider_browser.cpp",
+    "app/src/orbit/screens.hpp",
+    "app/src/orbit/settings.cpp",
+    "app/src/orbit/settings_looks.cpp",
+    "app/src/orbit/starter.cpp",
+    "app/src/orbit/starter.hpp",
+    "app/src/orbit/store.cpp",
+    "app/src/orbit/store.hpp",
+    "app/src/orbit/thread.cpp",
+    "app/src/orbit/thread.hpp",
+    "app/src/orbit/ui.cpp",
+    "app/src/orbit/ui.hpp",
+    "app/src/orbit/views.cpp",
+    "app/src/orbit/xb.cpp",
+    "app/src/orbit/xb.hpp",
+    "app/src/platform/ps5/audio_out.cpp",
+    "app/src/platform/ps5/audio_out.hpp",
+    "app/src/platform/ps5/display_egl.cpp",
+    "app/src/platform/ps5/display_egl.hpp",
+    "app/src/platform/ps5/pad.cpp",
+    "app/src/platform/ps5/pad.hpp",
+    "app/src/platform/ps5/provider_dialog.cpp",
+    "app/src/platform/ps5/provider_dialog.hpp",
+    "app/src/platform/ps5/provider_dialog_abi.hpp",
+    "app/src/platform/ps5/system.cpp",
+    "app/src/platform/ps5/system.hpp",
+    "app/src/runtime/app_heap.c",
+    "app/src/runtime/runtime_shims.c",
+    "app/src/third_party/stb/LICENSE",
+    "app/src/third_party/stb/UPSTREAM",
+    "app/src/third_party/stb/image.c",
+    "app/src/third_party/stb/stb_image.inc",
+    "app/src/third_party/stb/stb_vorbis.inc",
+    "app/src/third_party/stb/vorbis.c",
+    "app/src/third_party/stb/vorbis.h",
+    "app/src/ui/components.hpp",
+    "app/src/ui/components/accordion.cpp",
+    "app/src/ui/components/accordion.hpp",
+    "app/src/ui/components/action_glyph.hpp",
+    "app/src/ui/components/badge.cpp",
+    "app/src/ui/components/badge.hpp",
+    "app/src/ui/components/banner.cpp",
+    "app/src/ui/components/banner.hpp",
+    "app/src/ui/components/breadcrumb.cpp",
+    "app/src/ui/components/breadcrumb.hpp",
+    "app/src/ui/components/button.cpp",
+    "app/src/ui/components/button.hpp",
+    "app/src/ui/components/button_group.cpp",
+    "app/src/ui/components/button_group.hpp",
+    "app/src/ui/components/calendar.cpp",
+    "app/src/ui/components/calendar.hpp",
+    "app/src/ui/components/card.cpp",
+    "app/src/ui/components/card.hpp",
+    "app/src/ui/components/carousel.cpp",
+    "app/src/ui/components/carousel.hpp",
+    "app/src/ui/components/chart.cpp",
+    "app/src/ui/components/chart.hpp",
+    "app/src/ui/components/choice.cpp",
+    "app/src/ui/components/choice.hpp",
+    "app/src/ui/components/choice_group.cpp",
+    "app/src/ui/components/choice_group.hpp",
+    "app/src/ui/components/coach_mark.cpp",
+    "app/src/ui/components/coach_mark.hpp",
+    "app/src/ui/components/color_picker.cpp",
+    "app/src/ui/components/color_picker.hpp",
+    "app/src/ui/components/component.cpp",
+    "app/src/ui/components/component.hpp",
+    "app/src/ui/components/counter.cpp",
+    "app/src/ui/components/counter.hpp",
+    "app/src/ui/components/data_common.cpp",
+    "app/src/ui/components/data_common.hpp",
+    "app/src/ui/components/detail_list.cpp",
+    "app/src/ui/components/detail_list.hpp",
+    "app/src/ui/components/dialog.cpp",
+    "app/src/ui/components/dialog.hpp",
+    "app/src/ui/components/focus_frame.hpp",
+    "app/src/ui/components/focus_group.cpp",
+    "app/src/ui/components/focus_group.hpp",
+    "app/src/ui/components/form.cpp",
+    "app/src/ui/components/form.hpp",
+    "app/src/ui/components/grid.cpp",
+    "app/src/ui/components/grid.hpp",
+    "app/src/ui/components/hold_button.cpp",
+    "app/src/ui/components/hold_button.hpp",
+    "app/src/ui/components/hud.cpp",
+    "app/src/ui/components/hud.hpp",
+    "app/src/ui/components/image_viewer.cpp",
+    "app/src/ui/components/image_viewer.hpp",
+    "app/src/ui/components/input_prompt.cpp",
+    "app/src/ui/components/input_prompt.hpp",
+    "app/src/ui/components/inventory_grid.cpp",
+    "app/src/ui/components/inventory_grid.hpp",
+    "app/src/ui/components/jump_bar.cpp",
+    "app/src/ui/components/jump_bar.hpp",
+    "app/src/ui/components/key_binder.cpp",
+    "app/src/ui/components/key_binder.hpp",
+    "app/src/ui/components/keyboard.cpp",
+    "app/src/ui/components/keyboard.hpp",
+    "app/src/ui/components/layout.cpp",
+    "app/src/ui/components/layout.hpp",
+    "app/src/ui/components/list.cpp",
+    "app/src/ui/components/list.hpp",
+    "app/src/ui/components/loading_screen.cpp",
+    "app/src/ui/components/loading_screen.hpp",
+    "app/src/ui/components/media_controls.cpp",
+    "app/src/ui/components/media_controls.hpp",
+    "app/src/ui/components/menu.cpp",
+    "app/src/ui/components/menu.hpp",
+    "app/src/ui/components/node_map.cpp",
+    "app/src/ui/components/node_map.hpp",
+    "app/src/ui/components/notification.cpp",
+    "app/src/ui/components/notification.hpp",
+    "app/src/ui/components/notification_bell.cpp",
+    "app/src/ui/components/notification_bell.hpp",
+    "app/src/ui/components/notification_center.cpp",
+    "app/src/ui/components/notification_center.hpp",
+    "app/src/ui/components/overlay.cpp",
+    "app/src/ui/components/overlay.hpp",
+    "app/src/ui/components/page_dots.cpp",
+    "app/src/ui/components/page_dots.hpp",
+    "app/src/ui/components/pause_menu.cpp",
+    "app/src/ui/components/pause_menu.hpp",
+    "app/src/ui/components/pin_entry.cpp",
+    "app/src/ui/components/pin_entry.hpp",
+    "app/src/ui/components/profile_picker.cpp",
+    "app/src/ui/components/profile_picker.hpp",
+    "app/src/ui/components/progress.cpp",
+    "app/src/ui/components/progress.hpp",
+    "app/src/ui/components/quick_action.cpp",
+    "app/src/ui/components/quick_action.hpp",
+    "app/src/ui/components/radial.cpp",
+    "app/src/ui/components/radial.hpp",
+    "app/src/ui/components/range_slider.cpp",
+    "app/src/ui/components/range_slider.hpp",
+    "app/src/ui/components/rating.cpp",
+    "app/src/ui/components/rating.hpp",
+    "app/src/ui/components/scroll_area.cpp",
+    "app/src/ui/components/scroll_area.hpp",
+    "app/src/ui/components/search_field.cpp",
+    "app/src/ui/components/search_field.hpp",
+    "app/src/ui/components/select.cpp",
+    "app/src/ui/components/select.hpp",
+    "app/src/ui/components/sheet.cpp",
+    "app/src/ui/components/sheet.hpp",
+    "app/src/ui/components/sidenav.cpp",
+    "app/src/ui/components/sidenav.hpp",
+    "app/src/ui/components/skeleton.cpp",
+    "app/src/ui/components/skeleton.hpp",
+    "app/src/ui/components/split_view.cpp",
+    "app/src/ui/components/split_view.hpp",
+    "app/src/ui/components/stat.cpp",
+    "app/src/ui/components/stat.hpp",
+    "app/src/ui/components/status.cpp",
+    "app/src/ui/components/status.hpp",
+    "app/src/ui/components/stepper.cpp",
+    "app/src/ui/components/stepper.hpp",
+    "app/src/ui/components/surface.cpp",
+    "app/src/ui/components/surface.hpp",
+    "app/src/ui/components/table.cpp",
+    "app/src/ui/components/table.hpp",
+    "app/src/ui/components/tabs.cpp",
+    "app/src/ui/components/tabs.hpp",
+    "app/src/ui/components/tag_select.cpp",
+    "app/src/ui/components/tag_select.hpp",
+    "app/src/ui/components/text_field.cpp",
+    "app/src/ui/components/text_field.hpp",
+    "app/src/ui/components/text_view.cpp",
+    "app/src/ui/components/text_view.hpp",
+    "app/src/ui/components/timeline.cpp",
+    "app/src/ui/components/timeline.hpp",
+    "app/src/ui/components/toast.cpp",
+    "app/src/ui/components/toast.hpp",
+    "app/src/ui/components/tooltip.cpp",
+    "app/src/ui/components/tooltip.hpp",
+    "app/src/ui/components/transition.cpp",
+    "app/src/ui/components/transition.hpp",
+    "app/src/ui/components/tree.cpp",
+    "app/src/ui/components/tree.hpp",
+    "app/src/ui/components/unlock_popup.cpp",
+    "app/src/ui/components/unlock_popup.hpp",
+    "app/src/ui/components/wheel_picker.cpp",
+    "app/src/ui/components/wheel_picker.hpp",
+    "app/src/ui/components/wizard.cpp",
+    "app/src/ui/components/wizard.hpp",
+    "app/src/ui/confetti.cpp",
+    "app/src/ui/confetti.hpp",
+    "app/src/ui/feedback.hpp",
+    "app/src/ui/fonts.hpp",
+    "app/src/ui/glyphs.cpp",
+    "app/src/ui/glyphs.hpp",
+    "app/src/ui/motion.hpp",
+    "app/src/ui/pixel_font.cpp",
+    "app/src/ui/pixel_font.hpp",
+    "app/src/ui/theme.cpp",
+    "app/src/ui/theme.hpp",
+    "app/src/ui/widgets.cpp",
+    "app/src/ui/widgets.hpp",
+    "app/tests/unit/debrid_test.cpp",
+    "app/tests/unit/discover_test.cpp",
+    "app/tests/unit/i18n_test.cpp",
+    "app/tests/unit/image_app_test.cpp",
+    "app/tests/unit/json_http_test.cpp",
+    "app/tests/unit/look_test.cpp",
+    "app/tests/unit/model_test.cpp",
+    "app/tests/unit/native_provider_test.cpp",
+    "app/tests/unit/pano_test.cpp",
+    "app/tests/unit/provider_browser_test.cpp",
+    "app/tests/unit/provider_dialog_platform_test.cpp",
+    "app/tests/unit/sources.txt",
+    "app/tests/unit/starter_test.cpp",
+    "app/tests/unit/store_art_test.cpp",
+    "app/tests/unit/support.hpp",
+    "app/tests/unit/zero_test.cpp",
+    "app/third_party/fonts/Inter-LICENSE.txt",
+    "app/third_party/fonts/Inter-Medium.ttf",
+    "app/third_party/fonts/Inter-Regular.ttf",
+    "app/third_party/fonts/Inter-SemiBold.ttf",
+    "app/third_party/fonts/InterDisplay-Light.ttf",
+    "app/third_party/fonts/InterTight-ExtraLight.ttf",
+    "app/third_party/fonts/InterTight-LICENSE.txt",
+    "app/third_party/fonts/InterTight-Light.ttf",
+    "app/third_party/fonts/InterTight-Medium.ttf",
+    "app/third_party/fonts/InterTight-SemiBold.ttf",
+    "app/third_party/fonts/Sora-LICENSE.txt",
+    "app/third_party/fonts/Sora-Regular.ttf",
+    "app/third_party/fonts/Sora-SemiBold.ttf",
+    "app/third_party/fonts/UPSTREAM",
+    "app/third_party/stb/UPSTREAM",
+    "app/third_party/stb/stb_image_write.h",
+    "app/third_party/stb/stb_truetype.h",
+    "app/tooling/README.md",
+    "app/tooling/native/app-symbols.map",
+    "app/tooling/native/app_cpp_runtime.cpp",
+    "app/tooling/native/app_crt.cpp",
+    "app/tooling/native/elf_object.cpp",
+    "app/tooling/native/elf_object.hpp",
+    "app/tooling/native/hash.hpp",
+    "app/tooling/native/libc_builder.cpp",
+    "app/tooling/native/native_app_builder.cpp",
+    "app/tooling/native/ps5-pie.ld",
+    "app/tooling/native/runtime/api-surface.txt",
+    "app/tooling/native/runtime/imports.txt",
+    "app/tooling/native/sce_module_writer.cpp",
+    "app/tooling/native/sce_module_writer.hpp",
+    "app/tooling/native/self_container.cpp",
+    "app/tooling/native/self_container.hpp",
+    "app/tooling/native/stubs/libSceCommonDialog.S",
+    "app/tooling/native/stubs/libSceWebBrowserDialog.S",
+    "app/tooling/prospero-clang18",
+    "app/tools/bake-fonts.sh",
+    "app/tools/build-host-tools.sh",
+    "app/tools/build-tests.sh",
+    "app/tools/build.sh",
+    "app/tools/fetch-opengl-sdk.sh",
+    "app/tools/font-baker/bake_font.cpp",
+    "app/tools/icons/flatten.html",
+    "app/tools/icons/generate.sh",
+    "app/tools/icons/icons.json",
+    "app/tools/icons/icons.py",
+    "app/tools/ninja-build.sh",
+    "app/tools/prepare-opengl.sh",
+    "app/tools/prepare-provider-dialog.sh",
+    "app/tools/preview.sh",
+    "app/tools/rebuild-libc.sh",
+    "app/tools/run_clang_format.sh",
+    "app/tools/setup-native-dependencies.sh",
+    "app/tools/setup-pacbrew-dependencies.sh",
+    "app/tools/setup-packaging-dependencies.sh",
+    "app/tools/setup-test-dependencies.sh",
+    "app/tools/stage-payload.sh",
+    "app/tools/validate-assets.sh",
+    "app/tools/verify-package.sh",
+    "backend/api.c",
+    "backend/archive_account.c",
+    "backend/archive_account.h",
+    "backend/art.c",
+    "backend/autoboot.c",
+    "backend/browser.c",
+    "backend/browser_match.c",
+    "backend/browser_match.h",
+    "backend/browser_platform.c",
+    "backend/browser_platform.h",
+    "backend/browser_scan.c",
+    "backend/browser_scan.h",
+    "backend/browser_services.c",
+    "backend/catalog.c",
+    "backend/catalog_crypto.c",
+    "backend/catalog_crypto.h",
+    "backend/catalog_key.h",
+    "backend/debrid.c",
+    "backend/debrid.h",
+    "backend/debrid_network.c",
+    "backend/diagnostics.c",
+    "backend/extract.c",
+    "backend/extract.h",
+    "backend/favorites.c",
+    "backend/library.c",
+    "backend/main.c",
+    "backend/orbit.h",
+    "backend/process_identity.c",
+    "backend/process_identity.h",
+    "backend/provider_network.c",
+    "backend/provider_network.h",
+    "backend/providers.c",
+    "backend/ps5_fs.c",
+    "backend/queue.c",
+    "backend/receive.c",
+    "backend/receive.h",
+    "backend/sevenzip.cpp",
+    "backend/sevenzip.h",
+    "backend/sources.c",
+    "backend/state.c",
+    "backend/storage.c",
+    "backend/transfer.c",
+    "backend/transfer_benchmark.h",
+    "backend/transfer_writer.c",
+    "backend/transfer_writer.h",
+    "backend/tvapp.c",
+    "backend/updates.c",
+    "backend/zero_companion.c",
+    "backend/zero_companion.h",
+    "backend/zero_probe.c",
+    "backend/zero_probe.h",
+    "catalog/catalog.enc",
+    "catalog/games.enc",
+    "catalog/releases.enc",
+    "catalog/revision.json",
+    "config/network.json",
+    "diagnostics/README.md",
+    "diagnostics/boottrace.c",
+    "diagnostics/fs_probe.c",
+    "docs/pc-direct-link.md",
+    "experiments/browser-capture/README.md",
+    "experiments/browser-capture/main.c",
+    "experiments/transfer-benchmark/README.md",
+    "experiments/transfer-benchmark/main.c",
+    "i18n/de.json",
+    "i18n/en.json",
+    "i18n/es.json",
+    "i18n/fr.json",
+    "i18n/hu.json",
+    "i18n/it.json",
+    "i18n/nl.json",
+    "i18n/pl.json",
+    "i18n/pt-BR.json",
+    "i18n/ru.json",
+    "i18n/tr.json",
+    "index.html",
+    "launcher/README.md",
+    "launcher/install.c",
+    "launcher/install.h",
+    "launcher/platform_ps5.c",
+    "launcher/runtime_image.c",
+    "launcher/sce_sys/icon0.png",
+    "launcher/sce_sys/icon0.svg",
+    "launcher/sce_sys/param.json",
+    "licenses/7zip.txt",
+    "licenses/Apache-2.0.txt",
+    "licenses/GPL-3.0.txt",
+    "licenses/InterTight-OFL.txt",
+    "licenses/LGPL-2.1.txt",
+    "licenses/MPL-2.0.txt",
+    "licenses/React-MIT.txt",
+    "licenses/Sora-OFL.txt",
+    "licenses/Vite-MIT.txt",
+    "licenses/bzip2.txt",
+    "licenses/cJSON-MIT.txt",
+    "licenses/compiler-rt-LLVM.txt",
+    "licenses/curl.txt",
+    "licenses/libarchive-BSD-2-Clause.txt",
+    "licenses/libcxx-LLVM.txt",
+    "licenses/libcxxabi-LLVM.txt",
+    "licenses/liblzma-0BSD.txt",
+    "licenses/libunwind-LLVM.txt",
+    "licenses/libwebp-BSD-3-Clause.txt",
+    "licenses/libwebp-PATENTS.txt",
+    "licenses/ps5-opengl/LICENSE",
+    "licenses/ps5-opengl/LICENSES/Dear-ImGui.txt",
+    "licenses/ps5-opengl/LICENSES/Mesa/Apache-2.0",
+    "licenses/ps5-opengl/LICENSES/Mesa/BSL-1.0",
+    "licenses/ps5-opengl/LICENSES/Mesa/GPL-1.0-or-later",
+    "licenses/ps5-opengl/LICENSES/Mesa/GPL-2.0-only",
+    "licenses/ps5-opengl/LICENSES/Mesa/MIT",
+    "licenses/ps5-opengl/LICENSES/Mesa/SGI-B-2.0",
+    "licenses/ps5-opengl/LICENSES/Mesa/exceptions/Linux-Syscall-Note",
+    "licenses/ps5-opengl/LICENSES/NanoVG.txt",
+    "licenses/ps5-opengl/LICENSES/OpenGNM-PSBC.txt",
+    "licenses/ps5-opengl/LICENSES/OpenGNM.txt",
+    "licenses/ps5-opengl/LICENSES/SDL2.txt",
+    "licenses/ps5-opengl/LICENSES/SPIRV-Headers.txt",
+    "licenses/ps5-opengl/LICENSES/Sokol-Samples.txt",
+    "licenses/ps5-opengl/LICENSES/Sokol.txt",
+    "licenses/ps5-opengl/LICENSES/VK-GL-CTS.txt",
+    "licenses/ps5-opengl/LICENSES/Vulkan-Headers.txt",
+    "licenses/ps5-opengl/LICENSES/vecmath.txt",
+    "licenses/ps5-opengl/THIRD_PARTY_NOTICES.md",
+    "licenses/scheduler-MIT.txt",
+    "licenses/zlib.txt",
+    "package-lock.json",
+    "package.json",
+    "public/orbit.svg",
+    "src/App.tsx",
+    "src/ArchiveAccount.tsx",
+    "src/ArchiveSetting.tsx",
+    "src/Artwork.tsx",
+    "src/AutoStart.tsx",
+    "src/Backdrop.tsx",
+    "src/BrowserNotice.tsx",
+    "src/CatalogueUpdates.tsx",
+    "src/Debrid.tsx",
+    "src/Details.tsx",
+    "src/Diagnostics.tsx",
+    "src/DownloadLimit.tsx",
+    "src/Downloads.tsx",
+    "src/ExternalDownload.tsx",
+    "src/FavoriteNotice.tsx",
+    "src/GameRail.tsx",
+    "src/GameSheet.tsx",
+    "src/LanguageSetting.tsx",
+    "src/Library.tsx",
+    "src/LibraryActions.tsx",
+    "src/Loader.tsx",
+    "src/NativeAppNotice.tsx",
+    "src/Pairing.tsx",
+    "src/Rich.tsx",
+    "src/Select.tsx",
+    "src/Sources.tsx",
+    "src/TvApp.tsx",
+    "src/UpdateNotice.tsx",
+    "src/Updates.tsx",
+    "src/api.ts",
+    "src/artworkVisibility.ts",
+    "src/browse.ts",
+    "src/browserHandoff.ts",
+    "src/catalog.ts",
+    "src/collection.ts",
+    "src/components.tsx",
+    "src/controller.ts",
+    "src/details.css",
+    "src/i18n.ts",
+    "src/infiniteList.ts",
+    "src/interfaces/Appearance.tsx",
+    "src/interfaces/CinemaDownloads.tsx",
+    "src/interfaces/CinemaLibrary.tsx",
+    "src/interfaces/CinemaParts.tsx",
+    "src/interfaces/CrossbarDownloads.tsx",
+    "src/interfaces/CrossbarLibrary.tsx",
+    "src/interfaces/CrossbarList.tsx",
+    "src/interfaces/Glyph.tsx",
+    "src/interfaces/InterfaceNotice.tsx",
+    "src/interfaces/PanoramaDownloads.tsx",
+    "src/interfaces/PanoramaLibrary.tsx",
+    "src/interfaces/PanoramaParts.tsx",
+    "src/interfaces/Ring.tsx",
+    "src/interfaces/SettingsPage.tsx",
+    "src/interfaces/Shell.tsx",
+    "src/interfaces/choice.ts",
+    "src/interfaces/fonts/inter-tight-cyrillic-ext-wght-normal.woff2",
+    "src/interfaces/fonts/inter-tight-cyrillic-wght-normal.woff2",
+    "src/interfaces/fonts/inter-tight-latin-ext-wght-normal.woff2",
+    "src/interfaces/fonts/inter-tight-latin-wght-normal.woff2",
+    "src/interfaces/fonts/sora-latin-ext-wght-normal.woff2",
+    "src/interfaces/fonts/sora-latin-wght-normal.woff2",
+    "src/interfaces/interfaces.css",
+    "src/interfaces/menuKeys.ts",
+    "src/jobs.ts",
+    "src/loader.css",
+    "src/main.tsx",
+    "src/platform.ts",
+    "src/railWindow.ts",
+    "src/restartVerification.ts",
+    "src/snapshot.ts",
+    "src/styles.css",
+    "src/types.ts",
+    "src/updateStatus.ts",
+    "src/useLibrary.ts",
+    "src/useOrbit.ts",
+    "src/useSnapshot.ts",
+    "tests/external-download-ui.mjs",
+    "tests/external-download.test.mjs",
+    "tests/external_download_driver.c",
+    "tests/external_download_integration.py",
+    "tools/7zip-orbit.mak",
+    "tools/Dockerfile.sdk",
+    "tools/artwork.py",
+    "tools/bootstrap.py",
+    "tools/build-7zip.sh",
+    "tools/build-deps.sh",
+    "tools/build-host-archive.sh",
+    "tools/build-startup-trace.py",
+    "tools/catalog.py",
+    "tools/catalog_crypto.py",
+    "tools/catalog_crypto_cli.c",
+    "tools/embed-launcher.py",
+    "tools/embed.py",
+    "tools/i18n.mjs",
+    "tools/import_catalog.py",
+    "tools/import_ps4.py",
+    "tools/import_viking.py",
+    "tools/package-release.mjs",
+    "tools/patch-7zip.py",
+    "tools/publish_catalog.py",
+    "tools/regions.py",
+    "tools/release-artifacts.mjs",
+    "tools/release-check.mjs",
+    "tools/release-sources.json",
+    "tools/render-icon.mjs",
+    "tools/run-console-benchmark.py",
+    "tools/send-payload.py",
+    "tools/verify_import.py",
+    "tsconfig.json",
+    "vite.config.ts"
+  ],
+  "patch_sha256": "a8968584ae81f93fa9f88af90f03fcec1c353366c43d80a5d3c0f1699880d759",
+  "result": {
+    "sha": "07ee9fde1d54e0f264dce4d2bdee34fad81fd8d9",
+    "tree": "7488c0ececbf34ba35368523098207fd2e942e67",
+    "raw": "dHJlZSA3NDg4YzBlY2VjYmYzNGJhMzUzNjg1MjMwOTgyMDdmZDJlOTQyZTY3CnBhcmVudCBmMTdkN2FhZmM5Y2QxZmJlNGRkZTM3M2U2MGMxNzhmYTkyYzEwYzcyCmF1dGhvciBDb2RleCA8Y29kZXhAb3BlbmFpLmNvbT4gMTc5MjA1NzI1MSArMDIwMApjb21taXR0ZXIgQ29kZXggPGNvZGV4QG9wZW5haS5jb20+IDE3OTIwNTcyNTEgKzAyMDAKClBvcnQgUEMgZG93bmxvYWQgaGFuZG9mZiB0byBPcmJpdCBTdG9yZSAxLjMuNQo="
+  },
+  "files": [
+    {
+      "path": ".clang-format",
+      "mode": "100644",
+      "sha": "ae650149c5838d1c04a99c5ab2f119f2b12ac03b"
+    },
+    {
+      "path": ".dockerignore",
+      "mode": "100644",
+      "sha": "0e8e3564b8f788b0185b3e66edf20f4ea53d1819"
+    },
+    {
+      "path": ".gitattributes",
+      "mode": "100644",
+      "sha": "a16e3a708a20456abbd7fcc9820ba7da80642830"
+    },
+    {
+      "path": ".github/workflows/pc-link-build.yml",
+      "mode": "100644",
+      "sha": "7caf954401f4de6a3709872b6a240b770a166677"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "sha": "159be8806816f0bc0bc37a5aedf679d1a907c3aa"
+    },
+    {
+      "path": ".prettierignore",
+      "mode": "100644",
+      "sha": "b3cb6627c90018a7515fcd11bb0c6049ceafa453"
+    },
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "sha": "e0e135838ab7c1f1a88279bb7236c5bb31a2512e"
+    },
+    {
+      "path": "BUILDING.md",
+      "mode": "100644",
+      "sha": "e366086c9182f9b7c924573ad02f5bc9ed47d61d"
+    },
+    {
+      "path": "Dockerfile",
+      "mode": "100644",
+      "sha": "d5d6fd89f6d39dba2771ad1ae6929ba3da7957d5"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "sha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7"
+    },
+    {
+      "path": "Makefile",
+      "mode": "100644",
+      "sha": "b96ff5150df8ceac7c407d302b24ea1e1d1ea155"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "sha": "30d449779e96869d7c7ee0274c85676819fa8f4d"
+    },
+    {
+      "path": "SOURCE-BUNDLE.md",
+      "mode": "100644",
+      "sha": "59295254778a709cc12208830bc6b5086fbfbea2"
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.md",
+      "mode": "100644",
+      "sha": "58737e0dee7dbb0e2744b0fc1a225f0e77184fba"
+    },
+    {
+      "path": "app/.clang-format",
+      "mode": "100644",
+      "sha": "72f9806bb64191a8bc063166a3daf1a6298f1c5c"
+    },
+    {
+      "path": "app/.gitignore",
+      "mode": "100644",
+      "sha": "ff266aef275fb2f2221cd4c10790cc188b1423dd"
+    },
+    {
+      "path": "app/Dockerfile",
+      "mode": "100644",
+      "sha": "ad52e38e8dbb20a97404862ad9281943d328cbe3"
+    },
+    {
+      "path": "app/Makefile",
+      "mode": "100644",
+      "sha": "ff06145b7f4c38e32a536af25644589e6dc5816a"
+    },
+    {
+      "path": "app/README.md",
+      "mode": "100644",
+      "sha": "421457a575ccc67353a540776bdba80f420e9c32"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/back_01.wav",
+      "mode": "100755",
+      "sha": "7e270a68827ba56173f31d397f62917ac6795ec1"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/error_01.wav",
+      "mode": "100755",
+      "sha": "b5034496ff7c80d574873cebb92dcfbbd22f23d2"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/focus_01.wav",
+      "mode": "100755",
+      "sha": "145a4a0ec7657e94ecf5c302c8efbe4335c085fb"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/focus_02.wav",
+      "mode": "100755",
+      "sha": "ba38edab9f9ff9ec6eb39afb7516dbd4d7fab622"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/launch_01.wav",
+      "mode": "100755",
+      "sha": "798a180d068e15662b6abf63ee427f6fa09ebe92"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/modal_close_01.wav",
+      "mode": "100755",
+      "sha": "31abba3148bb27dcf66d7a0b460da22a78525efc"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/modal_open_01.wav",
+      "mode": "100755",
+      "sha": "a0264a2d32ee18c5b01b5fda7887529d2dd8a42f"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/notify_01.wav",
+      "mode": "100755",
+      "sha": "d76d26b995dd2047970f642e8338cb0e5ef1abc9"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/open_01.wav",
+      "mode": "100755",
+      "sha": "ecf4ffdc03a92e1842d4e482089656e3ecec79b0"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/resume_01.wav",
+      "mode": "100755",
+      "sha": "b05cb5973feed1710e85cb321ebd311f3e5af4b4"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/saved_01.wav",
+      "mode": "100755",
+      "sha": "facb8121ff37085872641fb3d3eff891b2dd98f8"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/select_01.wav",
+      "mode": "100755",
+      "sha": "d73ac500ade442fa34a1ba3ed2615a8aa31ab67a"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/slider_01.wav",
+      "mode": "100755",
+      "sha": "90d9bf46f7384abb48e736bc3eb0d335da174ab6"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/slider_02.wav",
+      "mode": "100755",
+      "sha": "975c964b8f4f065553dd740059a29870a625afc8"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/slider_03.wav",
+      "mode": "100755",
+      "sha": "0ae3c8e1b005308418ddc9319d1619eda447435b"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/tab_01.wav",
+      "mode": "100755",
+      "sha": "fb63ab1c7ef97e412b14cca74cb981c8399849a0"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/toggle_01.wav",
+      "mode": "100755",
+      "sha": "4b544ca111c8d448c9420dcd0930861966174ee5"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/toggle_02.wav",
+      "mode": "100755",
+      "sha": "a5a7f28c7e2da1fc6d43f987561d581682d01efd"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/toggle_03.wav",
+      "mode": "100755",
+      "sha": "d57a6ea7b58607a8d4f8f4a5486f5f97f93176cf"
+    },
+    {
+      "path": "app/assets/audio/sfx/glass/welcome_01.wav",
+      "mode": "100755",
+      "sha": "63c5875e820c313769e1ac693c65b744c5e61f93"
+    },
+    {
+      "path": "app/assets/fonts/Inter-LICENSE.txt",
+      "mode": "100644",
+      "sha": "9b2ca37b3ffc77391d8b2ebef4a974ef32bf46ea"
+    },
+    {
+      "path": "app/assets/fonts/InterTight-LICENSE.txt",
+      "mode": "100644",
+      "sha": "18d0da5dfcf4b1703293ed87f8e3efcf34aa643f"
+    },
+    {
+      "path": "app/assets/fonts/Sora-LICENSE.txt",
+      "mode": "100644",
+      "sha": "f1d9d6af7ba46af6c2da765fa123d93239c913f5"
+    },
+    {
+      "path": "app/assets/fonts/inter-display-light.huifont",
+      "mode": "100644",
+      "sha": "9537cba5ba837a9316560850574c1032e6989c46"
+    },
+    {
+      "path": "app/assets/fonts/inter-medium.huifont",
+      "mode": "100644",
+      "sha": "0531db0f15e709b750d95c61420349339bd00d1f"
+    },
+    {
+      "path": "app/assets/fonts/inter-regular.huifont",
+      "mode": "100644",
+      "sha": "965dba1c4713a8e8a495e7af3e250f4b4df390ed"
+    },
+    {
+      "path": "app/assets/fonts/inter-semibold.huifont",
+      "mode": "100644",
+      "sha": "677486653a146e019c3dc7b31a61c5f51299aefb"
+    },
+    {
+      "path": "app/assets/fonts/inter-tight-extralight.huifont",
+      "mode": "100644",
+      "sha": "2980e1750a9a340efe4cd1afb9a740e0fd2d936c"
+    },
+    {
+      "path": "app/assets/fonts/inter-tight-light.huifont",
+      "mode": "100644",
+      "sha": "83f36a59438b07cd9120866dbbd7f0642667859e"
+    },
+    {
+      "path": "app/assets/fonts/inter-tight-medium.huifont",
+      "mode": "100644",
+      "sha": "ae60ad59fce85d54b67d2269073734695fe423bd"
+    },
+    {
+      "path": "app/assets/fonts/inter-tight-semibold.huifont",
+      "mode": "100644",
+      "sha": "b74f5bed98b526fa1875cde13c51c6d0b82fa0a1"
+    },
+    {
+      "path": "app/assets/fonts/sora-regular.huifont",
+      "mode": "100644",
+      "sha": "4f56e7d08e1bea91516d198d88fdf6074258d241"
+    },
+    {
+      "path": "app/assets/fonts/sora-semibold.huifont",
+      "mode": "100644",
+      "sha": "b4b48fb4378fb84df8ba5492d06633265f68b7f6"
+    },
+    {
+      "path": "app/host/fixture.cpp",
+      "mode": "100644",
+      "sha": "66d8e31a2e4274e19db9358d942a9c8d52b6be54"
+    },
+    {
+      "path": "app/host/fixture.hpp",
+      "mode": "100644",
+      "sha": "72d6f394fb80bb32e152f3ffa34e460744044603"
+    },
+    {
+      "path": "app/host/platform_host.cpp",
+      "mode": "100644",
+      "sha": "e1741dbf35fac435227f55cc073fa51293491109"
+    },
+    {
+      "path": "app/host/preview_main.cpp",
+      "mode": "100644",
+      "sha": "8c58ef7e43cd180234220bbaf6b09129aee06811"
+    },
+    {
+      "path": "app/host/stb_write.c",
+      "mode": "100644",
+      "sha": "4f6bb42c450fda61e82e7ad34301deb2d0893d54"
+    },
+    {
+      "path": "app/runtime/README.md",
+      "mode": "100644",
+      "sha": "3da24c031253932748f00fafa50b2cb57f0ebf26"
+    },
+    {
+      "path": "app/runtime/libc.prx.sha256",
+      "mode": "100644",
+      "sha": "0b87a30b9f144aa54a328cb3e3e58ad32e88f7c5"
+    },
+    {
+      "path": "app/sce_sys/icon0.png",
+      "mode": "100644",
+      "sha": "c2a6323168ce69fcfde898b209d12a1450aeb00f"
+    },
+    {
+      "path": "app/sce_sys/param.json",
+      "mode": "100644",
+      "sha": "d5f91a1d67c29b298854a933ddc5395b5ed63944"
+    },
+    {
+      "path": "app/src/audio/cues.cpp",
+      "mode": "100644",
+      "sha": "116087e09303502325d6e67307fc410c45268b3d"
+    },
+    {
+      "path": "app/src/audio/cues.hpp",
+      "mode": "100644",
+      "sha": "5e25986524484862fdbfc54bf13ecda6067d99e9"
+    },
+    {
+      "path": "app/src/audio/mixer.cpp",
+      "mode": "100644",
+      "sha": "db4c72d79b4275f4d4cf4be6ddffce64401b2f45"
+    },
+    {
+      "path": "app/src/audio/mixer.hpp",
+      "mode": "100644",
+      "sha": "f67dd8fe70395d694c490fd1b6db4d341f399e9b"
+    },
+    {
+      "path": "app/src/audio/music.cpp",
+      "mode": "100644",
+      "sha": "c11bb5a36e0401c28bf2741ce946aa6a19aebc34"
+    },
+    {
+      "path": "app/src/audio/music.hpp",
+      "mode": "100644",
+      "sha": "f177ce42caf7352ee599c9607fb92d075db5db6f"
+    },
+    {
+      "path": "app/src/audio/stream_ring.hpp",
+      "mode": "100644",
+      "sha": "354139a4d87b120fd8b3cdc858b941aa49cbad70"
+    },
+    {
+      "path": "app/src/audio/wav.cpp",
+      "mode": "100644",
+      "sha": "958b172ca0cb139687bc25f6cc7f8288f62aeb54"
+    },
+    {
+      "path": "app/src/audio/wav.hpp",
+      "mode": "100644",
+      "sha": "4e30ca7b295abb6a1f68371b366df7d92a5adb1a"
+    },
+    {
+      "path": "app/src/core/bytes.hpp",
+      "mode": "100644",
+      "sha": "205c10bcb3d459ce0a74db434ec5143d50fd4ca7"
+    },
+    {
+      "path": "app/src/core/frame_stats.cpp",
+      "mode": "100644",
+      "sha": "f8066a03b746e8bf9aad3c9469b0083eec7a9fa0"
+    },
+    {
+      "path": "app/src/core/frame_stats.hpp",
+      "mode": "100644",
+      "sha": "decfc4fbcee1393194170535fc972d7f61ea0711"
+    },
+    {
+      "path": "app/src/core/held_step.hpp",
+      "mode": "100644",
+      "sha": "ff445e248d8a0c060ce8f46bc0ae6382c23500ef"
+    },
+    {
+      "path": "app/src/core/input.cpp",
+      "mode": "100644",
+      "sha": "3f792ea69c10049030a290032ebe2e3c9124f0cb"
+    },
+    {
+      "path": "app/src/core/input.hpp",
+      "mode": "100644",
+      "sha": "a1128cbc789f7f2d07425876af949279b57c6791"
+    },
+    {
+      "path": "app/src/core/save_file.cpp",
+      "mode": "100644",
+      "sha": "4c575a4d1ba75dfdee07ee80b6cb550c9623ce53"
+    },
+    {
+      "path": "app/src/core/save_file.hpp",
+      "mode": "100644",
+      "sha": "1374384cc7e4c17b8971825a1f441298630a6ea9"
+    },
+    {
+      "path": "app/src/core/settings.cpp",
+      "mode": "100644",
+      "sha": "413df310b75fe6c75916f8d21c9c3006e4d0dec8"
+    },
+    {
+      "path": "app/src/core/settings.hpp",
+      "mode": "100644",
+      "sha": "8d733a85a8d7270e81dce83ba67698eb43b12939"
+    },
+    {
+      "path": "app/src/core/tween.hpp",
+      "mode": "100644",
+      "sha": "bd8f22749fd3f9f1ac6daf98ca128b2aa9cbc71e"
+    },
+    {
+      "path": "app/src/core/version.cpp",
+      "mode": "100644",
+      "sha": "d1bf2aad8db67bc350c6095202e6431046567df4"
+    },
+    {
+      "path": "app/src/core/version.hpp",
+      "mode": "100644",
+      "sha": "65faa95065d964373a3697782efd84986230aa54"
+    },
+    {
+      "path": "app/src/gfx/backdrop.cpp",
+      "mode": "100644",
+      "sha": "bc8691d2f8a307f0e0a461eae3701424979c4810"
+    },
+    {
+      "path": "app/src/gfx/backdrop.hpp",
+      "mode": "100644",
+      "sha": "3f6b36f20e4faa1077a3e955e92a90322a70e22e"
+    },
+    {
+      "path": "app/src/gfx/backdrop_spec.hpp",
+      "mode": "100644",
+      "sha": "72830d0b48d49be519167aedc6f18a2cede0b3b9"
+    },
+    {
+      "path": "app/src/gfx/canvas.cpp",
+      "mode": "100644",
+      "sha": "a4b7abf13875497c1734d5a54d22eb00aebd3481"
+    },
+    {
+      "path": "app/src/gfx/canvas.hpp",
+      "mode": "100644",
+      "sha": "f59f827876c64406835eb2d0ba5731b25cd83438"
+    },
+    {
+      "path": "app/src/gfx/draw_list.cpp",
+      "mode": "100644",
+      "sha": "6263fac4b84d71876230e553b01b28b691f5bd96"
+    },
+    {
+      "path": "app/src/gfx/draw_list.hpp",
+      "mode": "100644",
+      "sha": "5bd5a2b152fa9653f0096fe2834a45f547187822"
+    },
+    {
+      "path": "app/src/gfx/font.cpp",
+      "mode": "100644",
+      "sha": "645aee56e6800d1fd7c5e9d69fc6cf9c7f1d6741"
+    },
+    {
+      "path": "app/src/gfx/font.hpp",
+      "mode": "100644",
+      "sha": "0c52b449b0447284ddecf2262132a89f14a27129"
+    },
+    {
+      "path": "app/src/gfx/font_format.hpp",
+      "mode": "100644",
+      "sha": "b2ce9a0db85383ecdfb4759600df7cfab3bdede4"
+    },
+    {
+      "path": "app/src/gfx/gl_batch.cpp",
+      "mode": "100644",
+      "sha": "8370786798bdf00517048aac50e6be8ce5a7b00a"
+    },
+    {
+      "path": "app/src/gfx/gl_batch.hpp",
+      "mode": "100644",
+      "sha": "85e622d9d3b7647ec7258e51db2c1e671be4f9c0"
+    },
+    {
+      "path": "app/src/gfx/gl_program.cpp",
+      "mode": "100644",
+      "sha": "08a1debe903a6ca54992acef4b6b04908320a164"
+    },
+    {
+      "path": "app/src/gfx/gl_program.hpp",
+      "mode": "100644",
+      "sha": "8925497df697362a679e12088f24ca6ab15ce236"
+    },
+    {
+      "path": "app/src/gfx/renderer.cpp",
+      "mode": "100644",
+      "sha": "29f2fade9b5bfacfac56b9f9c2b8fa1411075d58"
+    },
+    {
+      "path": "app/src/gfx/renderer.hpp",
+      "mode": "100644",
+      "sha": "df802ccd0e76cc8e53bf92427cd046bda7378647"
+    },
+    {
+      "path": "app/src/gfx/triangulate.cpp",
+      "mode": "100644",
+      "sha": "b5ee9d952004a2b4352b78f6312b9d7f52f4f9b5"
+    },
+    {
+      "path": "app/src/gfx/triangulate.hpp",
+      "mode": "100644",
+      "sha": "fee7625ae4f1bbae554138f0c1f5893b5a6c5efb"
+    },
+    {
+      "path": "app/src/main.cpp",
+      "mode": "100644",
+      "sha": "925fef306c1454a482a2db9280e9ed2c9a394be1"
+    },
+    {
+      "path": "app/src/orbit/api.cpp",
+      "mode": "100644",
+      "sha": "081e9e2d46732997a19018708b3974fa7feb7d9a"
+    },
+    {
+      "path": "app/src/orbit/api.hpp",
+      "mode": "100644",
+      "sha": "e109ef2242552ef40423e8a27bd8fe73d2409295"
+    },
+    {
+      "path": "app/src/orbit/app.cpp",
+      "mode": "100644",
+      "sha": "756d9d38a7b5fee6767ee09ad019dc619ede0c1c"
+    },
+    {
+      "path": "app/src/orbit/archive_sign_in.cpp",
+      "mode": "100644",
+      "sha": "0206cef7fcde7cfba943deb576bb903d63aa805f"
+    },
+    {
+      "path": "app/src/orbit/art.cpp",
+      "mode": "100644",
+      "sha": "cbcce1f2592400c779645a6140e18fb07f4ab00b"
+    },
+    {
+      "path": "app/src/orbit/art.hpp",
+      "mode": "100644",
+      "sha": "e71e96b34cfcd923b968d1d3efdf608d01a052a2"
+    },
+    {
+      "path": "app/src/orbit/browse.cpp",
+      "mode": "100644",
+      "sha": "88138ffc8c65195b61daa1d78882023a315858af"
+    },
+    {
+      "path": "app/src/orbit/browse_looks.cpp",
+      "mode": "100644",
+      "sha": "08434b894cd166e66ffe7e57f3a410bd31c32535"
+    },
+    {
+      "path": "app/src/orbit/browser_handoff.hpp",
+      "mode": "100644",
+      "sha": "8143cea58e7255a16be0bd15b2e63ed0d3407abb"
+    },
+    {
+      "path": "app/src/orbit/cn.cpp",
+      "mode": "100644",
+      "sha": "95f5d4a60005d80abd1bf680d8e28eb7f810af9b"
+    },
+    {
+      "path": "app/src/orbit/cn.hpp",
+      "mode": "100644",
+      "sha": "04bd1d0cd2552f70a6741d2cf2955395e6908ba2"
+    },
+    {
+      "path": "app/src/orbit/discover.cpp",
+      "mode": "100644",
+      "sha": "9370e837f6993c755aced5053fdc7282b3d2b2cb"
+    },
+    {
+      "path": "app/src/orbit/discover_looks.cpp",
+      "mode": "100644",
+      "sha": "f1e657b350e34f70df9d22b59fb38b0c9ea480ba"
+    },
+    {
+      "path": "app/src/orbit/downloads.cpp",
+      "mode": "100644",
+      "sha": "be940e2810fb7a7f20fcf88aaa492b4980879b47"
+    },
+    {
+      "path": "app/src/orbit/game_page.cpp",
+      "mode": "100644",
+      "sha": "a7bd81040961877fd4e5b8cc80e2701f258e8423"
+    },
+    {
+      "path": "app/src/orbit/gl_textures.hpp",
+      "mode": "100644",
+      "sha": "de289c29440ab79affb14faf8832f4891bea27b5"
+    },
+    {
+      "path": "app/src/orbit/http.cpp",
+      "mode": "100644",
+      "sha": "bb019d55c08214e8e209eee714e499686a455bc9"
+    },
+    {
+      "path": "app/src/orbit/http.hpp",
+      "mode": "100644",
+      "sha": "e7b0cf91ca7f8236680c22cdbfb7163f8bcb6e84"
+    },
+    {
+      "path": "app/src/orbit/i18n.cpp",
+      "mode": "100644",
+      "sha": "cc6fa3bd0b25a218e81e9c585e05988372014bd1"
+    },
+    {
+      "path": "app/src/orbit/i18n.hpp",
+      "mode": "100644",
+      "sha": "96909f31098ca2cc0cdafdcb585757ce239e9b49"
+    },
+    {
+      "path": "app/src/orbit/icons.cpp",
+      "mode": "100644",
+      "sha": "6f181a014bddb23a09da11c90471b1f2ace401c8"
+    },
+    {
+      "path": "app/src/orbit/icons.hpp",
+      "mode": "100644",
+      "sha": "1e8ad6d6294cfa740b7572ee29050aa18b9d5e94"
+    },
+    {
+      "path": "app/src/orbit/iface_common.cpp",
+      "mode": "100644",
+      "sha": "6dec8e65a8b99eda372771f23ce58d2492d0bc74"
+    },
+    {
+      "path": "app/src/orbit/image.cpp",
+      "mode": "100644",
+      "sha": "1d426578cd567480e768716a1b415c7fceab0e3b"
+    },
+    {
+      "path": "app/src/orbit/image.hpp",
+      "mode": "100644",
+      "sha": "df0b842c2febfe8872e89fc7fe74c6b3abe0d466"
+    },
+    {
+      "path": "app/src/orbit/json.cpp",
+      "mode": "100644",
+      "sha": "2681fe03fb69f9446fc23b0102a05ff6742f1768"
+    },
+    {
+      "path": "app/src/orbit/json.hpp",
+      "mode": "100644",
+      "sha": "2f26373d711b26a0f1c0027d697a3d8eb3c904ad"
+    },
+    {
+      "path": "app/src/orbit/library.cpp",
+      "mode": "100644",
+      "sha": "e30ade5c7e1b3af4a2a9569450af8ecd3ade42d9"
+    },
+    {
+      "path": "app/src/orbit/library_looks.cpp",
+      "mode": "100644",
+      "sha": "cd293f2fcc37af2294d700fecb255b185d5db194"
+    },
+    {
+      "path": "app/src/orbit/look.cpp",
+      "mode": "100644",
+      "sha": "711106682ea597a9e4d3558d7a5c5cd084613162"
+    },
+    {
+      "path": "app/src/orbit/look.hpp",
+      "mode": "100644",
+      "sha": "6a11d6b116b8c525b0f9217956cd0616dccf3eae"
+    },
+    {
+      "path": "app/src/orbit/mark.cpp",
+      "mode": "100644",
+      "sha": "89724054a444763380298645d824dcda18360588"
+    },
+    {
+      "path": "app/src/orbit/mark.hpp",
+      "mode": "100644",
+      "sha": "f14a67e9a3d9dabe1077e5844fa06f59533aeeed"
+    },
+    {
+      "path": "app/src/orbit/model.cpp",
+      "mode": "100644",
+      "sha": "60d66fa3e796930738f37393605bc2e89db3b413"
+    },
+    {
+      "path": "app/src/orbit/model.hpp",
+      "mode": "100644",
+      "sha": "3f2fd8e0c4c14a343de7928c85e5cf31900e4ab0"
+    },
+    {
+      "path": "app/src/orbit/native_provider.cpp",
+      "mode": "100644",
+      "sha": "49415fc486ec555a72012f8ae435cb51de39cd63"
+    },
+    {
+      "path": "app/src/orbit/native_provider.hpp",
+      "mode": "100644",
+      "sha": "d00fe491c1df9e8f53af75f3c09b660a42e7596e"
+    },
+    {
+      "path": "app/src/orbit/pano.cpp",
+      "mode": "100644",
+      "sha": "ee626c31036ff282f15c74d850981a242d432b2f"
+    },
+    {
+      "path": "app/src/orbit/pano.hpp",
+      "mode": "100644",
+      "sha": "dabcab55b86b04ddebb93965becdc2d42570f889"
+    },
+    {
+      "path": "app/src/orbit/pano_ui.cpp",
+      "mode": "100644",
+      "sha": "0badd26a6c07dbe90072b37b8e3998f747059855"
+    },
+    {
+      "path": "app/src/orbit/provider_browser.cpp",
+      "mode": "100644",
+      "sha": "a0bb8f4017105dcc292061d5baba8d09a7f54393"
+    },
+    {
+      "path": "app/src/orbit/screens.hpp",
+      "mode": "100644",
+      "sha": "6eb5c8504b3593d22a8f701196eb03b6564def1d"
+    },
+    {
+      "path": "app/src/orbit/settings.cpp",
+      "mode": "100644",
+      "sha": "ee2d2b5b1bb8e0d378ef40da9ff02baccbe85cb1"
+    },
+    {
+      "path": "app/src/orbit/settings_looks.cpp",
+      "mode": "100644",
+      "sha": "ca74c82682d8dbc23c4bd82b54e5b74bf7a896f8"
+    },
+    {
+      "path": "app/src/orbit/starter.cpp",
+      "mode": "100644",
+      "sha": "b0f181d065a72a23196fa7a9f46750af32aa8ad3"
+    },
+    {
+      "path": "app/src/orbit/starter.hpp",
+      "mode": "100644",
+      "sha": "dbff257cff5a73e9b97f0ba4691bf7ce864957be"
+    },
+    {
+      "path": "app/src/orbit/store.cpp",
+      "mode": "100644",
+      "sha": "8fc468dfb5c7020a0197b20745bfc4160d46a0b0"
+    },
+    {
+      "path": "app/src/orbit/store.hpp",
+      "mode": "100644",
+      "sha": "bf7febfcebac80872f2cebfb0d5761c21aff70cb"
+    },
+    {
+      "path": "app/src/orbit/thread.cpp",
+      "mode": "100644",
+      "sha": "a27f4dcd27e2c09303d0ce628d45e1ed92df03f7"
+    },
+    {
+      "path": "app/src/orbit/thread.hpp",
+      "mode": "100644",
+      "sha": "09471606fa8c6e9fde5a94fc0d371b955ad88c58"
+    },
+    {
+      "path": "app/src/orbit/ui.cpp",
+      "mode": "100644",
+      "sha": "5176d1d74bdeed96799c6a634ed16f06a428b88b"
+    },
+    {
+      "path": "app/src/orbit/ui.hpp",
+      "mode": "100644",
+      "sha": "83f703c9733496ffda2b696be3b88f3b6455a94f"
+    },
+    {
+      "path": "app/src/orbit/views.cpp",
+      "mode": "100644",
+      "sha": "9e0aa6ea9f707c90ecfa98b6cd6078a72e2eea5a"
+    },
+    {
+      "path": "app/src/orbit/xb.cpp",
+      "mode": "100644",
+      "sha": "8df24669f0e9daaf1088a021c20fba4616687b6f"
+    },
+    {
+      "path": "app/src/orbit/xb.hpp",
+      "mode": "100644",
+      "sha": "1c0b0e5c383329b6512d5dee116bcd495993a8eb"
+    },
+    {
+      "path": "app/src/platform/ps5/audio_out.cpp",
+      "mode": "100644",
+      "sha": "9f610ca5c9179304b3202a2a99145b82b0e6ebed"
+    },
+    {
+      "path": "app/src/platform/ps5/audio_out.hpp",
+      "mode": "100644",
+      "sha": "9d8d26ceb72e47c8b5372f90556f6bf2bc7b8b34"
+    },
+    {
+      "path": "app/src/platform/ps5/display_egl.cpp",
+      "mode": "100644",
+      "sha": "1ceee70beb4eaba33a5712705e414f1a62372687"
+    },
+    {
+      "path": "app/src/platform/ps5/display_egl.hpp",
+      "mode": "100644",
+      "sha": "9fc373322f036579295a74b10c28bef79f752029"
+    },
+    {
+      "path": "app/src/platform/ps5/pad.cpp",
+      "mode": "100644",
+      "sha": "f526e38288922be76c39e7f22337bcefdc5da08c"
+    },
+    {
+      "path": "app/src/platform/ps5/pad.hpp",
+      "mode": "100644",
+      "sha": "ab535e746e256fe2599d25580fb5d86a84cf09f0"
+    },
+    {
+      "path": "app/src/platform/ps5/provider_dialog.cpp",
+      "mode": "100644",
+      "sha": "c12259ed553d78704fc6a9ab94c1cc003020b5c7"
+    },
+    {
+      "path": "app/src/platform/ps5/provider_dialog.hpp",
+      "mode": "100644",
+      "sha": "f2120978674e2fa45b64ced4eb721da7fede4f70"
+    },
+    {
+      "path": "app/src/platform/ps5/provider_dialog_abi.hpp",
+      "mode": "100644",
+      "sha": "7d95b91dd40a763b3435167ab0981c7bbcf3b8a8"
+    },
+    {
+      "path": "app/src/platform/ps5/system.cpp",
+      "mode": "100644",
+      "sha": "da9d3ce699ff99cee404d95bc0699f0d79cc4e8a"
+    },
+    {
+      "path": "app/src/platform/ps5/system.hpp",
+      "mode": "100644",
+      "sha": "6503cfb45601868be7ef5577148caa9eb00762f0"
+    },
+    {
+      "path": "app/src/runtime/app_heap.c",
+      "mode": "100644",
+      "sha": "786cba1298bbaccb5b5dcb0ccaa2ba832ebd30ff"
+    },
+    {
+      "path": "app/src/runtime/runtime_shims.c",
+      "mode": "100644",
+      "sha": "d63a30043a67a7d0ac808a6ae467fcd2822c8d49"
+    },
+    {
+      "path": "app/src/third_party/stb/LICENSE",
+      "mode": "100644",
+      "sha": "a77ae91f3ec0abb0028c9d9bd8d34d880b454d38"
+    },
+    {
+      "path": "app/src/third_party/stb/UPSTREAM",
+      "mode": "100644",
+      "sha": "7b40c30ab341b37c473a7e3762815feb0379225b"
+    },
+    {
+      "path": "app/src/third_party/stb/image.c",
+      "mode": "100644",
+      "sha": "d6203413544b1476d24d8b6baab97c1e3962c722"
+    },
+    {
+      "path": "app/src/third_party/stb/stb_image.inc",
+      "mode": "100644",
+      "sha": "9eedabedc45b3e6fd88fae6f14a160b4d53272ec"
+    },
+    {
+      "path": "app/src/third_party/stb/stb_vorbis.inc",
+      "mode": "100644",
+      "sha": "3e5c2504c08f76b9d04e4adfbce80818631e835e"
+    },
+    {
+      "path": "app/src/third_party/stb/vorbis.c",
+      "mode": "100644",
+      "sha": "1fb4e9fb41d4e39ec6c4b497e2ec18fd08c31754"
+    },
+    {
+      "path": "app/src/third_party/stb/vorbis.h",
+      "mode": "100644",
+      "sha": "4d3c7767a3284ce1865774f581d92256cb462216"
+    },
+    {
+      "path": "app/src/ui/components.hpp",
+      "mode": "100644",
+      "sha": "fbac179ecdbc01fae8eea04d00150603522c8cf1"
+    },
+    {
+      "path": "app/src/ui/components/accordion.cpp",
+      "mode": "100644",
+      "sha": "51c23de536d57588d85c24e5d16745c06bbb78b5"
+    },
+    {
+      "path": "app/src/ui/components/accordion.hpp",
+      "mode": "100644",
+      "sha": "3814a1004b7b49efa1dc2c734fac4d842051118d"
+    },
+    {
+      "path": "app/src/ui/components/action_glyph.hpp",
+      "mode": "100644",
+      "sha": "aa8e984f65f60eb5a290ba0119f97807f54f7698"
+    },
+    {
+      "path": "app/src/ui/components/badge.cpp",
+      "mode": "100644",
+      "sha": "23e75c9a9eee86a421884ce16512eb4612bf02ac"
+    },
+    {
+      "path": "app/src/ui/components/badge.hpp",
+      "mode": "100644",
+      "sha": "726d3f6867739982f0a63869db13dd7b0e437b96"
+    },
+    {
+      "path": "app/src/ui/components/banner.cpp",
+      "mode": "100644",
+      "sha": "1cd3930003f5f764f294dc8b8d5ac1a2a6f8e08a"
+    },
+    {
+      "path": "app/src/ui/components/banner.hpp",
+      "mode": "100644",
+      "sha": "c0de80bab977133e50c08b4d5f99b02c1bf25d70"
+    },
+    {
+      "path": "app/src/ui/components/breadcrumb.cpp",
+      "mode": "100644",
+      "sha": "806e5da6e20947be4ac585aa1510a4e8fe4d1015"
+    },
+    {
+      "path": "app/src/ui/components/breadcrumb.hpp",
+      "mode": "100644",
+      "sha": "0a4071f765277c2d2e6256b4bdee5354af1e7fe8"
+    },
+    {
+      "path": "app/src/ui/components/button.cpp",
+      "mode": "100644",
+      "sha": "5441ae9b74328ee8096f5ee7a4779ba3f9ee7129"
+    },
+    {
+      "path": "app/src/ui/components/button.hpp",
+      "mode": "100644",
+      "sha": "8baa62c8bf9886f61adc9bc32c04b036a6e97591"
+    },
+    {
+      "path": "app/src/ui/components/button_group.cpp",
+      "mode": "100644",
+      "sha": "055125f973fe36dce7f2a6e04da557fbeb0be44a"
+    },
+    {
+      "path": "app/src/ui/components/button_group.hpp",
+      "mode": "100644",
+      "sha": "f9c38d50ef3d186a67ebb5d488ae59820fbb49f2"
+    },
+    {
+      "path": "app/src/ui/components/calendar.cpp",
+      "mode": "100644",
+      "sha": "3c7ef264ac1753444721430846bf7759f44f1398"
+    },
+    {
+      "path": "app/src/ui/components/calendar.hpp",
+      "mode": "100644",
+      "sha": "f33b4423fd0fc673bc61d67814d58f3cb6ca835d"
+    },
+    {
+      "path": "app/src/ui/components/card.cpp",
+      "mode": "100644",
+      "sha": "3d0a8652882ef73701495cfe1f0def373e945bc0"
+    },
+    {
+      "path": "app/src/ui/components/card.hpp",
+      "mode": "100644",
+      "sha": "8c0bcb747f28ad6a910c5cad4ff528d5037bb1e2"
+    },
+    {
+      "path": "app/src/ui/components/carousel.cpp",
+      "mode": "100644",
+      "sha": "82be040448de0c14dc059d53946cea4a759a615d"
+    },
+    {
+      "path": "app/src/ui/components/carousel.hpp",
+      "mode": "100644",
+      "sha": "f6cfe1db6f410cd34eeaa060cc3729cd3aa4077c"
+    },
+    {
+      "path": "app/src/ui/components/chart.cpp",
+      "mode": "100644",
+      "sha": "13de379a5b2a78b63abb6980ef0b85d59de7447c"
+    },
+    {
+      "path": "app/src/ui/components/chart.hpp",
+      "mode": "100644",
+      "sha": "8a8dd6ac654aea4a7990b006c6f71c1367a9eba6"
+    },
+    {
+      "path": "app/src/ui/components/choice.cpp",
+      "mode": "100644",
+      "sha": "153cdc4885d5a26a5a23f66cc9733f84c216efa3"
+    },
+    {
+      "path": "app/src/ui/components/choice.hpp",
+      "mode": "100644",
+      "sha": "e90e7f0b4996b7809aa9f1c37a99336952254424"
+    },
+    {
+      "path": "app/src/ui/components/choice_group.cpp",
+      "mode": "100644",
+      "sha": "c1f580035dc2e9a2449cb65728a3e5c6f1a36ddd"
+    },
+    {
+      "path": "app/src/ui/components/choice_group.hpp",
+      "mode": "100644",
+      "sha": "75fec4851e3fa3fa1241abee5bde6bc0b93863ed"
+    },
+    {
+      "path": "app/src/ui/components/coach_mark.cpp",
+      "mode": "100644",
+      "sha": "548af6b0517cc69082bd76b4ad5ac7067b6f89ef"
+    },
+    {
+      "path": "app/src/ui/components/coach_mark.hpp",
+      "mode": "100644",
+      "sha": "8541f1a0070ee488dcd598e1cc6e219fd3ec30b4"
+    },
+    {
+      "path": "app/src/ui/components/color_picker.cpp",
+      "mode": "100644",
+      "sha": "0ac2dc94d8d7e82725fb9c4764405c4805cf2b6c"
+    },
+    {
+      "path": "app/src/ui/components/color_picker.hpp",
+      "mode": "100644",
+      "sha": "c686ef7a51185304348b7f01e80ff54823dedcd7"
+    },
+    {
+      "path": "app/src/ui/components/component.cpp",
+      "mode": "100644",
+      "sha": "8d498c46296e1b97349bd5dacbba3652c6cf88a9"
+    },
+    {
+      "path": "app/src/ui/components/component.hpp",
+      "mode": "100644",
+      "sha": "2bae0dd5d0c57397017863d78b2db44e0d019c65"
+    },
+    {
+      "path": "app/src/ui/components/counter.cpp",
+      "mode": "100644",
+      "sha": "31ddb0d1317b1379652a6f9fbad80c0f5b54f476"
+    },
+    {
+      "path": "app/src/ui/components/counter.hpp",
+      "mode": "100644",
+      "sha": "2130e3fe85a0d483095384f96252b082cf75d129"
+    },
+    {
+      "path": "app/src/ui/components/data_common.cpp",
+      "mode": "100644",
+      "sha": "fa631cdc0c7a46986a34e6aa7cc03d0d5ee64d12"
+    },
+    {
+      "path": "app/src/ui/components/data_common.hpp",
+      "mode": "100644",
+      "sha": "4747926e37541a0dd81153493f9ca44525e1d8c1"
+    },
+    {
+      "path": "app/src/ui/components/detail_list.cpp",
+      "mode": "100644",
+      "sha": "27042b917d76c0ef07e0c9e86d16f9522cfe4d94"
+    },
+    {
+      "path": "app/src/ui/components/detail_list.hpp",
+      "mode": "100644",
+      "sha": "ed7438d1ee389d77166f9f9e8df3492dd5b97a33"
+    },
+    {
+      "path": "app/src/ui/components/dialog.cpp",
+      "mode": "100644",
+      "sha": "a73233dff979d8361224f5922a36c7951fba8b80"
+    },
+    {
+      "path": "app/src/ui/components/dialog.hpp",
+      "mode": "100644",
+      "sha": "1272d12b58b1411a90511e650d1ac4798fa37d77"
+    },
+    {
+      "path": "app/src/ui/components/focus_frame.hpp",
+      "mode": "100644",
+      "sha": "b681448a021733a71a53a795f407f8ed2afbb503"
+    },
+    {
+      "path": "app/src/ui/components/focus_group.cpp",
+      "mode": "100644",
+      "sha": "36c444a4d4480f822aef5960bdfe85a0cfc0adab"
+    },
+    {
+      "path": "app/src/ui/components/focus_group.hpp",
+      "mode": "100644",
+      "sha": "d2e556462fb577282dbf0e0eafbd3c531b6a4afb"
+    },
+    {
+      "path": "app/src/ui/components/form.cpp",
+      "mode": "100644",
+      "sha": "2d33abb2e18dc999352c3586bbcb1d825159c61c"
+    },
+    {
+      "path": "app/src/ui/components/form.hpp",
+      "mode": "100644",
+      "sha": "0d94a1485d1d3ebed9946997ae3709ad0eec88fa"
+    },
+    {
+      "path": "app/src/ui/components/grid.cpp",
+      "mode": "100644",
+      "sha": "cc8b3f53d8a082f77bbfa575c066ab137252b889"
+    },
+    {
+      "path": "app/src/ui/components/grid.hpp",
+      "mode": "100644",
+      "sha": "124831d26441cb65893a88a780bc877a23e1c917"
+    },
+    {
+      "path": "app/src/ui/components/hold_button.cpp",
+      "mode": "100644",
+      "sha": "caabcabd90d80d0d77877da0f45dc358a6620f19"
+    },
+    {
+      "path": "app/src/ui/components/hold_button.hpp",
+      "mode": "100644",
+      "sha": "54b7f940a4abac46f9813d12ff16bcd33351936b"
+    },
+    {
+      "path": "app/src/ui/components/hud.cpp",
+      "mode": "100644",
+      "sha": "d9748f829e5eacb1fba5e7f5e123f5926e803cc0"
+    },
+    {
+      "path": "app/src/ui/components/hud.hpp",
+      "mode": "100644",
+      "sha": "2cf5e65113930ac01205746cfca8a37942c9b401"
+    },
+    {
+      "path": "app/src/ui/components/image_viewer.cpp",
+      "mode": "100644",
+      "sha": "b29f3a478b73e1c04f53a387a287a1162f0cae08"
+    },
+    {
+      "path": "app/src/ui/components/image_viewer.hpp",
+      "mode": "100644",
+      "sha": "886053d87ee7f430aa5e833beee7a1cf185affa7"
+    },
+    {
+      "path": "app/src/ui/components/input_prompt.cpp",
+      "mode": "100644",
+      "sha": "b3e52fec9cbc3845651d36c1f919eeb1e8b1baa8"
+    },
+    {
+      "path": "app/src/ui/components/input_prompt.hpp",
+      "mode": "100644",
+      "sha": "fda0494e281181330cc63f4d8fed37f4866d54dc"
+    },
+    {
+      "path": "app/src/ui/components/inventory_grid.cpp",
+      "mode": "100644",
+      "sha": "e2f37bea15b7058540822453e1d4793f0ec7d621"
+    },
+    {
+      "path": "app/src/ui/components/inventory_grid.hpp",
+      "mode": "100644",
+      "sha": "57944bc224b235d24655a332c37cd61e6e1daa86"
+    },
+    {
+      "path": "app/src/ui/components/jump_bar.cpp",
+      "mode": "100644",
+      "sha": "003fa6728d482c4c97aba01edac735ecc8b3d1df"
+    },
+    {
+      "path": "app/src/ui/components/jump_bar.hpp",
+      "mode": "100644",
+      "sha": "7aa91b2a54c10a8daefd54ee893c260c9412e5a1"
+    },
+    {
+      "path": "app/src/ui/components/key_binder.cpp",
+      "mode": "100644",
+      "sha": "338f73db2379484569a77775fefcd2846e474c92"
+    },
+    {
+      "path": "app/src/ui/components/key_binder.hpp",
+      "mode": "100644",
+      "sha": "d194650baca59d47d78db49cf8821dabf31d5e36"
+    },
+    {
+      "path": "app/src/ui/components/keyboard.cpp",
+      "mode": "100644",
+      "sha": "35717c10239ccc46b7f094b9ec0ca124b68965c5"
+    },
+    {
+      "path": "app/src/ui/components/keyboard.hpp",
+      "mode": "100644",
+      "sha": "8a2b41c5ba826824a0349c566b2575b1b85299b6"
+    },
+    {
+      "path": "app/src/ui/components/layout.cpp",
+      "mode": "100644",
+      "sha": "5fff8ed917e138221b0e878fad6703a83abf4718"
+    },
+    {
+      "path": "app/src/ui/components/layout.hpp",
+      "mode": "100644",
+      "sha": "1607e17029ecc6516be74ca65a64ac25b8fcc18a"
+    },
+    {
+      "path": "app/src/ui/components/list.cpp",
+      "mode": "100644",
+      "sha": "0eb0105b5a364aa433232a31907face4d9dbaaf1"
+    },
+    {
+      "path": "app/src/ui/components/list.hpp",
+      "mode": "100644",
+      "sha": "755a501aba8d184e09011710ed45810000ba0e2d"
+    },
+    {
+      "path": "app/src/ui/components/loading_screen.cpp",
+      "mode": "100644",
+      "sha": "4e29942e55ed1cc54b7e190f697d16b68fb151ee"
+    },
+    {
+      "path": "app/src/ui/components/loading_screen.hpp",
+      "mode": "100644",
+      "sha": "a8449aa5150e8e7ad720d008a7f01f7937300679"
+    },
+    {
+      "path": "app/src/ui/components/media_controls.cpp",
+      "mode": "100644",
+      "sha": "7528bbaa1eb3e14f85eba7a6b46a2b48eaa76af0"
+    },
+    {
+      "path": "app/src/ui/components/media_controls.hpp",
+      "mode": "100644",
+      "sha": "bf213b54e3806d372a7c1a9c367b49ecdb1411fe"
+    },
+    {
+      "path": "app/src/ui/components/menu.cpp",
+      "mode": "100644",
+      "sha": "a19956e539ef56854e7a11f3dc4b49e64e793bf7"
+    },
+    {
+      "path": "app/src/ui/components/menu.hpp",
+      "mode": "100644",
+      "sha": "24386ab9033546cd41cb77d6ca9ac615733dacf2"
+    },
+    {
+      "path": "app/src/ui/components/node_map.cpp",
+      "mode": "100644",
+      "sha": "de5811732f7f2ebaae64ab1507db3e3d66541311"
+    },
+    {
+      "path": "app/src/ui/components/node_map.hpp",
+      "mode": "100644",
+      "sha": "fffda4b0e99da0aca41c0aaf1b90eb18c78c0116"
+    },
+    {
+      "path": "app/src/ui/components/notification.cpp",
+      "mode": "100644",
+      "sha": "82c249e7054daeae0221060d9fdc48ebfea653f6"
+    },
+    {
+      "path": "app/src/ui/components/notification.hpp",
+      "mode": "100644",
+      "sha": "d39b74bc5094fe20841ccbd214b943206d3badd3"
+    },
+    {
+      "path": "app/src/ui/components/notification_bell.cpp",
+      "mode": "100644",
+      "sha": "d11194c020c9ae1cb78290dc3d662d5719038bef"
+    },
+    {
+      "path": "app/src/ui/components/notification_bell.hpp",
+      "mode": "100644",
+      "sha": "bbaa0bdc211d383f996564385bdb50e2860c36c2"
+    },
+    {
+      "path": "app/src/ui/components/notification_center.cpp",
+      "mode": "100644",
+      "sha": "1b81c1fe1b567195618db0033d4a0c4e6a7d575a"
+    },
+    {
+      "path": "app/src/ui/components/notification_center.hpp",
+      "mode": "100644",
+      "sha": "ee9da4468a3004d6fda36b9459fff20ce8e9bc6f"
+    },
+    {
+      "path": "app/src/ui/components/overlay.cpp",
+      "mode": "100644",
+      "sha": "fd1d6304dfce73fdb38b70c6899a11f761defde2"
+    },
+    {
+      "path": "app/src/ui/components/overlay.hpp",
+      "mode": "100644",
+      "sha": "61184c353f2537fb7b21a7b03b48d746a9d6c188"
+    },
+    {
+      "path": "app/src/ui/components/page_dots.cpp",
+      "mode": "100644",
+      "sha": "333ec9c98aff366b348b2dca5afd1c73e45ee62e"
+    },
+    {
+      "path": "app/src/ui/components/page_dots.hpp",
+      "mode": "100644",
+      "sha": "84196487626ad84040db879fc75bc092394cabc6"
+    },
+    {
+      "path": "app/src/ui/components/pause_menu.cpp",
+      "mode": "100644",
+      "sha": "b02ab8ca70947f830bac210daca507a9998b5ace"
+    },
+    {
+      "path": "app/src/ui/components/pause_menu.hpp",
+      "mode": "100644",
+      "sha": "d06dea518df15a6b52bafd57cf00afe4e6db6254"
+    },
+    {
+      "path": "app/src/ui/components/pin_entry.cpp",
+      "mode": "100644",
+      "sha": "62856603708515a4e0d5537abb0e15d1321fc8bd"
+    },
+    {
+      "path": "app/src/ui/components/pin_entry.hpp",
+      "mode": "100644",
+      "sha": "dd8b893b3bfef52199fb44c54b85a9e91a32fbdf"
+    },
+    {
+      "path": "app/src/ui/components/profile_picker.cpp",
+      "mode": "100644",
+      "sha": "2db16f3b7d58ba7384f6f7098c0ea30c1e6486ac"
+    },
+    {
+      "path": "app/src/ui/components/profile_picker.hpp",
+      "mode": "100644",
+      "sha": "fc40592bcf83001ca49190be10226b3bad9a6daa"
+    },
+    {
+      "path": "app/src/ui/components/progress.cpp",
+      "mode": "100644",
+      "sha": "1d093bb49e4b8ed70d0f7dcbd0cc24411853cd3e"
+    },
+    {
+      "path": "app/src/ui/components/progress.hpp",
+      "mode": "100644",
+      "sha": "1719fa1095ef3b9b81971c1e95328bad5d765142"
+    },
+    {
+      "path": "app/src/ui/components/quick_action.cpp",
+      "mode": "100644",
+      "sha": "70bdb948c0771a3739fc7a2397645c758c1eda44"
+    },
+    {
+      "path": "app/src/ui/components/quick_action.hpp",
+      "mode": "100644",
+      "sha": "0a90b459956aa5441888a6f3ab8cd40b676a88dd"
+    },
+    {
+      "path": "app/src/ui/components/radial.cpp",
+      "mode": "100644",
+      "sha": "902413b8bd14079a4b551c6247db2eca9bd9e450"
+    },
+    {
+      "path": "app/src/ui/components/radial.hpp",
+      "mode": "100644",
+      "sha": "2674ee2e57a3fadc495cfd7a40c2747a24ef162d"
+    },
+    {
+      "path": "app/src/ui/components/range_slider.cpp",
+      "mode": "100644",
+      "sha": "09c5d43bb166eeb6df84c7cf033f5b85940978c0"
+    },
+    {
+      "path": "app/src/ui/components/range_slider.hpp",
+      "mode": "100644",
+      "sha": "8d9db31692b0103335736e9b01f5ad116d647bf1"
+    },
+    {
+      "path": "app/src/ui/components/rating.cpp",
+      "mode": "100644",
+      "sha": "e4838cbdf4860ff52c95619a0f82a93256521b78"
+    },
+    {
+      "path": "app/src/ui/components/rating.hpp",
+      "mode": "100644",
+      "sha": "f184c545766671fcf55b11c7b798561df27e077d"
+    },
+    {
+      "path": "app/src/ui/components/scroll_area.cpp",
+      "mode": "100644",
+      "sha": "98b2dbe181fd48f8eb5c2f65065fd52afc221d1c"
+    },
+    {
+      "path": "app/src/ui/components/scroll_area.hpp",
+      "mode": "100644",
+      "sha": "7a84487ca8aaf06840dd1598cb3cfc12e821026a"
+    },
+    {
+      "path": "app/src/ui/components/search_field.cpp",
+      "mode": "100644",
+      "sha": "e432f254a2a471375e655d48fc0b5c0390c9f39e"
+    },
+    {
+      "path": "app/src/ui/components/search_field.hpp",
+      "mode": "100644",
+      "sha": "7a47cf3a26c55f0c7faef7df2e84856441ce21fc"
+    },
+    {
+      "path": "app/src/ui/components/select.cpp",
+      "mode": "100644",
+      "sha": "72cbf458be6ab4705b6111b44df5a27f31481617"
+    },
+    {
+      "path": "app/src/ui/components/select.hpp",
+      "mode": "100644",
+      "sha": "25a2d1e8c640cff18f75e46c913b615385821350"
+    },
+    {
+      "path": "app/src/ui/components/sheet.cpp",
+      "mode": "100644",
+      "sha": "d04b738b89c7ba62675fab55686da7bd9325546f"
+    },
+    {
+      "path": "app/src/ui/components/sheet.hpp",
+      "mode": "100644",
+      "sha": "ef03a0973f0ef5e0da61ace3d47046e50cd8b8af"
+    },
+    {
+      "path": "app/src/ui/components/sidenav.cpp",
+      "mode": "100644",
+      "sha": "e345275d82c1e5e9aad69fec95c1e1c342bcad14"
+    },
+    {
+      "path": "app/src/ui/components/sidenav.hpp",
+      "mode": "100644",
+      "sha": "5c167f40c22eb7ffbcde2c78f047f1f9f1c5bcb1"
+    },
+    {
+      "path": "app/src/ui/components/skeleton.cpp",
+      "mode": "100644",
+      "sha": "45e2ff2d534f32d5b66d4820dd9f6bbeef48ab71"
+    },
+    {
+      "path": "app/src/ui/components/skeleton.hpp",
+      "mode": "100644",
+      "sha": "2b13b937c717cc8239645a9e61a96302b5e2da46"
+    },
+    {
+      "path": "app/src/ui/components/split_view.cpp",
+      "mode": "100644",
+      "sha": "afd1f8e6e68c7b6e4e5455dd4568ca72931a3ea9"
+    },
+    {
+      "path": "app/src/ui/components/split_view.hpp",
+      "mode": "100644",
+      "sha": "36527c85eb8bd02c1ecc3cb739765a237c8de4ac"
+    },
+    {
+      "path": "app/src/ui/components/stat.cpp",
+      "mode": "100644",
+      "sha": "1859a1cd05553b1119ec876463e137daab2d5c0b"
+    },
+    {
+      "path": "app/src/ui/components/stat.hpp",
+      "mode": "100644",
+      "sha": "84fb41906b0b269cb1340d2ceb397d7dfe009268"
+    },
+    {
+      "path": "app/src/ui/components/status.cpp",
+      "mode": "100644",
+      "sha": "367e8b1db440cbc8babf3a62d4420a65d683d5b2"
+    },
+    {
+      "path": "app/src/ui/components/status.hpp",
+      "mode": "100644",
+      "sha": "7667ad692dae7d521576601c9d06bab5e08cc2d4"
+    },
+    {
+      "path": "app/src/ui/components/stepper.cpp",
+      "mode": "100644",
+      "sha": "210450ae789cf7924b1f9642a14bd1d7ab75a111"
+    },
+    {
+      "path": "app/src/ui/components/stepper.hpp",
+      "mode": "100644",
+      "sha": "cee9b2c57e084a1bff9b86ac1dbacece19b09a5d"
+    },
+    {
+      "path": "app/src/ui/components/surface.cpp",
+      "mode": "100644",
+      "sha": "e1b88c6dce041f9e1fddee44f0167ac8ab29460c"
+    },
+    {
+      "path": "app/src/ui/components/surface.hpp",
+      "mode": "100644",
+      "sha": "11cac97c72d95bafd2c1e3789adc8488e38d3bcd"
+    },
+    {
+      "path": "app/src/ui/components/table.cpp",
+      "mode": "100644",
+      "sha": "f3e677da99b9876da4dd3e46a9101983cfb9cf7c"
+    },
+    {
+      "path": "app/src/ui/components/table.hpp",
+      "mode": "100644",
+      "sha": "38c6cacac960bb7336b07f37794269ca1df1fb47"
+    },
+    {
+      "path": "app/src/ui/components/tabs.cpp",
+      "mode": "100644",
+      "sha": "773e88ea1abe3531a91343367e854464e4f5b7e1"
+    },
+    {
+      "path": "app/src/ui/components/tabs.hpp",
+      "mode": "100644",
+      "sha": "ebaa8ec496342c3dfec6ecd5e6c16d4000fd55a6"
+    },
+    {
+      "path": "app/src/ui/components/tag_select.cpp",
+      "mode": "100644",
+      "sha": "95a9dc7c9ea04592c79d70a5a8a4ba91ffd5f2b7"
+    },
+    {
+      "path": "app/src/ui/components/tag_select.hpp",
+      "mode": "100644",
+      "sha": "3577cca69993eacba08773c4fbf30dc1038af2cf"
+    },
+    {
+      "path": "app/src/ui/components/text_field.cpp",
+      "mode": "100644",
+      "sha": "51d009b36c9f76c7bcb5e3651f93d711e65db13a"
+    },
+    {
+      "path": "app/src/ui/components/text_field.hpp",
+      "mode": "100644",
+      "sha": "5693d2f397c70e69ab77b6ec54a38ac9b481beba"
+    },
+    {
+      "path": "app/src/ui/components/text_view.cpp",
+      "mode": "100644",
+      "sha": "8045a307636c44dda2a115d23d308f038f16b22c"
+    },
+    {
+      "path": "app/src/ui/components/text_view.hpp",
+      "mode": "100644",
+      "sha": "e026fd5c8300fbcfc72082abdc96d0e694635a36"
+    },
+    {
+      "path": "app/src/ui/components/timeline.cpp",
+      "mode": "100644",
+      "sha": "e7182f769d74e6f036b785e3a3917ed3b31a2f87"
+    },
+    {
+      "path": "app/src/ui/components/timeline.hpp",
+      "mode": "100644",
+      "sha": "43cf6775b05184360dc3ef4aaabe121034f62cb8"
+    },
+    {
+      "path": "app/src/ui/components/toast.cpp",
+      "mode": "100644",
+      "sha": "d708cd091482e0589851f52d9681b566edb88565"
+    },
+    {
+      "path": "app/src/ui/components/toast.hpp",
+      "mode": "100644",
+      "sha": "8bf53ce4206c74c11beccd0e22b5eaf4b264fd89"
+    },
+    {
+      "path": "app/src/ui/components/tooltip.cpp",
+      "mode": "100644",
+      "sha": "174a14cb939d80633d182482c029b618faf19326"
+    },
+    {
+      "path": "app/src/ui/components/tooltip.hpp",
+      "mode": "100644",
+      "sha": "22ba9f85db969d6e461ab03547456f4e49dce67f"
+    },
+    {
+      "path": "app/src/ui/components/transition.cpp",
+      "mode": "100644",
+      "sha": "848018cbad6811015643d7de2540d8f6fd885f64"
+    },
+    {
+      "path": "app/src/ui/components/transition.hpp",
+      "mode": "100644",
+      "sha": "20f1a21494c5650f6db797ebe688eeec0d42fe7c"
+    },
+    {
+      "path": "app/src/ui/components/tree.cpp",
+      "mode": "100644",
+      "sha": "f83c81032922bf643a08c5953d603e2b1988ebac"
+    },
+    {
+      "path": "app/src/ui/components/tree.hpp",
+      "mode": "100644",
+      "sha": "b6d943dfaf826dd7ef4483a17f4e9670b7789137"
+    },
+    {
+      "path": "app/src/ui/components/unlock_popup.cpp",
+      "mode": "100644",
+      "sha": "2ee2ed63b4f37e81838faa1965436a3fc99ad274"
+    },
+    {
+      "path": "app/src/ui/components/unlock_popup.hpp",
+      "mode": "100644",
+      "sha": "02506f88d476bc1a5ccfae77e46100100c86a9f0"
+    },
+    {
+      "path": "app/src/ui/components/wheel_picker.cpp",
+      "mode": "100644",
+      "sha": "cbeb7e1dbdc61a4f9be3b966fb8b8c4759fa7fdc"
+    },
+    {
+      "path": "app/src/ui/components/wheel_picker.hpp",
+      "mode": "100644",
+      "sha": "3c5a14123b451b98bed0233c848609743504f585"
+    },
+    {
+      "path": "app/src/ui/components/wizard.cpp",
+      "mode": "100644",
+      "sha": "1efa1ec99380ef94ac30f6605031a018056f7504"
+    },
+    {
+      "path": "app/src/ui/components/wizard.hpp",
+      "mode": "100644",
+      "sha": "887a83a63e9d1781cab4431220190dd6ec836363"
+    },
+    {
+      "path": "app/src/ui/confetti.cpp",
+      "mode": "100644",
+      "sha": "078b244d389e8e040bae02717b827830990bd165"
+    },
+    {
+      "path": "app/src/ui/confetti.hpp",
+      "mode": "100644",
+      "sha": "6cdcf27d7a15789e2472b03290def29b957dde4a"
+    },
+    {
+      "path": "app/src/ui/feedback.hpp",
+      "mode": "100644",
+      "sha": "41d70d48a5dfb076d6324869550e3dfc8ccd5078"
+    },
+    {
+      "path": "app/src/ui/fonts.hpp",
+      "mode": "100644",
+      "sha": "8b6b0289a805fbb10d8fb941c5d5265ec9daf95e"
+    },
+    {
+      "path": "app/src/ui/glyphs.cpp",
+      "mode": "100644",
+      "sha": "768a373c3db5d038eaa432b1ea5c8905b7c81896"
+    },
+    {
+      "path": "app/src/ui/glyphs.hpp",
+      "mode": "100644",
+      "sha": "8ff9fcb164a7d1f270ca036046452b508640f44b"
+    },
+    {
+      "path": "app/src/ui/motion.hpp",
+      "mode": "100644",
+      "sha": "644e6cff34c52e0acee7bc3fe5ab317566584b3f"
+    },
+    {
+      "path": "app/src/ui/pixel_font.cpp",
+      "mode": "100644",
+      "sha": "87bbc3de0be84bce621696f462559f6fce38a0ce"
+    },
+    {
+      "path": "app/src/ui/pixel_font.hpp",
+      "mode": "100644",
+      "sha": "c86fa0b303eae130249663a044340f7588adac08"
+    },
+    {
+      "path": "app/src/ui/theme.cpp",
+      "mode": "100644",
+      "sha": "7e73485298934ee7b3d861c35dda6eaadd6cb9b1"
+    },
+    {
+      "path": "app/src/ui/theme.hpp",
+      "mode": "100644",
+      "sha": "86dd8d0cdd1d470ae1e0371d145a1372ba586c26"
+    },
+    {
+      "path": "app/src/ui/widgets.cpp",
+      "mode": "100644",
+      "sha": "237bc8bd140a21a7b904b6e196b7f088adec4cbd"
+    },
+    {
+      "path": "app/src/ui/widgets.hpp",
+      "mode": "100644",
+      "sha": "4ed9bb3c7717635a548b77169c633ab4f32aa3bf"
+    },
+    {
+      "path": "app/tests/unit/debrid_test.cpp",
+      "mode": "100644",
+      "sha": "da61b1b6e6e1958f7e1ccd40b3cacc31a6f23b3b"
+    },
+    {
+      "path": "app/tests/unit/discover_test.cpp",
+      "mode": "100644",
+      "sha": "e504e5c045c73a6b25289b6e2ff8063e95f1ae01"
+    },
+    {
+      "path": "app/tests/unit/i18n_test.cpp",
+      "mode": "100644",
+      "sha": "22ef334f58ff292bf056c3d303b4e9746820f576"
+    },
+    {
+      "path": "app/tests/unit/image_app_test.cpp",
+      "mode": "100644",
+      "sha": "0c12d88965d54d16b9f996f567c17911099155f3"
+    },
+    {
+      "path": "app/tests/unit/json_http_test.cpp",
+      "mode": "100644",
+      "sha": "da1f2dd1ed431bd6daee563672d657a839419736"
+    },
+    {
+      "path": "app/tests/unit/look_test.cpp",
+      "mode": "100644",
+      "sha": "71b56f65d3a59d20e0714c6a00277c4799411e76"
+    },
+    {
+      "path": "app/tests/unit/model_test.cpp",
+      "mode": "100644",
+      "sha": "707b4f4ae11a36041531fdf0dccb1d721fa5e8b7"
+    },
+    {
+      "path": "app/tests/unit/native_provider_test.cpp",
+      "mode": "100644",
+      "sha": "a6e99f7ea845181a5ba929ebbc633a0358be1753"
+    },
+    {
+      "path": "app/tests/unit/pano_test.cpp",
+      "mode": "100644",
+      "sha": "59af3ab64eb849c274855440dc7cde2f26220014"
+    },
+    {
+      "path": "app/tests/unit/provider_browser_test.cpp",
+      "mode": "100644",
+      "sha": "17e643a2f506c3244b071c1f20040ca2b9dc124c"
+    },
+    {
+      "path": "app/tests/unit/provider_dialog_platform_test.cpp",
+      "mode": "100644",
+      "sha": "959312903588d803380c2ae450f751e92924002c"
+    },
+    {
+      "path": "app/tests/unit/sources.txt",
+      "mode": "100644",
+      "sha": "3bc2787042333347f70ea3cea7d1f597fc8ddbe8"
+    },
+    {
+      "path": "app/tests/unit/starter_test.cpp",
+      "mode": "100644",
+      "sha": "5823674f473a0d7eb0e6cb42cd11dc098bac73d1"
+    },
+    {
+      "path": "app/tests/unit/store_art_test.cpp",
+      "mode": "100644",
+      "sha": "9183ddfd34471c90b2c0425d6bfa9989f35326c4"
+    },
+    {
+      "path": "app/tests/unit/support.hpp",
+      "mode": "100644",
+      "sha": "a1bee5b844cebd821c78c91d0317693d522327c7"
+    },
+    {
+      "path": "app/tests/unit/zero_test.cpp",
+      "mode": "100644",
+      "sha": "30e99e6c636c6fc20215f4f90603dfe5fa87e070"
+    },
+    {
+      "path": "app/third_party/fonts/Inter-LICENSE.txt",
+      "mode": "100644",
+      "sha": "9b2ca37b3ffc77391d8b2ebef4a974ef32bf46ea"
+    },
+    {
+      "path": "app/third_party/fonts/Inter-Medium.ttf",
+      "mode": "100644",
+      "sha": "458cd0601d28013d3817481aa2839c9bbb5ded70"
+    },
+    {
+      "path": "app/third_party/fonts/Inter-Regular.ttf",
+      "mode": "100644",
+      "sha": "b7aaca8de1fe458399e17311d35d543a1fa2f984"
+    },
+    {
+      "path": "app/third_party/fonts/Inter-SemiBold.ttf",
+      "mode": "100644",
+      "sha": "47f8ab1d68144fc004b310d65d95180d502b449b"
+    },
+    {
+      "path": "app/third_party/fonts/InterDisplay-Light.ttf",
+      "mode": "100644",
+      "sha": "8533d04a2bfe29dc4f001d8c7cfce2450b918ac4"
+    },
+    {
+      "path": "app/third_party/fonts/InterTight-ExtraLight.ttf",
+      "mode": "100644",
+      "sha": "5a9a7ea834f915705551a6601fab3510612539e5"
+    },
+    {
+      "path": "app/third_party/fonts/InterTight-LICENSE.txt",
+      "mode": "100644",
+      "sha": "18d0da5dfcf4b1703293ed87f8e3efcf34aa643f"
+    },
+    {
+      "path": "app/third_party/fonts/InterTight-Light.ttf",
+      "mode": "100644",
+      "sha": "4a4f38bfd211c2eb36f57e05dce10aefdc8f1ccb"
+    },
+    {
+      "path": "app/third_party/fonts/InterTight-Medium.ttf",
+      "mode": "100644",
+      "sha": "0e8e97a9118a2e9534b3aa252c0d101c8e579e4d"
+    },
+    {
+      "path": "app/third_party/fonts/InterTight-SemiBold.ttf",
+      "mode": "100644",
+      "sha": "f4eda6dcbd1cdf56f337a5d22a1fa4b874bfbcdf"
+    },
+    {
+      "path": "app/third_party/fonts/Sora-LICENSE.txt",
+      "mode": "100644",
+      "sha": "f1d9d6af7ba46af6c2da765fa123d93239c913f5"
+    },
+    {
+      "path": "app/third_party/fonts/Sora-Regular.ttf",
+      "mode": "100644",
+      "sha": "3a7475b3fd5dc8815fdcbd09b10586b501d598d1"
+    },
+    {
+      "path": "app/third_party/fonts/Sora-SemiBold.ttf",
+      "mode": "100644",
+      "sha": "b358fcb280f436311bc5a50b933d1b060000f4c9"
+    },
+    {
+      "path": "app/third_party/fonts/UPSTREAM",
+      "mode": "100644",
+      "sha": "ff108b03712b7ad17e78518cb505f2c1a7ba8534"
+    },
+    {
+      "path": "app/third_party/stb/UPSTREAM",
+      "mode": "100644",
+      "sha": "2d4537faf484cab8a0b4079a179991e0a323582b"
+    },
+    {
+      "path": "app/third_party/stb/stb_image_write.h",
+      "mode": "100644",
+      "sha": "e4b32ed1bc32ef9c962acbf47a9d10af01939e08"
+    },
+    {
+      "path": "app/third_party/stb/stb_truetype.h",
+      "mode": "100644",
+      "sha": "90a5c2e2b3fe563c98585294ca7a949876aec94c"
+    },
+    {
+      "path": "app/tooling/README.md",
+      "mode": "100644",
+      "sha": "d7441df88617d33fb2b4b0703ae79da12318a497"
+    },
+    {
+      "path": "app/tooling/native/app-symbols.map",
+      "mode": "100644",
+      "sha": "689327f4e6384e8af19d99a984143c5f1602b94c"
+    },
+    {
+      "path": "app/tooling/native/app_cpp_runtime.cpp",
+      "mode": "100644",
+      "sha": "f7f80a4e69f2dd992de4dac53ed33d6ed1fd48f4"
+    },
+    {
+      "path": "app/tooling/native/app_crt.cpp",
+      "mode": "100644",
+      "sha": "b53c9deaf25109d0af585c11aa98d8be6aecd620"
+    },
+    {
+      "path": "app/tooling/native/elf_object.cpp",
+      "mode": "100644",
+      "sha": "964a0ce5b0e00a0fc724e9d33bc7f7f04d0e0981"
+    },
+    {
+      "path": "app/tooling/native/elf_object.hpp",
+      "mode": "100644",
+      "sha": "91928f7dbb7cebc6b05cf9e7778d298503ee2de7"
+    },
+    {
+      "path": "app/tooling/native/hash.hpp",
+      "mode": "100644",
+      "sha": "df287efde1fc73a3fd491b9f3a35aeff478dcddc"
+    },
+    {
+      "path": "app/tooling/native/libc_builder.cpp",
+      "mode": "100644",
+      "sha": "f67de88495155a15b8a235d0290c52c07052299f"
+    },
+    {
+      "path": "app/tooling/native/native_app_builder.cpp",
+      "mode": "100644",
+      "sha": "8c3b055768c7fe7ae3bcf93eb2ce2140fd07c682"
+    },
+    {
+      "path": "app/tooling/native/ps5-pie.ld",
+      "mode": "100644",
+      "sha": "bdd3adc1497165dbcd2b9fdc78e14c2f1209d323"
+    },
+    {
+      "path": "app/tooling/native/runtime/api-surface.txt",
+      "mode": "100644",
+      "sha": "c8b285ad1e2daf070bc7d26e8b69cd074faedd67"
+    },
+    {
+      "path": "app/tooling/native/runtime/imports.txt",
+      "mode": "100644",
+      "sha": "3d02f56fc5c778c00347cdd15af6bf7908251a5a"
+    },
+    {
+      "path": "app/tooling/native/sce_module_writer.cpp",
+      "mode": "100644",
+      "sha": "0f47fb70b7e1c47712cb49b54832a09c4efc838d"
+    },
+    {
+      "path": "app/tooling/native/sce_module_writer.hpp",
+      "mode": "100644",
+      "sha": "7a7c4e53018b8b4d78bc5a2f1ee3bfc7ddaf90ea"
+    },
+    {
+      "path": "app/tooling/native/self_container.cpp",
+      "mode": "100644",
+      "sha": "2635323e7253e070436bcdc6ddb2efb402f5a364"
+    },
+    {
+      "path": "app/tooling/native/self_container.hpp",
+      "mode": "100644",
+      "sha": "a695d9415e9f44a8cddcf99f2bf586f2b877253d"
+    },
+    {
+      "path": "app/tooling/native/stubs/libSceCommonDialog.S",
+      "mode": "100644",
+      "sha": "a2ae45c2251f02457dcade33d89cdcacee89123f"
+    },
+    {
+      "path": "app/tooling/native/stubs/libSceWebBrowserDialog.S",
+      "mode": "100644",
+      "sha": "79cc4b5a613466e46c4554ecee9325e1a28f2f24"
+    },
+    {
+      "path": "app/tooling/prospero-clang18",
+      "mode": "100644",
+      "sha": "8b24e54ff4395cc73492e757d72ba95827d42bb5"
+    },
+    {
+      "path": "app/tools/bake-fonts.sh",
+      "mode": "100755",
+      "sha": "4f7aecf1529a396cbd41a51a6e21991c626af228"
+    },
+    {
+      "path": "app/tools/build-host-tools.sh",
+      "mode": "100755",
+      "sha": "1f66da430516f6c33a75b39e436742e6f4751025"
+    },
+    {
+      "path": "app/tools/build-tests.sh",
+      "mode": "100755",
+      "sha": "9138c5c0014dc8e02c94e9322bfd68f6f12b91c4"
+    },
+    {
+      "path": "app/tools/build.sh",
+      "mode": "100755",
+      "sha": "b9dd83cca987dff9c622bc5eb033aa9ba294c860"
+    },
+    {
+      "path": "app/tools/fetch-opengl-sdk.sh",
+      "mode": "100755",
+      "sha": "4f9884571c539d83634744106a8c27ef526049ee"
+    },
+    {
+      "path": "app/tools/font-baker/bake_font.cpp",
+      "mode": "100644",
+      "sha": "cf72e47ab483636a6e179aeb01f7869fb0dcad90"
+    },
+    {
+      "path": "app/tools/icons/flatten.html",
+      "mode": "100644",
+      "sha": "0bb468cbef23dd27c5061d4d6edd5679d792fc15"
+    },
+    {
+      "path": "app/tools/icons/generate.sh",
+      "mode": "100755",
+      "sha": "72a63fc6e0e84e8302fd1fe44c30e5732dce8c37"
+    },
+    {
+      "path": "app/tools/icons/icons.json",
+      "mode": "100644",
+      "sha": "a2981780a8b26c393ea58155915661b3d2fe3cb8"
+    },
+    {
+      "path": "app/tools/icons/icons.py",
+      "mode": "100755",
+      "sha": "c0a248e222963cbb02c4ca81678e2f99d1969d17"
+    },
+    {
+      "path": "app/tools/ninja-build.sh",
+      "mode": "100755",
+      "sha": "7a1bc286c1efa78798226ba1e32ac5bf4d9fedcc"
+    },
+    {
+      "path": "app/tools/prepare-opengl.sh",
+      "mode": "100755",
+      "sha": "458338099aac2ffd121471f1bd4ad7fb1f1eb495"
+    },
+    {
+      "path": "app/tools/prepare-provider-dialog.sh",
+      "mode": "100644",
+      "sha": "e33f3797e619b12528b24c9c67e577d5ad536731"
+    },
+    {
+      "path": "app/tools/preview.sh",
+      "mode": "100755",
+      "sha": "cd549fe75d2b2f5ac08e644df36033de2412a2c9"
+    },
+    {
+      "path": "app/tools/rebuild-libc.sh",
+      "mode": "100755",
+      "sha": "c6bb2878446bc8c4d237fbb790797bb112015191"
+    },
+    {
+      "path": "app/tools/run_clang_format.sh",
+      "mode": "100755",
+      "sha": "0ba19bcc5e3d5d8b1c7b828fe076c2b9438eee0f"
+    },
+    {
+      "path": "app/tools/setup-native-dependencies.sh",
+      "mode": "100755",
+      "sha": "47ec9f3328c25486bb789f67a4b4acb0038e6fcd"
+    },
+    {
+      "path": "app/tools/setup-pacbrew-dependencies.sh",
+      "mode": "100755",
+      "sha": "fef8a67957d8f5dc1c25106e77d1f1b512ab4469"
+    },
+    {
+      "path": "app/tools/setup-packaging-dependencies.sh",
+      "mode": "100755",
+      "sha": "e2720a741fba491cde9cf7c5972ec4769e014b66"
+    },
+    {
+      "path": "app/tools/setup-test-dependencies.sh",
+      "mode": "100755",
+      "sha": "c57e23f4b953dda662a97df8a1e406fcf8049b83"
+    },
+    {
+      "path": "app/tools/stage-payload.sh",
+      "mode": "100755",
+      "sha": "590f3c184ecb72a8a240fb4eb71aba70eb1e0db3"
+    },
+    {
+      "path": "app/tools/validate-assets.sh",
+      "mode": "100755",
+      "sha": "07d143ec617083dda51510c888a0de2c0b595ffd"
+    },
+    {
+      "path": "app/tools/verify-package.sh",
+      "mode": "100644",
+      "sha": "3acfc527f871b2c0463d767ad54ba948d1f1457c"
+    },
+    {
+      "path": "backend/api.c",
+      "mode": "100644",
+      "sha": "a4d8aaaaaf81a5f857706fe88a23ca23dd655c6a"
+    },
+    {
+      "path": "backend/archive_account.c",
+      "mode": "100644",
+      "sha": "1cccdfbe4ed1f887143659f570bb0a37212d915c"
+    },
+    {
+      "path": "backend/archive_account.h",
+      "mode": "100644",
+      "sha": "a6591192e4a7170a41cbe24211d3ac65598ea8c4"
+    },
+    {
+      "path": "backend/art.c",
+      "mode": "100644",
+      "sha": "f256fbee055d05448ea82e9931f8f5ce3eda7eff"
+    },
+    {
+      "path": "backend/autoboot.c",
+      "mode": "100644",
+      "sha": "3f3d38c256d1bacaf66dbd361393b397d89a2eab"
+    },
+    {
+      "path": "backend/browser.c",
+      "mode": "100644",
+      "sha": "7784addbd143da7a8d62f2ecb004c4c5b07ab699"
+    },
+    {
+      "path": "backend/browser_match.c",
+      "mode": "100644",
+      "sha": "89f39ded27cbab470e6ac89799a9b492542d0411"
+    },
+    {
+      "path": "backend/browser_match.h",
+      "mode": "100644",
+      "sha": "35fab41d35677b32820da204ffe06fcf2e5d21b3"
+    },
+    {
+      "path": "backend/browser_platform.c",
+      "mode": "100644",
+      "sha": "d897846f6a5b7a46b5801b26698d376d75114f99"
+    },
+    {
+      "path": "backend/browser_platform.h",
+      "mode": "100644",
+      "sha": "a662cb5114d2546b9fc0b04bed52164124c5ede9"
+    },
+    {
+      "path": "backend/browser_scan.c",
+      "mode": "100644",
+      "sha": "30aa49bee74d2e236eec965b5990568f94e038fd"
+    },
+    {
+      "path": "backend/browser_scan.h",
+      "mode": "100644",
+      "sha": "ce5fe96db7a8b2f93de85de7ce49b9b0862bf790"
+    },
+    {
+      "path": "backend/browser_services.c",
+      "mode": "100644",
+      "sha": "9ee3e97f7afa295d70e3ced377ec28ac1d4a4cb2"
+    },
+    {
+      "path": "backend/catalog.c",
+      "mode": "100644",
+      "sha": "c1bd6472e3ab8089a157620a830db2e1ad229c68"
+    },
+    {
+      "path": "backend/catalog_crypto.c",
+      "mode": "100644",
+      "sha": "f77cfeb638c09f24551a0ca5bde47fc25d19b7ab"
+    },
+    {
+      "path": "backend/catalog_crypto.h",
+      "mode": "100644",
+      "sha": "a5fff0f8ef6f20aaf608a8512f8c50669f44908b"
+    },
+    {
+      "path": "backend/catalog_key.h",
+      "mode": "100644",
+      "sha": "88c78b221a87b58503ff020dfdd4eb56c8558d5f"
+    },
+    {
+      "path": "backend/debrid.c",
+      "mode": "100644",
+      "sha": "3c1ae55a5a876fcf3dc10be76dadf5b86696f7c2"
+    },
+    {
+      "path": "backend/debrid.h",
+      "mode": "100644",
+      "sha": "ecd4558af006aba0684904e9b7eea8eb40be4268"
+    },
+    {
+      "path": "backend/debrid_network.c",
+      "mode": "100644",
+      "sha": "768efe91b1b7143a66a3d580a57e2f7bb99eefe5"
+    },
+    {
+      "path": "backend/diagnostics.c",
+      "mode": "100644",
+      "sha": "c9659c58580e23c86e28025714983e0dd5fbcee7"
+    },
+    {
+      "path": "backend/extract.c",
+      "mode": "100644",
+      "sha": "a0bd8329929766d532d825f586d2c3473f9b81d1"
+    },
+    {
+      "path": "backend/extract.h",
+      "mode": "100644",
+      "sha": "c8efed199c092b6b1ecf25c6b4e4cda8f51c772d"
+    },
+    {
+      "path": "backend/favorites.c",
+      "mode": "100644",
+      "sha": "1a961daf82c4fed5437f78127eee58e443bbed92"
+    },
+    {
+      "path": "backend/library.c",
+      "mode": "100644",
+      "sha": "92430dea777a1b2da3b295c66f1316d12ceb8e24"
+    },
+    {
+      "path": "backend/main.c",
+      "mode": "100644",
+      "sha": "8f7a149bfdac48492621c45a5df327cd47530a5f"
+    },
+    {
+      "path": "backend/orbit.h",
+      "mode": "100644",
+      "sha": "e001c7a16129c31763dd664990bbbc12ec7e1584"
+    },
+    {
+      "path": "backend/process_identity.c",
+      "mode": "100644",
+      "sha": "15ecc8d7123f85f406ab1944a48fe700e413fe2a"
+    },
+    {
+      "path": "backend/process_identity.h",
+      "mode": "100644",
+      "sha": "ed284c38998890776f6f8c4bc3e8ee91bb35ae44"
+    },
+    {
+      "path": "backend/provider_network.c",
+      "mode": "100644",
+      "sha": "f55d39dd529cad9748e5b65283921c97842e4b85"
+    },
+    {
+      "path": "backend/provider_network.h",
+      "mode": "100644",
+      "sha": "b81f3b1d360c471b8f6d05f32cbd5e24ef475e07"
+    },
+    {
+      "path": "backend/providers.c",
+      "mode": "100644",
+      "sha": "724190438b92b7bc6bdeab3e8ccb01ebad44c05a"
+    },
+    {
+      "path": "backend/ps5_fs.c",
+      "mode": "100644",
+      "sha": "4e502a8e81cd8aae24d2d538d0e2a9eb1fcf8d2a"
+    },
+    {
+      "path": "backend/queue.c",
+      "mode": "100644",
+      "sha": "2b72baf330889e644a1a8d9cc5d730e9c7caba52"
+    },
+    {
+      "path": "backend/receive.c",
+      "mode": "100644",
+      "sha": "da871049875c4999fa7b2ce498a80b4d2d857add"
+    },
+    {
+      "path": "backend/receive.h",
+      "mode": "100644",
+      "sha": "2e228fda72517324d88bb17c4f0e70ccc8d5b95f"
+    },
+    {
+      "path": "backend/sevenzip.cpp",
+      "mode": "100644",
+      "sha": "6d67d8b0d73549748f204988c9dcc2ef3b1b2d96"
+    },
+    {
+      "path": "backend/sevenzip.h",
+      "mode": "100644",
+      "sha": "a5d0331411fa8c00945ff3db86daa34e3a9fd9e0"
+    },
+    {
+      "path": "backend/sources.c",
+      "mode": "100644",
+      "sha": "e002d24f71b1705f3a04ced8272a1759784f224e"
+    },
+    {
+      "path": "backend/state.c",
+      "mode": "100644",
+      "sha": "f155dac3cdd1f4033b6bece6ceee91a7f1ae488c"
+    },
+    {
+      "path": "backend/storage.c",
+      "mode": "100644",
+      "sha": "1b03106c962e14d889ff62fc73b89066b1335a1d"
+    },
+    {
+      "path": "backend/transfer.c",
+      "mode": "100644",
+      "sha": "7b82e70e591a3c6ea500e9f1c82882e394a0ffef"
+    },
+    {
+      "path": "backend/transfer_benchmark.h",
+      "mode": "100644",
+      "sha": "f5d9cb9f8ff7818f4d49c324095b3bb54b710bdc"
+    },
+    {
+      "path": "backend/transfer_writer.c",
+      "mode": "100644",
+      "sha": "f0de7ba27681706e9461d0752d02ce92351120e1"
+    },
+    {
+      "path": "backend/transfer_writer.h",
+      "mode": "100644",
+      "sha": "77c8098e555a0d42eb8a3e068ca8e274b5a4ba6e"
+    },
+    {
+      "path": "backend/tvapp.c",
+      "mode": "100644",
+      "sha": "334183b77e5ff18f3d790daac0d2b98ef74576d4"
+    },
+    {
+      "path": "backend/updates.c",
+      "mode": "100644",
+      "sha": "c5f8fd42f4d2c6e474a7152c58939b8a44371ff6"
+    },
+    {
+      "path": "backend/zero_companion.c",
+      "mode": "100644",
+      "sha": "91b6c545134c2d5ff55b8d1d9f2208082f944b21"
+    },
+    {
+      "path": "backend/zero_companion.h",
+      "mode": "100644",
+      "sha": "3d2889c4d547b250feb1f98ffd274c45be5d6e49"
+    },
+    {
+      "path": "backend/zero_probe.c",
+      "mode": "100644",
+      "sha": "fdd513e210626458d3d170c86d4fed2e297e9e0e"
+    },
+    {
+      "path": "backend/zero_probe.h",
+      "mode": "100644",
+      "sha": "43b758346dda31a6efa627607e89395a4469825d"
+    },
+    {
+      "path": "catalog/catalog.enc",
+      "mode": "100644",
+      "sha": "1507d419a967e50ac73175cae065b2cba7dfe4b2"
+    },
+    {
+      "path": "catalog/games.enc",
+      "mode": "100644",
+      "sha": "2e102a0e9cfa7bd762bf58ca30a57e1ec14cb88b"
+    },
+    {
+      "path": "catalog/releases.enc",
+      "mode": "100644",
+      "sha": "35c2e46cfc32d1ee9bc8336be05f630ba7079ee8"
+    },
+    {
+      "path": "catalog/revision.json",
+      "mode": "100644",
+      "sha": "8eb935aa643571eeac84e257a30e3606220517ed"
+    },
+    {
+      "path": "config/network.json",
+      "mode": "100644",
+      "sha": "59c8a0f632b8e547dabbad7e20b017c0ad54f7f9"
+    },
+    {
+      "path": "diagnostics/README.md",
+      "mode": "100644",
+      "sha": "3df22fa6d703c835792b49fd3c9ad579e939d82f"
+    },
+    {
+      "path": "diagnostics/boottrace.c",
+      "mode": "100644",
+      "sha": "ab9a23a1627e609340753f8c6f40f33cb25b4018"
+    },
+    {
+      "path": "diagnostics/fs_probe.c",
+      "mode": "100644",
+      "sha": "1a7b12c1925a69ae91044f829e85ca9f8519123f"
+    },
+    {
+      "path": "docs/pc-direct-link.md",
+      "mode": "100644",
+      "sha": "36b501c5d916a44c3241e7022a243a7cb0e860b6"
+    },
+    {
+      "path": "experiments/browser-capture/README.md",
+      "mode": "100644",
+      "sha": "7454854df1cf8e2a6676da5ea0aec8f7ca7e10b0"
+    },
+    {
+      "path": "experiments/browser-capture/main.c",
+      "mode": "100644",
+      "sha": "b5ba1d991889012832c84e3139e9e9246ed2f11e"
+    },
+    {
+      "path": "experiments/transfer-benchmark/README.md",
+      "mode": "100644",
+      "sha": "997e00eb5b7b2a0c1fc063a16ea6bf43aefd6cc0"
+    },
+    {
+      "path": "experiments/transfer-benchmark/main.c",
+      "mode": "100644",
+      "sha": "e5956c2da2d1caa1e63f910e2c97295a2180a8b9"
+    },
+    {
+      "path": "i18n/de.json",
+      "mode": "100644",
+      "sha": "1bb2ebf9961cb9f4baff1cffc67a31fd7b620f30"
+    },
+    {
+      "path": "i18n/en.json",
+      "mode": "100644",
+      "sha": "44159e6b0442c72c0965f32cbe795f29d80cd833"
+    },
+    {
+      "path": "i18n/es.json",
+      "mode": "100644",
+      "sha": "d2854ec458eb395cd934c1dfecae4d7fadb390a3"
+    },
+    {
+      "path": "i18n/fr.json",
+      "mode": "100644",
+      "sha": "bc60405c2ee63acbc3809166a992ee0ba5fd3b11"
+    },
+    {
+      "path": "i18n/hu.json",
+      "mode": "100644",
+      "sha": "6455629dd0776a6a6c50291730df0745319620bd"
+    },
+    {
+      "path": "i18n/it.json",
+      "mode": "100644",
+      "sha": "b85b2c414f9b5a8e2bc82ec76148a4af3d8fdef3"
+    },
+    {
+      "path": "i18n/nl.json",
+      "mode": "100644",
+      "sha": "8d5816450ff5e7753214dcdd9833413ef991a5ed"
+    },
+    {
+      "path": "i18n/pl.json",
+      "mode": "100644",
+      "sha": "35c8e61a53d0d439e3268851a5f3dc58d94b7fbb"
+    },
+    {
+      "path": "i18n/pt-BR.json",
+      "mode": "100644",
+      "sha": "76d9c81ac86e934a8b7a20895ca18053fd25b474"
+    },
+    {
+      "path": "i18n/ru.json",
+      "mode": "100644",
+      "sha": "ade247940d8dc76ae4ed5b53c5f4267d26959de8"
+    },
+    {
+      "path": "i18n/tr.json",
+      "mode": "100644",
+      "sha": "e7c28d42427c6201c421839bc882fda5b6a8c53a"
+    },
+    {
+      "path": "index.html",
+      "mode": "100644",
+      "sha": "8b48fd73a5a6f60a66d7ac80d8ccaa0956b30d3f"
+    },
+    {
+      "path": "launcher/README.md",
+      "mode": "100644",
+      "sha": "54a3422aeca96d53e46a3b7a9de144aaa2498990"
+    },
+    {
+      "path": "launcher/install.c",
+      "mode": "100644",
+      "sha": "9de60abadf0afceaa6b345f997247fcd333cdf58"
+    },
+    {
+      "path": "launcher/install.h",
+      "mode": "100644",
+      "sha": "e32fb289a526544f7fe377c13bfbf010e223c4bb"
+    },
+    {
+      "path": "launcher/platform_ps5.c",
+      "mode": "100644",
+      "sha": "d5d715b110b16f6e3c762b5154a8c0201f832959"
+    },
+    {
+      "path": "launcher/runtime_image.c",
+      "mode": "100644",
+      "sha": "b08f72373f54f0fdc945db9bc9455357ee77335f"
+    },
+    {
+      "path": "launcher/sce_sys/icon0.png",
+      "mode": "100644",
+      "sha": "c2a6323168ce69fcfde898b209d12a1450aeb00f"
+    },
+    {
+      "path": "launcher/sce_sys/icon0.svg",
+      "mode": "100644",
+      "sha": "88c82b3d292dfc1ebd39b7cee6e4b80a269df4c9"
+    },
+    {
+      "path": "launcher/sce_sys/param.json",
+      "mode": "100644",
+      "sha": "f170eb4e10a36b201254400a1fdcbe970696b7fa"
+    },
+    {
+      "path": "licenses/7zip.txt",
+      "mode": "100644",
+      "sha": "9c301dc1da14f342438a5cbb2a2ee14baf7b8d81"
+    },
+    {
+      "path": "licenses/Apache-2.0.txt",
+      "mode": "100644",
+      "sha": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+    },
+    {
+      "path": "licenses/GPL-3.0.txt",
+      "mode": "100644",
+      "sha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7"
+    },
+    {
+      "path": "licenses/InterTight-OFL.txt",
+      "mode": "100644",
+      "sha": "b350194781e5fdde128f95ece3df466a8eb294f9"
+    },
+    {
+      "path": "licenses/LGPL-2.1.txt",
+      "mode": "100644",
+      "sha": "f6683e74e0f0130f246dbf7054f4cacc88ca84b0"
+    },
+    {
+      "path": "licenses/MPL-2.0.txt",
+      "mode": "100644",
+      "sha": "14e2f777f6c395e7e04ab4aa306bbcc4b0c1120e"
+    },
+    {
+      "path": "licenses/React-MIT.txt",
+      "mode": "100644",
+      "sha": "b93be90515ccd0b9daedaa589e42bf5929693f1f"
+    },
+    {
+      "path": "licenses/Sora-OFL.txt",
+      "mode": "100644",
+      "sha": "915fb7706ae07366748cd32c4de64551efb970bb"
+    },
+    {
+      "path": "licenses/Vite-MIT.txt",
+      "mode": "100644",
+      "sha": "b7e97ecb6aa4dd70b3e3a637afa2ae16feb7cd12"
+    },
+    {
+      "path": "licenses/bzip2.txt",
+      "mode": "100644",
+      "sha": "81a37eab7a5be1a34456f38adb74928cc9073e9b"
+    },
+    {
+      "path": "licenses/cJSON-MIT.txt",
+      "mode": "100644",
+      "sha": "78deb0406d713ab9730e3c2447be1abdbd70b9a2"
+    },
+    {
+      "path": "licenses/compiler-rt-LLVM.txt",
+      "mode": "100644",
+      "sha": "5a79a1b9d5cb0af9a779751f07033e44ca3b14d8"
+    },
+    {
+      "path": "licenses/curl.txt",
+      "mode": "100644",
+      "sha": "3fa85ebb641ce13a2baee669f19603e5b1081851"
+    },
+    {
+      "path": "licenses/libarchive-BSD-2-Clause.txt",
+      "mode": "100644",
+      "sha": "9d0bcf81ff613bf5f36d71983b75e20cd0f69213"
+    },
+    {
+      "path": "licenses/libcxx-LLVM.txt",
+      "mode": "100644",
+      "sha": "e159d283443f92ac78b964d2bccebe8f95d5d445"
+    },
+    {
+      "path": "licenses/libcxxabi-LLVM.txt",
+      "mode": "100644",
+      "sha": "b75c0441bcd5be32b5a07e2a1ffc7e67b6d99f16"
+    },
+    {
+      "path": "licenses/liblzma-0BSD.txt",
+      "mode": "100644",
+      "sha": "4322122aecf1aecff317bd50334ba206dcb9ac41"
+    },
+    {
+      "path": "licenses/libunwind-LLVM.txt",
+      "mode": "100644",
+      "sha": "1e3120621caeb62648745a42f7a9a25d1e2731ab"
+    },
+    {
+      "path": "licenses/libwebp-BSD-3-Clause.txt",
+      "mode": "100644",
+      "sha": "7a6f99547d4d6b4c5e6d5321acfaeba313e08de3"
+    },
+    {
+      "path": "licenses/libwebp-PATENTS.txt",
+      "mode": "100644",
+      "sha": "caedf607e95ae4c3dc84d057fddcc301cd0e4863"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSE",
+      "mode": "100644",
+      "sha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Dear-ImGui.txt",
+      "mode": "100644",
+      "sha": "00ae473abe62bf1c53b333613bd9e05aa72e2ca0"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Mesa/Apache-2.0",
+      "mode": "100644",
+      "sha": "6e89ddeab187e08398d1b7804fc740ca0e1c427c"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Mesa/BSL-1.0",
+      "mode": "100644",
+      "sha": "de167202f794e66ca64e53aa9d15141c065b96a1"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Mesa/GPL-1.0-or-later",
+      "mode": "100644",
+      "sha": "c92d37cf1e55a3186746f4608ffe48002729064c"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Mesa/GPL-2.0-only",
+      "mode": "100644",
+      "sha": "c90e9ca1fa8bf48929938b27656e02d1f6b8f52e"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Mesa/MIT",
+      "mode": "100644",
+      "sha": "f33a68ceb3ea00a533d2331a091ec7f2580bb4df"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Mesa/SGI-B-2.0",
+      "mode": "100644",
+      "sha": "3a0b643504b2ec2500e2153134e918f20bba80bd"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Mesa/exceptions/Linux-Syscall-Note",
+      "mode": "100644",
+      "sha": "adbe756a050277946e6c82a021bc7f7c617d0720"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/NanoVG.txt",
+      "mode": "100644",
+      "sha": "2a03a1a61efc6d060d93668a31c224379909e649"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/OpenGNM-PSBC.txt",
+      "mode": "100644",
+      "sha": "41d2f96763447b082db20a89822de07e7bed60ce"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/OpenGNM.txt",
+      "mode": "100644",
+      "sha": "b7f6c730e20850ae1108abdb8f4925f8e7650d86"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/SDL2.txt",
+      "mode": "100644",
+      "sha": "52d0ed38b843709d0d103d55bfb75715ec60550d"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/SPIRV-Headers.txt",
+      "mode": "100644",
+      "sha": "a63e9c620ee123267192113ab0be3814782ba909"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Sokol-Samples.txt",
+      "mode": "100644",
+      "sha": "31a6c77406c6dfebc1a778b9e923f5db7712be97"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Sokol.txt",
+      "mode": "100644",
+      "sha": "efdc02e8faf47abd7c73b7b7373314fa682bf099"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/VK-GL-CTS.txt",
+      "mode": "100644",
+      "sha": "75b52484ea471f882c29e02693b4f02dba175b5e"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/Vulkan-Headers.txt",
+      "mode": "100644",
+      "sha": "17cf4a17d6208dad41b88124d417e0af1d29736d"
+    },
+    {
+      "path": "licenses/ps5-opengl/LICENSES/vecmath.txt",
+      "mode": "100644",
+      "sha": "f84c213147c32dba5cee802990206eae4e0c0be9"
+    },
+    {
+      "path": "licenses/ps5-opengl/THIRD_PARTY_NOTICES.md",
+      "mode": "100644",
+      "sha": "4984e827ec1ae6dfc3768a4aef3254c6238e3d2b"
+    },
+    {
+      "path": "licenses/scheduler-MIT.txt",
+      "mode": "100644",
+      "sha": "b93be90515ccd0b9daedaa589e42bf5929693f1f"
+    },
+    {
+      "path": "licenses/zlib.txt",
+      "mode": "100644",
+      "sha": "b7a69d058e616651eae27b3f90c0b7fd36c099b2"
+    },
+    {
+      "path": "package-lock.json",
+      "mode": "100644",
+      "sha": "242721daab38efe6cd75ebbb2b646a74a36a69e3"
+    },
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "sha": "c384e8ca83eb9ab79554389b5daa0aa89dfcd651"
+    },
+    {
+      "path": "public/orbit.svg",
+      "mode": "100644",
+      "sha": "bac30e7885988ad7b30660b0b18879e6231d4ca8"
+    },
+    {
+      "path": "src/App.tsx",
+      "mode": "100644",
+      "sha": "95446f2001dda4c4ec9547806a5cf13622f3d49c"
+    },
+    {
+      "path": "src/ArchiveAccount.tsx",
+      "mode": "100644",
+      "sha": "f894802c05c9912dd546dfe58d1ff3f573842696"
+    },
+    {
+      "path": "src/ArchiveSetting.tsx",
+      "mode": "100644",
+      "sha": "4936a93f45d76d7e3f2a2f58feddf685232213e2"
+    },
+    {
+      "path": "src/Artwork.tsx",
+      "mode": "100644",
+      "sha": "3df645f382f4d6e573a6ae0143c5257a35598400"
+    },
+    {
+      "path": "src/AutoStart.tsx",
+      "mode": "100644",
+      "sha": "58e1806d483f821f4ea3e22857705ceec5b04005"
+    },
+    {
+      "path": "src/Backdrop.tsx",
+      "mode": "100644",
+      "sha": "6d1555b64ee09826430287867d7f953a8dc1abdb"
+    },
+    {
+      "path": "src/BrowserNotice.tsx",
+      "mode": "100644",
+      "sha": "fa7f721864f550cd1c9e7ac2f09878447af6664a"
+    },
+    {
+      "path": "src/CatalogueUpdates.tsx",
+      "mode": "100644",
+      "sha": "5e14ad9244d058d997aa174414484f12eb38fbe3"
+    },
+    {
+      "path": "src/Debrid.tsx",
+      "mode": "100644",
+      "sha": "24bf32f6ae13a1adb8087fde080bfa8f7e8ee624"
+    },
+    {
+      "path": "src/Details.tsx",
+      "mode": "100644",
+      "sha": "720e19d6b70a0ee91b8c5b03f40d29162ade410b"
+    },
+    {
+      "path": "src/Diagnostics.tsx",
+      "mode": "100644",
+      "sha": "8c0657bc376a2f0fe729d841345b9f42ba48d240"
+    },
+    {
+      "path": "src/DownloadLimit.tsx",
+      "mode": "100644",
+      "sha": "a6854ab36a21a3ba7f3c9625e184030371e9eff2"
+    },
+    {
+      "path": "src/Downloads.tsx",
+      "mode": "100644",
+      "sha": "2cffe15fdf5a680399c83cdc7277d02bf4408d5b"
+    },
+    {
+      "path": "src/ExternalDownload.tsx",
+      "mode": "100644",
+      "sha": "b543993cdd3922c66a3faf71d1ee8fdc8f7cdcb8"
+    },
+    {
+      "path": "src/FavoriteNotice.tsx",
+      "mode": "100644",
+      "sha": "c04652a30ddb61fee0b7e85460a36a0582b2e331"
+    },
+    {
+      "path": "src/GameRail.tsx",
+      "mode": "100644",
+      "sha": "a61c7f0401f84e1d2c6f0222174b84260887eea6"
+    },
+    {
+      "path": "src/GameSheet.tsx",
+      "mode": "100644",
+      "sha": "f085f5e6569261dbf1ddc0396f9982f8189cef52"
+    },
+    {
+      "path": "src/LanguageSetting.tsx",
+      "mode": "100644",
+      "sha": "d6539c09712642d01bac6559887b4e9061eb4d3a"
+    },
+    {
+      "path": "src/Library.tsx",
+      "mode": "100644",
+      "sha": "e5f61a5f4b1aa37b5f01fd484fb05279de3ed7a0"
+    },
+    {
+      "path": "src/LibraryActions.tsx",
+      "mode": "100644",
+      "sha": "fabe1ecd4f12cd973e00b561b5b76e25841d5acd"
+    },
+    {
+      "path": "src/Loader.tsx",
+      "mode": "100644",
+      "sha": "14ade3caf421e1767907a4969e21aa442908499b"
+    },
+    {
+      "path": "src/NativeAppNotice.tsx",
+      "mode": "100644",
+      "sha": "503086cff091837e5f157e7e2d4c2885835b2981"
+    },
+    {
+      "path": "src/Pairing.tsx",
+      "mode": "100644",
+      "sha": "84698a175bb6a67d6ed53e664214f2967d010f6c"
+    },
+    {
+      "path": "src/Rich.tsx",
+      "mode": "100644",
+      "sha": "f4c0431c18a77e6b821278f9d18278e15b337bf5"
+    },
+    {
+      "path": "src/Select.tsx",
+      "mode": "100644",
+      "sha": "3837e908800b34199a4ffc32b9fc2769cd4b639f"
+    },
+    {
+      "path": "src/Sources.tsx",
+      "mode": "100644",
+      "sha": "1c488a663d1980664c9149ff33ca3cf806cef8c9"
+    },
+    {
+      "path": "src/TvApp.tsx",
+      "mode": "100644",
+      "sha": "d3c140fade8dd8401524d9a814a2352f5e48af92"
+    },
+    {
+      "path": "src/UpdateNotice.tsx",
+      "mode": "100644",
+      "sha": "3b6653e8aa77852b7b8cb7d315561088a95ddb7a"
+    },
+    {
+      "path": "src/Updates.tsx",
+      "mode": "100644",
+      "sha": "1e07e75e386db1ed57ecf886b49c94b483694ee4"
+    },
+    {
+      "path": "src/api.ts",
+      "mode": "100644",
+      "sha": "9635cc56bd460264c775fde0541b713e48662674"
+    },
+    {
+      "path": "src/artworkVisibility.ts",
+      "mode": "100644",
+      "sha": "b138ef1fbf4075a7596bc3484b64d0cd7571f648"
+    },
+    {
+      "path": "src/browse.ts",
+      "mode": "100644",
+      "sha": "4158caf79e59daa655124be0e757eaf85c39a30b"
+    },
+    {
+      "path": "src/browserHandoff.ts",
+      "mode": "100644",
+      "sha": "1fc9af0a09ba6dde30a398c7b58b7df4e3cb0e66"
+    },
+    {
+      "path": "src/catalog.ts",
+      "mode": "100644",
+      "sha": "fba78ce2de94adfd351d2df597d83d49b850b8d2"
+    },
+    {
+      "path": "src/collection.ts",
+      "mode": "100644",
+      "sha": "e2a5b7db268708168e98848839aa420b3eb939ee"
+    },
+    {
+      "path": "src/components.tsx",
+      "mode": "100644",
+      "sha": "f2b0897ebf9cd71e0d4b0a0959b7157cea53bf12"
+    },
+    {
+      "path": "src/controller.ts",
+      "mode": "100644",
+      "sha": "6e07758069f3534d0bcc2f8f8f4bd2867a30ad41"
+    },
+    {
+      "path": "src/details.css",
+      "mode": "100644",
+      "sha": "5b1f0b5360ace60ced6ccbbd95b02c4f8e83f9be"
+    },
+    {
+      "path": "src/i18n.ts",
+      "mode": "100644",
+      "sha": "3fabd3e9e3aed33ab6484c4460cede45f2879de3"
+    },
+    {
+      "path": "src/infiniteList.ts",
+      "mode": "100644",
+      "sha": "335037a7598b1ce3f12dd959625f12d05be9bc78"
+    },
+    {
+      "path": "src/interfaces/Appearance.tsx",
+      "mode": "100644",
+      "sha": "3bf1db94df292dbd03b9fa80918fc3fbd910b1f1"
+    },
+    {
+      "path": "src/interfaces/CinemaDownloads.tsx",
+      "mode": "100644",
+      "sha": "3331b7f6a80d51d7a97650910b01301ac80d1d06"
+    },
+    {
+      "path": "src/interfaces/CinemaLibrary.tsx",
+      "mode": "100644",
+      "sha": "0cd8a2d5f3a39be87d995f07ebd53e7ea57caff8"
+    },
+    {
+      "path": "src/interfaces/CinemaParts.tsx",
+      "mode": "100644",
+      "sha": "4892bf5ada7a36e7f82da4a43f53eb509933b46e"
+    },
+    {
+      "path": "src/interfaces/CrossbarDownloads.tsx",
+      "mode": "100644",
+      "sha": "5d7033ea53a3aacf1aedd31b7e2033c2d75ed05f"
+    },
+    {
+      "path": "src/interfaces/CrossbarLibrary.tsx",
+      "mode": "100644",
+      "sha": "884f887e11eae4100919d4b932462eac5f318618"
+    },
+    {
+      "path": "src/interfaces/CrossbarList.tsx",
+      "mode": "100644",
+      "sha": "7d209190f369c189d1f9ce819eea8690cc263860"
+    },
+    {
+      "path": "src/interfaces/Glyph.tsx",
+      "mode": "100644",
+      "sha": "2193b0f6e3f3c56b4f12b0cb7793279c07532185"
+    },
+    {
+      "path": "src/interfaces/InterfaceNotice.tsx",
+      "mode": "100644",
+      "sha": "9ce83309f7bd09b6a697eaad883c34986f15d723"
+    },
+    {
+      "path": "src/interfaces/PanoramaDownloads.tsx",
+      "mode": "100644",
+      "sha": "cd4b914a58f525558727f1bf9625c7c5be9fb4b9"
+    },
+    {
+      "path": "src/interfaces/PanoramaLibrary.tsx",
+      "mode": "100644",
+      "sha": "fc88d78aaa33a0aed4c28610ce4761253bf1848d"
+    },
+    {
+      "path": "src/interfaces/PanoramaParts.tsx",
+      "mode": "100644",
+      "sha": "c092c178029b0909e3bd64e9af13e63f9585a2c8"
+    },
+    {
+      "path": "src/interfaces/Ring.tsx",
+      "mode": "100644",
+      "sha": "e2d72910c768392f1dc57fe5054c7bf023465f31"
+    },
+    {
+      "path": "src/interfaces/SettingsPage.tsx",
+      "mode": "100644",
+      "sha": "53afe0002c9de02d739d2aae9742378c9160aef0"
+    },
+    {
+      "path": "src/interfaces/Shell.tsx",
+      "mode": "100644",
+      "sha": "69f5e100ebbff75afe82dd372bd2c19162b13fd1"
+    },
+    {
+      "path": "src/interfaces/choice.ts",
+      "mode": "100644",
+      "sha": "bc8747ad6169f970afa0d5c8b199753e79018b99"
+    },
+    {
+      "path": "src/interfaces/fonts/inter-tight-cyrillic-ext-wght-normal.woff2",
+      "mode": "100644",
+      "sha": "b9d96399025bc6d6ee594a3a7df62443a6f4e83e"
+    },
+    {
+      "path": "src/interfaces/fonts/inter-tight-cyrillic-wght-normal.woff2",
+      "mode": "100644",
+      "sha": "daa4e71e8f892ee67c73228c33de0a2b58c69704"
+    },
+    {
+      "path": "src/interfaces/fonts/inter-tight-latin-ext-wght-normal.woff2",
+      "mode": "100644",
+      "sha": "f87a053065936a38494f731b88552719e76f25f6"
+    },
+    {
+      "path": "src/interfaces/fonts/inter-tight-latin-wght-normal.woff2",
+      "mode": "100644",
+      "sha": "d8f79a69e4733c1a3d6df3f6ceb4164d492761bc"
+    },
+    {
+      "path": "src/interfaces/fonts/sora-latin-ext-wght-normal.woff2",
+      "mode": "100644",
+      "sha": "28516fd342a982db01f81cb9812e25a9f4c9a2e1"
+    },
+    {
+      "path": "src/interfaces/fonts/sora-latin-wght-normal.woff2",
+      "mode": "100644",
+      "sha": "3dbf56eb49eadd3ab4c09b71b9158b042d812584"
+    },
+    {
+      "path": "src/interfaces/interfaces.css",
+      "mode": "100644",
+      "sha": "9f1ab295ff8494e1fbaaf3038e1cb68dce8ccb3f"
+    },
+    {
+      "path": "src/interfaces/menuKeys.ts",
+      "mode": "100644",
+      "sha": "4fcc7baa083e2de36378b2adeaa51a81e7d44f93"
+    },
+    {
+      "path": "src/jobs.ts",
+      "mode": "100644",
+      "sha": "964c42c994af997692e7016c9544282a7a44f16c"
+    },
+    {
+      "path": "src/loader.css",
+      "mode": "100644",
+      "sha": "0c912afc64dd63c89d62c7491e287199acdf0ccb"
+    },
+    {
+      "path": "src/main.tsx",
+      "mode": "100644",
+      "sha": "46e598cc9f26167f6c6f67fcb579c5a267d776ea"
+    },
+    {
+      "path": "src/platform.ts",
+      "mode": "100644",
+      "sha": "19dad47f10e88546ac2e6051aa164697f1b5fb1d"
+    },
+    {
+      "path": "src/railWindow.ts",
+      "mode": "100644",
+      "sha": "06f1102420329f39d40394eb09274ae149ff1113"
+    },
+    {
+      "path": "src/restartVerification.ts",
+      "mode": "100644",
+      "sha": "497359307db22e0e7eae4ac56b4ce9558cc59685"
+    },
+    {
+      "path": "src/snapshot.ts",
+      "mode": "100644",
+      "sha": "967faec0ddf1e85c6247e2c3afcba65f6371455b"
+    },
+    {
+      "path": "src/styles.css",
+      "mode": "100644",
+      "sha": "5dcf82a9989b5fa35f846245a6aa935452c33a44"
+    },
+    {
+      "path": "src/types.ts",
+      "mode": "100644",
+      "sha": "276a1a2328438d4065dff1e0a723d52ef1bb6879"
+    },
+    {
+      "path": "src/updateStatus.ts",
+      "mode": "100644",
+      "sha": "5bc63f893d0bbf227d5517557276af309ce6ca7d"
+    },
+    {
+      "path": "src/useLibrary.ts",
+      "mode": "100644",
+      "sha": "21fe19d277a94c30c23b70c08f21b50bc6f3b33e"
+    },
+    {
+      "path": "src/useOrbit.ts",
+      "mode": "100644",
+      "sha": "1dda2cb55288e5b3361ddd5e29b996b3957ff156"
+    },
+    {
+      "path": "src/useSnapshot.ts",
+      "mode": "100644",
+      "sha": "fb5a3418d3cc4ab6aae40d0725cfb1edb74207cd"
+    },
+    {
+      "path": "tests/external-download-ui.mjs",
+      "mode": "100644",
+      "sha": "4e26eb8ddd8a523b056d5d660e45e6cf7df9fa1a"
+    },
+    {
+      "path": "tests/external-download.test.mjs",
+      "mode": "100644",
+      "sha": "3e7ff8b285caf2642572decbcc39318b2b864984"
+    },
+    {
+      "path": "tests/external_download_driver.c",
+      "mode": "100644",
+      "sha": "51a129b32d875493c44ca589be84225e77f2dbf1"
+    },
+    {
+      "path": "tests/external_download_integration.py",
+      "mode": "100644",
+      "sha": "a844aa552adc74f7aaf262ab04ec791be4c0f29a"
+    },
+    {
+      "path": "tools/7zip-orbit.mak",
+      "mode": "100644",
+      "sha": "4cf7cb71a53794886f9f248b18bba6cee20e8094"
+    },
+    {
+      "path": "tools/Dockerfile.sdk",
+      "mode": "100644",
+      "sha": "08e3ae9193462a92a3b71297854100991f142297"
+    },
+    {
+      "path": "tools/artwork.py",
+      "mode": "100644",
+      "sha": "75d0720fe953580c95dadbdc4d68fe5f766c5a7e"
+    },
+    {
+      "path": "tools/bootstrap.py",
+      "mode": "100644",
+      "sha": "374857fb3869fb31b8d8ec742d2263c7470085a4"
+    },
+    {
+      "path": "tools/build-7zip.sh",
+      "mode": "100644",
+      "sha": "ad4d4d54548925d3bb0108fbddd6e082e5f37efc"
+    },
+    {
+      "path": "tools/build-deps.sh",
+      "mode": "100644",
+      "sha": "f39a997cbe8ad959017f9d0de47618f59bef2ed7"
+    },
+    {
+      "path": "tools/build-host-archive.sh",
+      "mode": "100644",
+      "sha": "626aefc8721a16905d21bf7a0f702b18e1f6ec4b"
+    },
+    {
+      "path": "tools/build-startup-trace.py",
+      "mode": "100644",
+      "sha": "3fcaf0d3c736f22f68329785d332b58e06e96628"
+    },
+    {
+      "path": "tools/catalog.py",
+      "mode": "100644",
+      "sha": "34db4bb354b265cc3187e4c8d3663cba32be1232"
+    },
+    {
+      "path": "tools/catalog_crypto.py",
+      "mode": "100644",
+      "sha": "d86a86c86c44354ad698b22b433de6f564703e12"
+    },
+    {
+      "path": "tools/catalog_crypto_cli.c",
+      "mode": "100644",
+      "sha": "8449a77c010d6010ef7aba61bdcd2a52b89f9a77"
+    },
+    {
+      "path": "tools/embed-launcher.py",
+      "mode": "100644",
+      "sha": "1cd6341b777ade9621899e11ca4c75dfc8a7f881"
+    },
+    {
+      "path": "tools/embed.py",
+      "mode": "100644",
+      "sha": "126b52feba1b8d526353da710ae3b630533a275f"
+    },
+    {
+      "path": "tools/i18n.mjs",
+      "mode": "100644",
+      "sha": "f813a6798421a7d72ee7a579c2dac28a0411c3e1"
+    },
+    {
+      "path": "tools/import_catalog.py",
+      "mode": "100644",
+      "sha": "b07542fda5a110c638fc3e89f0b2ee6b93bdff87"
+    },
+    {
+      "path": "tools/import_ps4.py",
+      "mode": "100644",
+      "sha": "c4d90657f5d18d2de7c2c44ae6506224f8c82e43"
+    },
+    {
+      "path": "tools/import_viking.py",
+      "mode": "100644",
+      "sha": "1c10082cfd03eb019fb6699023abf2e671ed1592"
+    },
+    {
+      "path": "tools/package-release.mjs",
+      "mode": "100644",
+      "sha": "7376b45af849e981007ec0935db53f95abac31ab"
+    },
+    {
+      "path": "tools/patch-7zip.py",
+      "mode": "100644",
+      "sha": "0aad29949c5a130d333a0fa29d0d21eeb3f7670d"
+    },
+    {
+      "path": "tools/publish_catalog.py",
+      "mode": "100644",
+      "sha": "ae6a15123a7ff8eb8cdd92b1878257b189f06131"
+    },
+    {
+      "path": "tools/regions.py",
+      "mode": "100644",
+      "sha": "7dece31f3cfb1266ff7ce07691cbaefa6c11d3ad"
+    },
+    {
+      "path": "tools/release-artifacts.mjs",
+      "mode": "100644",
+      "sha": "813973583760704b9c4ed4a76c975e7cc0b23dc7"
+    },
+    {
+      "path": "tools/release-check.mjs",
+      "mode": "100644",
+      "sha": "856ac42056d7a810ea6800d36fccae95b2c2ca9c"
+    },
+    {
+      "path": "tools/release-sources.json",
+      "mode": "100644",
+      "sha": "8d6619363cc92a17ffaeba40f6b2bec71026abdc"
+    },
+    {
+      "path": "tools/render-icon.mjs",
+      "mode": "100644",
+      "sha": "a2082e54ec7b85048edec5491aca4495e9b67aeb"
+    },
+    {
+      "path": "tools/run-console-benchmark.py",
+      "mode": "100644",
+      "sha": "7d7b91fa0db70d78927ad969cec1f17cc9687248"
+    },
+    {
+      "path": "tools/send-payload.py",
+      "mode": "100644",
+      "sha": "c662558b8355ee1923a546c26a62250b5adc6403"
+    },
+    {
+      "path": "tools/verify_import.py",
+      "mode": "100644",
+      "sha": "b04d13f731fadf41adeb11396b6b89e1e8ef1756"
+    },
+    {
+      "path": "tsconfig.json",
+      "mode": "100644",
+      "sha": "b600e2aedaec08874b8d761bfb226610b34c46f6"
+    },
+    {
+      "path": "vite.config.ts",
+      "mode": "100644",
+      "sha": "d32035594c2680f169bb6ad4f67661ccb6d8da25"
+    }
+  ]
+}

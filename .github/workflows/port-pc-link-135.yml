@@ -1,0 +1,23 @@
+name: Publish reviewed Orbit 1.3.5 PC-link integration
+
+on:
+  push:
+    branches: [ops/port-pc-link-1.3.5]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: orbit-135-source-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - run: python3 .orbit-port-135/publish.py
