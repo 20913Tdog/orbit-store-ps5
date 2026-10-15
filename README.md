@@ -1,11 +1,11 @@
 # Orbit Store (Beta)
 
-> **PC link handoff prototype — 1.3.1-beta.1.** This development branch lets you
+> **PC link handoff prototype — 1.3.1-beta.2.** This development branch lets you
 > finish provider verification in your computer's browser and paste the final file
 > URL into Orbit so the PS5 downloads it directly. Read the
 > [setup, test results and rollback instructions](docs/pc-direct-link.md).
-> Local backend/browser tests pass; a real PS5 and a PC-generated Vikingfile link
-> still need testing. This is a development fork of the upstream project below.
+> Local backend/browser tests pass and the first build starts on a real PS5.
+> A download using a PC-generated Vikingfile link still needs testing. This is a development fork of the upstream project below.
 
 ### A modern, no-BS download manager for PS5.
 
@@ -368,3 +368,4 @@ Catalogue entries reference publicly accessible third-party URLs. **Publicly acc
 All game names, artwork, trademarks, and other third-party materials belong to their respective owners. Orbit is **not affiliated with or endorsed by** Sony Interactive Entertainment, PlayStation, game publishers, or download providers. The app does not supply accounts, credentials, purchase entitlements, or permission to bypass access restrictions.
 
 To report an incorrect entry or a rights concern, open an issue with the affected title, URL, and sufficient information to identify the concern. Do not post private personal information. The underlying hosting provider is responsible for files it hosts; Orbit's maintainers can review catalogue references controlled by this project.
+

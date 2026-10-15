@@ -480,7 +480,7 @@ export function Details({
       : pending;
   // The notes Store shows around its download button, for Crossbar and Panorama.
   const noteList: { key: string; text: string; warn?: boolean }[] = [
-    ...(initialSelection
+    ...(initialSelection && !computerLinkMode
       ? [{ key: "handoff", text: t("Your game and source are selected from the app. Check the save location, then open the download page below.") }]
       : []),
     ...(!game.releases.some((option) => option.id === releaseId)
@@ -954,7 +954,7 @@ export function Details({
           <div className="cn-game-intro">
             {tagline && <p className="cn-sheet-tagline">{tagline}</p>}
             {description && <p className="cn-body">{description}</p>}
-            {initialSelection && (
+            {initialSelection && !computerLinkMode && (
               <p className="cn-note">
                 {t(
                   "Your game and source are selected from the app. Check the save location, then open the download page below.",
@@ -1507,7 +1507,7 @@ export function Details({
               </div>
             ) : (
               <>
-                {initialSelection && (
+                {initialSelection && !computerLinkMode && (
                   <p className="notice">
                     {t(
                       "Your game and source are selected from the app. Check the save location, then open the download page below.",
