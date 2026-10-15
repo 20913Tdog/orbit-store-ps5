@@ -1,0 +1,70 @@
+name: Build PC-link test payload
+
+on:
+  push:
+    branches: [feat/pc-direct-link]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pc-link-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - run: npm ci
+      - name: Check PC and console browser flows
+        run: |
+          npm install --prefix /tmp/orbit-test-tools --no-package-lock --ignore-scripts playwright@1.51.1
+          node /tmp/orbit-test-tools/node_modules/playwright/cli.js install --with-deps chromium --only-shell
+          ORBIT_PLAYWRIGHT_MODULE=/tmp/orbit-test-tools/node_modules/playwright/index.mjs npm run test:pc-link:ui
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: PC-link-UI-check
+          path: build/ui/
+          if-no-files-found: ignore
+
+  payload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Prepare frontend and pinned inputs
+        run: |
+          npm ci
+          python3 -m venv .venv
+          .venv/bin/python tools/bootstrap.py
+          npm run build
+          node --test tests/external-download.test.mjs tests/pc-link-starter.test.mjs
+      - name: Build SDK and static libraries
+        run: |
+          docker build -f tools/Dockerfile.sdk -t orbit-sdk:0.43 .
+          docker build -t orbit-payload-build .
+      - name: Build PS5 payload
+        run: docker run --rm -v "$PWD:/work" orbit-payload-build payload
+      - name: Check HTTP download and Archive.org integration
+        run: |
+          docker run --rm -v "$PWD:/work" orbit-payload-build build/orbit-test
+          docker run --rm -v "$PWD:/work" --entrypoint python3 orbit-payload-build tests/external_download_integration.py
+      - name: Package test build
+        run: |
+          mkdir -p build/pc-link-package
+          cp build/orbit_store.elf build/pc-link-package/
+          cp docs/pc-direct-link.md build/pc-link-package/LIESMICH.md
+          cp LICENSE THIRD-PARTY-NOTICES.md build/pc-link-package/
+          git rev-parse HEAD > build/pc-link-package/SOURCE-COMMIT.txt
+          cd build/pc-link-package
+          sha256sum orbit_store.elf > SHA256SUMS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Orbit-PC-Link-Test-1.3.6-beta.1
+          path: build/pc-link-package/
+          retention-days: 30
+          if-no-files-found: error
