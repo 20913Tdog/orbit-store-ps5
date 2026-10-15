@@ -36,7 +36,7 @@ async function setup(layout = "store", mode = "ok") {
     const path = url.pathname.slice("/api/v1".length);
     let data;
     let code = 200;
-    if (path === "/system") data = { name: "Orbit Store", version: "1.3.5-pc.1", platform: "ps5",
+    if (path === "/system") data = { name: "Orbit Store", version: "1.3.6-beta.1", platform: "ps5",
       paired: true, catalogueRevision: 1, stateHealthy: true, preferredStorage: "internal",
       localSessionAvailable: mode === "ps5-session", launcherStatus: "ready", httpPort: 34177 };
     else if (path === "/session") data = { token: "fixture-pairing-token", pairCode: "123456" };

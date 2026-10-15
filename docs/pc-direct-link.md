@@ -2,7 +2,8 @@
 
 Experimenteller Eigenbau auf Basis des offiziellen Orbit-Store-Quellpakets **1.3.5**.
 Entwicklungsbranch: [`feat/pc-direct-link`](https://github.com/20913Tdog/orbit-store-ps5/tree/feat/pc-direct-link).
-Angezeigte Service-Version: **1.3.5-pc.1**.
+Angezeigte Service-Version: **1.3.6-beta.1** (eigener Testbuild auf Basis von 1.3.5).
+Die Beta-Nummer sorgt dafür, dass die offizielle 1.3.5-TV-App beim Neustart die gespeicherte PC-Link-Version auswählt.
 Die native TV-App wurde nicht verändert. Für die neuen nativen Bedienelemente und den verbesserten Dialogablauf die offizielle **1.3.5-TV-App** verwenden:
 [PPSA99177.ffpkg](https://github.com/saawant12/orbit-store-ps5/releases/download/v1.3.5/PPSA99177.ffpkg).
 Danach unseren Dienst über die neue `orbit_store.elf` starten. Orbit Zero wird für die PC-Link-Funktion nicht benötigt.
@@ -16,7 +17,7 @@ Die offiziellen Orbit-Zero-1.3.5-Pakete können unabhängig davon verwendet werd
    Orbit zum Neustart stoppen** wählen und warten, bis der Dienst beendet ist.
 3. Die mitgelieferte `orbit_store.elf` über deinen vorhandenen Payload Manager oder
    ELF Loader starten. Am PC `http://<PS5-IP>:34177/` öffnen, neu laden und bei Bedarf koppeln.
-   Unter App-Einstellungen sollte **1.3.5-pc.1** stehen.
+   Unter App-Einstellungen sollte **1.3.6-beta.1** stehen.
 
 Orbit speichert beim Start wie gewohnt eine Laufzeitkopie unter
 `/data/orbit-store/orbit_store.elf` und aktualisiert bereits von Orbit verwaltete
@@ -59,6 +60,7 @@ eine abweichende Dateigröße wird abgelehnt. Es werden keine Browser-Cookies an
 - HTTP-Integration mit dem vollständigen Testdienst und Archive.org-An-/Abmeldung gegen lokale Testdaten: Kopplung, Herkunftsprüfung,
   Dateiname, Größe, Dateityp, stabile Datei-Identität, Byte-Probe und vollständiger
   Download mit Prüfsumme in ein temporäres Laufwerk.
+- Neustart-Auswahl gegen den unveränderten Starter der offiziellen 1.3.5-TV-App.
 - PS5-Payload mit SDK 0.43 aus den festgelegten Bibliotheksquellen gebaut.
 
 **Praxistest:** Die PC-Funktion im vorherigen Build 1.3.1-beta.2 wurde auf der echten PS5 bestätigt. Die neue Kombination mit 1.3.5 muss noch auf der Konsole getestet werden. PC und PS5 sollten dafür zunächst dasselbe Heimnetz und denselben

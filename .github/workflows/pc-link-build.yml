@@ -42,7 +42,7 @@ jobs:
           python3 -m venv .venv
           .venv/bin/python tools/bootstrap.py
           npm run build
-          node --test tests/external-download.test.mjs
+          node --test tests/external-download.test.mjs tests/pc-link-starter.test.mjs
       - name: Build SDK and static libraries
         run: |
           docker build -f tools/Dockerfile.sdk -t orbit-sdk:0.43 .
@@ -64,7 +64,7 @@ jobs:
           sha256sum orbit_store.elf > SHA256SUMS
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: Orbit-PC-Link-Test-1.3.5-pc.1
+          name: Orbit-PC-Link-Test-1.3.6-beta.1
           path: build/pc-link-package/
           retention-days: 30
           if-no-files-found: error

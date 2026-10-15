@@ -1,6 +1,6 @@
 # Orbit Store (Beta)
 
-> **PC link handoff prototype — 1.3.5-pc.1.** This development branch lets you
+> **PC link handoff prototype — 1.3.6-beta.1.** This development branch lets you
 > finish provider verification in your computer's browser and paste the final file
 > URL into Orbit so the PS5 downloads it directly. Read the
 > [setup, test results and rollback instructions](docs/pc-direct-link.md).
